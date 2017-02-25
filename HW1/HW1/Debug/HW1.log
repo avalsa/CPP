@@ -1,0 +1,5 @@
+﻿  Main.cpp
+d:\git\cpp\hw1\hw1\main.cpp(17): warning C4101: m: неиспользованная локальная переменная
+d:\git\cpp\hw1\hw1\main.cpp(21): warning C4101: s: неиспользованная локальная переменная
+  HW1.vcxproj -> D:\git\CPP\HW1\Debug\HW1.exe
+  HW1.vcxproj -> D:\git\CPP\HW1\Debug\HW1.pdb (Full PDB)
