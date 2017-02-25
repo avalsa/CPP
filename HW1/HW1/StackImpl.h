@@ -14,7 +14,7 @@ class StackImpl : public Stack
 {
 public:
 
-	StackImpl()
+	StackImpl(): size_(0)
 	{
 		root = nullptr;
 	}
@@ -73,13 +73,23 @@ public:
 		return root->data;
 	}
 
+	size_t size() const override
+	{
+		return size_;
+	}
+
+	bool empty() const override
+	{
+		return (size_) ? false : true;
+	}
+
 private:
-	bool ok() const override
+	bool ok() const 
 	{
 		return (size_ != POISON) ? true : false;
 	}
 
-	void dump() const override
+	void dump() const
 	{
 		std::ofstream out("dump.txt"); 
 		out << "Dump of stackimpl "<<std::endl;
@@ -95,6 +105,8 @@ private:
 		out.close();
 	}
 
+
+private:
 	struct Node
 	{
 		value_type data;
@@ -110,6 +122,7 @@ private:
 	};
 
 	Node * root;
+	size_t size_;
 };
 
 #endif

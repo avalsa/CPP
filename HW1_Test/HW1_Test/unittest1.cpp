@@ -50,22 +50,39 @@ namespace HW1_Test
 			delete s;
 		}
 
+
+		//don't work/ its normal
 		TEST_METHOD(base_badpointer)
 		{
 			Stack * s = new StackImpl();
+			Stack ** d = &s;
 			s->push(4);
 			s->push(34);
-			delete s;
+			s->~Stack();
 			try
 			{
-				s->pop();
+				(*d)->size();
 				Assert::AreEqual(1, 2);
 			}
 			catch(const char *e)
 			{
-				
 				Assert::AreEqual(e, "stack is corrupted");
-			}
+			}	
 		}
+
+		TEST_METHOD(base_top)
+		{
+			Stack * s = new StackImpl();
+			s->push(1);
+			s->push(2);
+			Assert::AreEqual(s->top(), 2);
+			Assert::AreEqual(s->size(), static_cast<unsigned>(2));
+			Assert::AreEqual(s->pop(), 2);
+			Assert::AreEqual(s->top(), 1);
+			Assert::AreEqual(s->size(), static_cast<unsigned>(1));
+			delete s;
+		}
+
+
 	};
 }
