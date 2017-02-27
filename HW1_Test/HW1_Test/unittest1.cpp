@@ -50,6 +50,26 @@ namespace HW1_Test
 			delete s;
 		}
 
+		TEST_METHOD(copy_constr)
+		{
+			StackImpl *s = new StackImpl();
+			s->push(1);
+			s->push(2);
+			s->push(3);
+			s->push(4);
+
+			Stack *s2 = new StackImpl(*s);
+			s2->push(45);
+			s->push(34);
+			Assert::AreNotEqual(s->pop(), s2->pop());
+			Assert::AreEqual(s->pop(), s2->pop());
+			Assert::AreEqual(s->pop(), s2->pop());
+			Assert::AreEqual(s->pop(), s2->pop()); 
+			Assert::AreEqual(s->pop(), s2->pop());
+			delete s;
+			delete s2;
+		}
+
 
 		//don't work/ its normal
 		TEST_METHOD(base_badpointer)

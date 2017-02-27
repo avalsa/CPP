@@ -4,7 +4,6 @@
 class Stack
 {
 public:
-	Stack() {}
 	virtual ~Stack() {}
 	typedef int value_type;
 	virtual void push(value_type const) = 0;
@@ -15,5 +14,3 @@ public:
 };
 
 #endif
-
-

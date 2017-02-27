@@ -14,9 +14,24 @@ class StackImpl : public Stack
 {
 public:
 
-	StackImpl(): size_(0)
+	StackImpl(): root(nullptr), size_(0) {}
+
+	StackImpl(StackImpl &s1): root(nullptr), size_(s1.size_)
 	{
-		root = nullptr;
+		if (!s1.ok())
+			throw "Object not created";
+		if (s1.root == nullptr) 
+			return;
+		Node * cur_root = s1.root;
+		Node * first = Node::new_Node(cur_root->data, nullptr);
+		Node * prev = first;
+		while ( (cur_root=cur_root->next) != nullptr)
+		{
+			Node * n = Node::new_Node(cur_root->data, nullptr);
+			prev->next = n;
+			prev = n;
+		}
+		root = first;
 	}
 
 	~StackImpl()
