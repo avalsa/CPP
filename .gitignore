@@ -1,5 +1,7 @@
-# Compiled Object files
-*.slo
+# Cmpiled Object files
+cmake-build-debug
+.idea/*
+*.lo
 *.lo
 *.o
 *.obj
