@@ -10,8 +10,8 @@
 
 class Bot : public Actor
 {
-    Bot(int x, int y, int hp, int hp_max, Weapon weapon) : Actor(x, y, hp_max, hp_max, weapon)
-    {}
+    Bot(int x, int y);
+
 };
 
 

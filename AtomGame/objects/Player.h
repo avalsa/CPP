@@ -11,8 +11,7 @@
 class Player : public Actor
 {
 public:
-    Player(int x, int y, int hp, int hp_max, Weapon weapon) : Actor(x, y, hp_max, hp_max, weapon)
-    {}
+    Player(int x, int y);
 };
 
 

@@ -3,3 +3,6 @@
 //
 
 #include "Player.h"
+
+Player::Player(int x, int y) : Actor(x, y) {
+}

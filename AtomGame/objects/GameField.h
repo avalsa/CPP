@@ -5,22 +5,23 @@
 #ifndef ATOMGAME_GAMEFIELD_H
 #define ATOMGAME_GAMEFIELD_H
 
-#include <vector>
 #include "GameObject.h"
-#include "Player.h"
 
-class GameField {
+class GameField : public GameObject {
 public:
-    GameField(std::vector<GameObject>& objects, Player *player) : objs_(&objects), player_(player)
-    {}
 
-    void PerformGameLogic(){
-        // proccess all attacks, moves and so on
-    }
+    GameField(int width, int height);
+
+    int getWidth() const;
+
+    int getHeight() const;
+
+    char getCell(int x, int y);
 
 private:
-    std::vector<GameObject> *objs_;
-    Player *player_;
+    int width_;
+    int height_;
+    char **field_; //todo make not char but enum for ex grass, sky, etc or make class cell with same idea
 };
 
 

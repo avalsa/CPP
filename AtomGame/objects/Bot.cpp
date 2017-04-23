@@ -3,3 +3,6 @@
 //
 
 #include "Bot.h"
+
+Bot::Bot(int x, int y) : Actor(x, y)
+{}

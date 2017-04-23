@@ -13,22 +13,24 @@ public:
 
     enum Direction { Up, Down, Left, Right};
 
-    Actor(int x, int y, int hp_max, int hp_cur, Weapon weapon): x_(x), y_(y), hp_max_(hp_max), hp_cur_(hp_cur), weapon_(weapon), direction_(Direction::Right)
+    Actor(int x, int y): x_(x), y_(y)
     {}
 
-    virtual void Move() = 0;
+    void Move( int dx, int dy );
 
-    virtual void Jump() = 0;
+    //virtual void Jump() = 0;
 
-    virtual void Attack() = 0;
+    //virtual void Attack() = 0;
 
-private:
-    int x_;
+//    void setX(int x) { x_ = x; }
+//    void setY(int y) { y_ = y; }
+    int getX() { return x_; }
+    int getY() { return y_; }
+
+protected:
     int y_;
-    int hp_max_;
-    int hp_cur_;
-    Weapon weapon_;
-    Direction direction_;
+    int x_;
 };
+
 
 #endif //ATOMGAME_ACTOR_H
