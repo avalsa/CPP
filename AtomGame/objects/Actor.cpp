@@ -4,7 +4,7 @@
 
 #include "Actor.h"
 
-void Actor::Move(int dx, int dy) {
-    x_ += dx;
-    y_ += dy;
+Actor::Actor (int x, int y, int sizex, int sizey) : PhysicalObject (x, y, sizex, sizey)
+{
+
 }
