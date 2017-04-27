@@ -37,7 +37,7 @@ void Model::tick(){
         prevX = pos.x;
         prevY = pos.y;
         pos = canMove (&(*i), pos);
-        if ((prevY != pos.y))
+        if (i->setOnGround (prevY != pos.y))
             i->setVelocity (player.getVx (), 0);
         if (prevX != pos.x)
             i->setVelocity (0, player.getVy ());
