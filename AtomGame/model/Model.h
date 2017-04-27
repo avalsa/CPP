@@ -50,7 +50,6 @@ private:
     collides (const PhysicalObject &obj1, const PhysicalObject &obj2, PhysicalObject::Position pos);
 
     const int playerMovementSpeed = 5;
-    bool playerOnGround;
 
 };
 

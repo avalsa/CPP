@@ -14,7 +14,7 @@ void Model::tick(){
     int prevX = pos.x;
     int prevY = pos.y;
     pos = canMove (&player, pos);
-    if ((playerOnGround = prevY != pos.y))
+    if (player.setOnGround (prevY != pos.y))
         player.setVelocity (player.getVx (), 0);
     if (prevX != pos.x)
         player.setVelocity (0, player.getVy ());
@@ -90,7 +90,7 @@ void Model::movePlayer (Actor::Direction direction)
 {
     if (direction == PhysicalObject::Direction::Up)
     {
-        if (playerOnGround)
+        if (player.isOnGround ())
             player.setVelocity (player.getAx (), 20);
     } else if (direction == PhysicalObject::Direction::Right)
         player.setDx (playerMovementSpeed);
