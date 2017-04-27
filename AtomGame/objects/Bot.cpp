@@ -4,5 +4,5 @@
 
 #include "Bot.h"
 
-Bot::Bot(int x, int y) : Actor(x, y)
+Bot::Bot (int x, int y, int sizex, int sizey) : Actor (x, y, sizex, sizey)
 {}

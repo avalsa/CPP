@@ -5,31 +5,44 @@
 #ifndef ATOMGAME_ACTOR_H
 #define ATOMGAME_ACTOR_H
 
-#include "GameObject.h"
 #include "Weapon.h"
-class Actor : public GameObject
+#include "PhysicalObject.h"
+
+class Actor : public PhysicalObject
 {
+private:
+
+    bool _onGround;
+
+protected:
+
+    int _dx;
+
+    int _dy;
+
 public:
 
-    enum Direction { Up, Down, Left, Right};
+    void setDx (int _dx);
 
-    Actor(int x, int y): x_(x), y_(y)
-    {}
+    void setDy (int _dy);
 
-    void Move( int dx, int dy );
+    Actor (int x, int y, int sizex, int sizey);
 
-    //virtual void Jump() = 0;
+    bool isOnGround() const;
 
-    //virtual void Attack() = 0;
+    bool setOnGround(bool onGround);
+
+    virtual PhysicalObject::Position tick ();
+
+    PhysicalObject::Direction getXDirection() const;
+
+    PhysicalObject::Direction getYDirection() const;
+    //virtual void jump() = 0;
+
+    //virtual void attack() = 0;
 
 //    void setX(int x) { x_ = x; }
 //    void setY(int y) { y_ = y; }
-    int getX() { return x_; }
-    int getY() { return y_; }
-
-protected:
-    int y_;
-    int x_;
 };
 
 

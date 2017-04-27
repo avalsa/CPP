@@ -4,5 +4,7 @@
 
 #include "Player.h"
 
-Player::Player(int x, int y) : Actor(x, y) {
+Player::Player (int x, int y, int sizex, int sizey) : Actor (x, y, sizex, sizey)
+{
+
 }

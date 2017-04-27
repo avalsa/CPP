@@ -11,7 +11,6 @@
 
 int main()
 {
-    Player player(3,4);
     std::string initFileName = "log4cpp.properties";
     log4cpp::PropertyConfigurator::configure(initFileName);
 
@@ -27,6 +26,7 @@ int main()
     View view(&model, &controller, 600, 400);
     controller.SetView(&view);
     for (;;) {
-    if (!view.tick()) return 0;
+        model.tick ();
+        if (!view.tick()) return 0;
     }
 }
