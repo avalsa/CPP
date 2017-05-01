@@ -27,7 +27,7 @@ public:
 
     void movePlayer(Actor::Direction direction);
 
-    void actPlayer (Actor::Actions action);
+    void actPlayer (Actor::Action action);
 
     const std::vector<Bot> &getBots() const;
 

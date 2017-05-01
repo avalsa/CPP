@@ -8,6 +8,7 @@
 #include "../objects/GameObject.h"
 #include "../model/Model.h"
 #include "../controller/Controller.h"
+#include "Animation.h"
 #include <SFML/Graphics.hpp>
 
 class Controller;
@@ -31,6 +32,8 @@ private:
     sf::RenderWindow window;
     int offsetX;
     int offsetY;
+
+    Animation* _playerAnimation;
 };
 
 

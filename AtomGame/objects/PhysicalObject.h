@@ -11,17 +11,13 @@
 
 class PhysicalObject : public GameObject
 {
-protected:
-    int _x;
-    int _y;
-    int _vx;
-    int _vy;
-    int _sizex;
-    int _sizey;
-    int _ax;
-    int _ay;
-    const int maxSpeed = 30;
 public:
+
+    enum Direction
+    {
+        Up, Down, Left, Right, No
+    };
+
     struct Position;
 
     PhysicalObject (int x, int y, int sizex, int sizey);
@@ -50,14 +46,17 @@ public:
 
     int getAy () const;
 
-    enum Direction
-    {
-        Up, Down, Left, Right, No
-    };
-    enum Actions
-    {
-        Jump, Cover, Shoot, Interact
-    };
+
+protected:
+    int _x;
+    int _y;
+    int _vx;
+    int _vy;
+    int _sizex;
+    int _sizey;
+    int _ax;
+    int _ay;
+    const int maxSpeed = 30;
 };
 
 struct PhysicalObject::Position
@@ -67,6 +66,5 @@ struct PhysicalObject::Position
 
     Position (int x, int y);
 };
-
 
 #endif //ATOMGAME_PHYSICALOBJECT_H

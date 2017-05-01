@@ -4,6 +4,7 @@
 
 
 #include "View.h"
+#include "AnimationFactory.h"
 
 
 log4cpp::Category& View::logger = log4cpp::Category::getInstance(typeid(View).name());
@@ -33,7 +34,7 @@ int View::tick()     // 1 - window is open, 0 - closed, todo also better to make
         controller->onDownKeyPress();
 
     //proccess all objs we know
-    window.clear();
+    window.clear(sf::Color::Blue);
 
     Player player = model->getPlayer();
     offsetX = player.getX(); //for map moving
@@ -51,15 +52,50 @@ int View::tick()     // 1 - window is open, 0 - closed, todo also better to make
                 window.draw(wall);
             }
 
+//here we draw player
+    static bool inversion = false; //because of Direction::No
+    sf::Sprite playerSprite;
+    logger.warn(std::to_string(Actor::Action::Move));
+    logger.warn(std::to_string(player.getAction()));
 
-    sf::CircleShape playerShape(30.f);
-    playerShape.setFillColor(sf::Color::Cyan);
-    playerShape.setPosition(player.getY()-offsetY, player.getX()-offsetX); //yes, so because of rotate
-    window.draw(playerShape);
+    switch (player.getAction())
+    {
+        case Actor::Action::NoAction:
+            if (_playerAnimation->getAnimationType() != Animation::AnimationType::Stand)
+                _playerAnimation->setAnimationType(Animation::AnimationType::Stand);
+            playerSprite = _playerAnimation->getNextSprite(player.getXDirection());
+            break;
+        case Actor::Action::Move:
+            if (_playerAnimation->getAnimationType() != Animation::AnimationType::Move)
+                _playerAnimation->setAnimationType(Animation::AnimationType::Move);
+            playerSprite = _playerAnimation->getNextSprite(player.getXDirection());
+            break;
+        case Actor::Action::Jump:
+            if (_playerAnimation->getAnimationType() != Animation::AnimationType::Jump)
+                _playerAnimation->setAnimationType(Animation::AnimationType::Jump);
+            playerSprite = _playerAnimation->getNextSprite(player.getXDirection());
+            break;
+        default:
+            throw std::exception();
+    }
+    playerSprite.setPosition(player.getY()-offsetY, player.getX()-offsetX); //yes, so because of rotate
+
+    window.draw(playerSprite);
+
+//    sf::Sprite s;
+//
+//    sf::Texture t;
+//    t.loadFromFile("player.gif");
+//
+//    s.setTexture(t);
+//    s.setTextureRect(sf::IntRect(0, 80, 38, 42));
+//    s.setPosition(player.getY()-offsetY, player.getX()-offsetX);
+//    window.draw(s);
+//finish
 
     window.display();
 
-    sf::sleep(sf::milliseconds(100));
+    sf::sleep(sf::milliseconds(10));
     return 1;
 
 }
@@ -77,8 +113,10 @@ View::View(Model *model, Controller *controller, int height, int width):
         controller(controller),
         window(sf::VideoMode(width, height), "AtomGame"),
         offsetX(0),
-        offsetY(0)
+        offsetY(0),
+        _playerAnimation(AnimationFactory::getPlayerAnimation())
 {
+
     sf::View view = window.getDefaultView();
     view.setCenter(0, 0);
     view.rotate(90.f);
@@ -86,3 +124,4 @@ View::View(Model *model, Controller *controller, int height, int width):
     window.setView(view);
     logger.info("View init");
 }
+

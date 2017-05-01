@@ -14,10 +14,14 @@ void Model::tick(){
     int prevX = pos.x;
     int prevY = pos.y;
     pos = canMove (&player, pos);
-    if (player.setOnGround (prevY != pos.y))
-        player.setVelocity (player.getVx (), 0);
+    if (player.setOnGround (prevY != pos.y)) {
+        player.setVelocity(player.getVx(), 0);
+        player.setAction(Actor::Action::NoAction);
+    }
     if (prevX != pos.x)
-        player.setVelocity (0, player.getVy ());
+        player.setVelocity(0, player.getVy());
+    if (prevX != pos.x && prevY != pos.y)
+        player.setAction(Actor::Action::NoAction);
     player.move (pos);
     for (std::vector<PhysicalObject>::iterator i = nonActiveObjs.begin (); i != nonActiveObjs.end (); i++)
     {
@@ -57,7 +61,7 @@ void Model::startGame() {
     if (direction==Actor::Direction::Down) player.move (0, -1);
 }*/
 
-void Model::actPlayer (Actor::Actions action) {}
+void Model::actPlayer (Actor::Action action) {}
 
 bool Model::isPlayerWin() {
     return false;
@@ -67,6 +71,7 @@ Model::Model () : player (0, 0, 10, 10), bots (), nonActiveObjs (), gameField (1
 {
     logger.info("Model init");
     player.setAcceleration (0, -1);
+    player.setAction(Actor::Action::NoAction);
 }
 
 const Player &Model::getPlayer() const {
@@ -88,16 +93,27 @@ const std::vector<PhysicalObject> &Model::getNonActiveObjs () const
 
 void Model::movePlayer (Actor::Direction direction)
 {
-    if (direction == PhysicalObject::Direction::Up)
-    {
-        if (player.isOnGround ())
-            player.setVelocity (player.getAx (), 20);
-    } else if (direction == PhysicalObject::Direction::Right)
-        player.setDx (playerMovementSpeed);
-    else if (direction == PhysicalObject::Direction::Down)
-        player.setDy (-playerMovementSpeed);
-    else if (direction == PhysicalObject::Direction::Left)
-        player.setDx (-playerMovementSpeed);
+    switch(direction) {
+        case PhysicalObject::Direction::Up:
+            if (player.isOnGround()) {
+                player.setVelocity(player.getAx(), 20);
+                player.setAction(Actor::Action::Jump);
+            }
+            break;
+        case PhysicalObject::Direction::Right:
+            player.setDx(playerMovementSpeed);
+            if (player.isOnGround())
+                player.setAction(Actor::Action::Move);
+            break;
+        case PhysicalObject::Direction::Down:
+            player.setDy(-playerMovementSpeed);
+            break;
+        case PhysicalObject::Direction::Left:
+            player.setDx(-playerMovementSpeed);
+            if (player.isOnGround())
+                player.setAction(Actor::Action::Move);
+            break;
+    }
 }
 
 PhysicalObject::Position Model::canMove (PhysicalObject *obj, PhysicalObject::Position position)
