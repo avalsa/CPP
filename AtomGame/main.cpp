@@ -18,14 +18,10 @@ int main()
 
     model.startGame();
 
-//    model.movePlayer(Actor::Direction::Right);
-
-    model.tick();
-
-    Controller controller(&model);
-    View view(&model, &controller, 600, 400);
-    controller.SetView(&view);
+    View view (&model, 600, 400);
+    Controller controller (&model, &view);
     for (;;) {
+        controller.tick ();
         model.tick ();
         if (!view.tick()) return 0;
     }

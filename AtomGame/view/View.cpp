@@ -23,16 +23,6 @@ int View::tick()     // 1 - window is open, 0 - closed, todo also better to make
         }
     }
 
-    //all presses we need
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
-        controller->onRightKeyPress();
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
-        controller->onLeftKeyPress();
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
-        controller->onUpKeyPress();
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
-        controller->onDownKeyPress();
-
     //proccess all objs we know
     window.clear(sf::Color::Blue);
 
@@ -48,39 +38,48 @@ int View::tick()     // 1 - window is open, 0 - closed, todo also better to make
     for (int i = 0; i < x; ++i)
         for (int j = 0; j < y; ++j)
             if (gameField.getCell(i, j)) {
-                wall.setPosition(i * 20.f - offsetY, j * 20.f - offsetX);
+                wall.setPosition (j * 20.f - offsetX, i * 20.f - offsetY);
                 window.draw(wall);
             }
 
 //here we draw player
-    static bool inversion = false; //because of Direction::No
     sf::Sprite playerSprite;
-    logger.warn(std::to_string(Actor::Action::Move));
     logger.warn(std::to_string(player.getAction()));
-
-    switch (player.getAction())
+    if (player.isOnGround ())
     {
-        case Actor::Action::NoAction:
-            if (_playerAnimation->getAnimationType() != Animation::AnimationType::Stand)
-                _playerAnimation->setAnimationType(Animation::AnimationType::Stand);
-            playerSprite = _playerAnimation->getNextSprite(player.getXDirection());
-            break;
-        case Actor::Action::Move:
+        if (player.isMoving ())
+        {
             if (_playerAnimation->getAnimationType() != Animation::AnimationType::Move)
                 _playerAnimation->setAnimationType(Animation::AnimationType::Move);
-            playerSprite = _playerAnimation->getNextSprite(player.getXDirection());
-            break;
-        case Actor::Action::Jump:
-            if (_playerAnimation->getAnimationType() != Animation::AnimationType::Jump)
-                _playerAnimation->setAnimationType(Animation::AnimationType::Jump);
-            playerSprite = _playerAnimation->getNextSprite(player.getXDirection());
-            break;
-        default:
-            throw std::exception();
+            playerSprite = _playerAnimation->getNextSprite (player.getLookDirection ());
+        } else
+        {
+            if (_playerAnimation->getAnimationType () != Animation::AnimationType::Stand)
+                _playerAnimation->setAnimationType (Animation::AnimationType::Stand);
+            playerSprite = _playerAnimation->getNextSprite (player.getLookDirection ());
+        }
+    } else
+    {
+        if (_playerAnimation->getAnimationType () != Animation::AnimationType::Jump)
+            _playerAnimation->setAnimationType (Animation::AnimationType::Jump);
+        playerSprite = _playerAnimation->getNextSprite (player.getLookDirection ());
     }
-    playerSprite.setPosition(player.getY()-offsetY, player.getX()-offsetX); //yes, so because of rotate
+    playerSprite.setPosition (player.getX () - offsetX, player.getY () - offsetY);
 
     window.draw(playerSprite);
+
+
+
+//draw blocks
+    for (std::vector<PhysicalObject *>::const_iterator i = model->getBlocks ().cbegin ();
+         i != model->getBlocks ().cend (); ++i)
+    {
+        sf::RectangleShape obj;
+        obj.setSize (sf::Vector2f ((*i)->getSizex (), (*i)->getSizey ()));
+        obj.setFillColor (sf::Color::Green);
+        obj.setPosition ((*i)->getX () - offsetX, (*i)->getY () - offsetY);
+        window.draw (obj);
+    }
 
 //    sf::Sprite s;
 //
@@ -108,9 +107,8 @@ void View::PlayerWin() {
 
 }
 
-View::View(Model *model, Controller *controller, int height, int width):
+View::View (Model *model, int height, int width) :
         model(model),
-        controller(controller),
         window(sf::VideoMode(width, height), "AtomGame"),
         offsetX(0),
         offsetY(0),
@@ -119,7 +117,6 @@ View::View(Model *model, Controller *controller, int height, int width):
 
     sf::View view = window.getDefaultView();
     view.setCenter(0, 0);
-    view.rotate(90.f);
 
     window.setView(view);
     logger.info("View init");

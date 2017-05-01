@@ -10,48 +10,28 @@ log4cpp::Category& Model::logger = log4cpp::Category::getInstance(typeid(Model).
 
 void Model::tick(){
     logger.info("Model tick");
-    PhysicalObject::Position pos = player.tick ();
-    int prevX = pos.x;
-    int prevY = pos.y;
-    pos = canMove (&player, pos);
-    if (player.setOnGround (prevY != pos.y)) {
-        player.setVelocity(player.getVx(), 0);
-        player.setAction(Actor::Action::NoAction);
-    }
-    if (prevX != pos.x)
-        player.setVelocity(0, player.getVy());
-    if (prevX != pos.x && prevY != pos.y)
-        player.setAction(Actor::Action::NoAction);
-    player.move (pos);
-    for (std::vector<PhysicalObject>::iterator i = nonActiveObjs.begin (); i != nonActiveObjs.end (); i++)
+    for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); i++)
     {
-        pos = i->tick ();
-        prevX = pos.x;
-        prevY = pos.y;
-        pos = canMove (&(*i), pos);
-        if ((prevY != pos.y))
-            i->setVelocity (player.getVx (), 0);
-        if (prevX != pos.x)
-            i->setVelocity (0, player.getVy ());
-        i->move (pos);
+        PhysicalObject::Position pos = (*i)->tick ();
+        tryMove (**i, pos);
     }
-    for (std::vector<Bot>::iterator i = bots.begin (); i != bots.end (); i++)
+    for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); i++)
     {
-        pos = i->tick ();
-        prevX = pos.x;
-        prevY = pos.y;
-        pos = canMove (&(*i), pos);
-        if (i->setOnGround (prevY != pos.y))
-            i->setVelocity (player.getVx (), 0);
-        if (prevX != pos.x)
-            i->setVelocity (0, player.getVy ());
-        i->move (pos);
+        (*i)->processCollisions ();
     }
 }
 
 void Model::startGame() {
-    nonActiveObjs.push_back (PhysicalObject (-10, -11, 1000, 10));
-    nonActiveObjs.push_back (PhysicalObject (100, -10, 10, 100));
+    PhysicalObject *floor = new PhysicalObject (-1000, 11, 100000, 10);
+    blocks.push_back (floor);
+    PhysicalObject *wall = new PhysicalObject (400, -100, 100, 100);
+    wall->setVelocity (-1, 0);
+    blocks.push_back (wall);
+    player->setAcceleration (0, gravity);
+    for (std::vector<Bot *>::const_iterator i = bots.cbegin (); i != bots.cend (); ++i)
+        objs.emplace_back (*i);
+    for (std::vector<PhysicalObject *>::const_iterator i = blocks.cbegin (); i != blocks.cend (); ++i)
+        objs.emplace_back (*i);
 }
 
 /*void Model::movePlayer(Actor::Direction direction) {
@@ -67,18 +47,19 @@ bool Model::isPlayerWin() {
     return false;
 }
 
-Model::Model () : player (0, 0, 10, 10), bots (), nonActiveObjs (), gameField (100, 100)
+Model::Model () : bots (), objs (), gameField (100, 100)
 {
     logger.info("Model init");
-    player.setAcceleration (0, -1);
-    player.setAction(Actor::Action::NoAction);
+    player = new Player (0, -200, 38, 42);
+    objs.emplace_back (player);
 }
 
 const Player &Model::getPlayer() const {
-    return player;
+    return *player;
 }
 
-const std::vector<Bot> &Model::getBots() const {
+const std::vector<Bot *> &Model::getBots () const
+{
     return bots;
 }
 
@@ -86,91 +67,168 @@ const GameField &Model::getGameField() const {
     return gameField;
 }
 
-const std::vector<PhysicalObject> &Model::getNonActiveObjs () const
+const std::vector<PhysicalObject *> &Model::getObjs () const
 {
-    return nonActiveObjs;
+    return objs;
+}
+
+const std::vector<PhysicalObject *> &Model::getBlocks () const
+{
+    return blocks;
 }
 
 void Model::movePlayer (Actor::Direction direction)
 {
     switch(direction) {
         case PhysicalObject::Direction::Up:
-            if (player.isOnGround()) {
-                player.setVelocity(player.getAx(), 20);
-                player.setAction(Actor::Action::Jump);
+            if (player->isOnGround ())
+            {
+                player->setVelocity (player->getVx (), -jumpStrength);
             }
             break;
         case PhysicalObject::Direction::Right:
-            player.setDx(playerMovementSpeed);
-            if (player.isOnGround())
-                player.setAction(Actor::Action::Move);
+            player->addDx (playerMovementSpeed);
+            player->setMoving (true);
+            player->setLookDirection (PhysicalObject::Direction::Right);
             break;
         case PhysicalObject::Direction::Down:
-            player.setDy(-playerMovementSpeed);
+            player->addDy (playerMovementSpeed);
             break;
         case PhysicalObject::Direction::Left:
-            player.setDx(-playerMovementSpeed);
-            if (player.isOnGround())
-                player.setAction(Actor::Action::Move);
+            player->addDx (-playerMovementSpeed);
+            player->setMoving (true);
+            player->setLookDirection (PhysicalObject::Direction::Left);
+            break;
+        case PhysicalObject::Direction::NoDirection:
+            player->setMoving (false);
+            break;
+        default:
             break;
     }
 }
 
-PhysicalObject::Position Model::canMove (PhysicalObject *obj, PhysicalObject::Position position)
+void Model::tryMove (PhysicalObject &obj, PhysicalObject::Position position)
 {
     PhysicalObject::Position ret (position);
-    for (std::vector<PhysicalObject>::const_iterator i = nonActiveObjs.cbegin (); i != nonActiveObjs.cend (); i++)
+    std::vector<PhysicalObject *> collides;
+    for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); i++)
     {
-        if (&(*i) != obj)
+        if (*i != &obj)
         {
-            PhysicalObject::Position pos = collides (*obj, *i, position);
-            if (abs (pos.x - obj->getX ()) < abs (ret.x - obj->getX ()))
-                ret.x = pos.x;
-            if (abs (pos.y - obj->getY ()) < abs (ret.y - obj->getY ()))
-                ret.y = pos.y;
+            std::pair<bool, int> xPos = collidesOnX (obj, **i, position);
+            if (xPos.first)
+            {
+                if (abs (xPos.second - obj.getX ()) < abs (ret.x - obj.getX ()))
+                {
+                    ret.x = xPos.second;
+                    collides.clear ();
+                    collides.push_back (*i);
+                } else if (xPos.second == ret.x)
+                    collides.push_back (*i);
+            }
+        }
+    }
+    for (std::vector<PhysicalObject *>::iterator i = collides.begin (); i != collides.end (); i++)
+    {
+        (*i)->addCollision (&obj, PhysicalObject::Axis::axisX);
+        obj.addCollision (*i, PhysicalObject::Axis::axisX);
+    }
+    collides.clear ();
+    for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); i++)
+    {
+        if (*i != &obj)
+        {
+            std::pair<bool, int> yPos = collidesOnY (obj, **i, position);
+            if (yPos.first)
+            {
+                if (abs (yPos.second - obj.getY ()) < abs (ret.y - obj.getY ()))
+                {
+                    ret.y = yPos.second;
+                    collides.clear ();
+                    collides.push_back (*i);
+                } else if (yPos.second == ret.y)
+                    collides.push_back (*i);
+            }
+        }
+    }
+    for (std::vector<PhysicalObject *>::iterator i = collides.begin (); i != collides.end (); i++)
+    {
+        (*i)->addCollision (&obj, PhysicalObject::Axis::axisY);
+        obj.addCollision (*i, PhysicalObject::Axis::axisY);
+    }
+    obj.move (ret);
+}
+
+std::pair<bool, int>
+Model::collidesOnX (const PhysicalObject &obj1, const PhysicalObject &obj2, PhysicalObject::Position pos)
+{
+    int y11 = obj1.getY ();
+    int y12 = y11 + obj1.getSizey () - 1;
+    int y21 = obj2.getY ();
+    int y22 = y21 + obj2.getSizey () - 1;
+    int x11 = obj1.getX ();
+    //int x12 = x11 + obj1.getSizex () -1;
+    int x21 = obj2.getX ();
+    int x22 = x21 + obj2.getSizex () - 1;
+    std::pair<bool, int> ret (false, pos.x);
+    if (y11 >= y21 && y11 <= y22 || y21 >= y11 && y21 <= y12)
+    {
+        if (x11 > x21)
+        {
+            if (ret.second <= x22 + 1)
+            {
+                ret.second = x22 + 1;
+                ret.first = true;
+            }
+        } else
+        {
+            if (ret.second + obj1.getSizex () >= x21)
+            {
+                ret.second = x21 - obj1.getSizex ();
+                ret.first = true;
+            }
         }
     }
     return ret;
 }
 
-PhysicalObject::Position
-Model::collides (const PhysicalObject &obj1, const PhysicalObject &obj2, PhysicalObject::Position pos)
+std::pair<bool, int>
+Model::collidesOnY (const PhysicalObject &obj1, const PhysicalObject &obj2, PhysicalObject::Position pos)
 {
     int y11 = obj1.getY ();
-    int y12 = y11 + obj1.getSizey ();
+    //int y12 = y11 + obj1.getSizey () -1;
     int y21 = obj2.getY ();
-    int y22 = y21 + obj2.getSizey ();
+    int y22 = y21 + obj2.getSizey () - 1;
     int x11 = obj1.getX ();
-    int x12;
+    int x12 = x11 + obj1.getSizex () - 1;
     int x21 = obj2.getX ();
-    int x22 = x21 + obj2.getSizex ();
-    if (y11 >= y21 && y11 <= y22 || y21 >= y11 && y21 <= y12)
-    {
-        if (pos.x > x11)
-        {
-            if (x21 >= x11 && x21 - obj1.getSizex () <= pos.x)
-                pos.x = x21 - obj1.getSizex () - 1;
-        } else
-        {
-            if (x21 <= x11 && x22 >= pos.x)
-                pos.x = x22 + 1;
-        }
-    }
-    x11 = pos.x;
-    x12 = x11 + obj1.getSizex ();
+    int x22 = x21 + obj2.getSizex () - 1;
+    std::pair<bool, int> ret (false, pos.y);
     if (x11 >= x21 && x11 <= x22 || x21 >= x11 && x21 <= x12)
     {
-        if (pos.y > y11)
+        if (y11 > y21)
         {
-            if (y21 >= y11 && y21 - obj1.getSizey () <= pos.y)
-                pos.y = y21 - obj1.getSizey () - 1;
+            if (ret.second <= y22 + 1)
+            {
+                ret.second = y22 + 1;
+                ret.first = true;
+            }
         } else
         {
-            if (y21 <= y11 && y22 >= pos.y)
-                pos.y = y22 + 1;
+            if (ret.second + obj1.getSizey () >= y21)
+            {
+                ret.second = y21 - obj1.getSizey ();
+                ret.first = true;
+            }
         }
     }
-    return pos;
+    return ret;
+}
+
+Model::~Model ()
+{
+    for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); ++i)
+        delete *i;
 }
 
 

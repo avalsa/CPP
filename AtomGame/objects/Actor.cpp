@@ -4,50 +4,53 @@
 
 #include "Actor.h"
 
-Actor::Actor (int x, int y, int sizex, int sizey) : PhysicalObject (x, y, sizex, sizey), _onGround (true), _dx(0), _dy(0)
+Actor::Actor (int x, int y, int sizex, int sizey) : PhysicalObject (x, y, sizex, sizey), _action (NoAction),
+                                                    lookDirection (Right),
+                                                    moving (false)
 {
 
 }
 
 bool Actor::isOnGround () const
 {
-    return _onGround;
-}
-
-bool Actor::setOnGround (bool onGround)
-{
-    _onGround = onGround;
-    return _onGround;
+    return _blockedY == Down;
 }
 
 PhysicalObject::Position Actor::tick ()
 {
-    PhysicalObject::Position pos = PhysicalObject::tick ();
-    pos.x += _dx;
-    pos.y += _dy;
-    _dx = 0;
-    _dy = 0;
-    return pos;
+    if (_vx != 0 && _dx != 0 && (_dx > 0 == _vx < 0))
+        _vx += _dx > 0 ? 1 : -1;
+    if (_vy != 0 && _dy != 0 && (_dy > 0 == _vy < 0))
+        _vy += _dy > 0 ? 1 : -1;
+
+    return PhysicalObject::tick ();
 }
 
-void Actor::setDx (int dx)
+void Actor::collided (PhysicalObject &source, PhysicalObject::Axis relativeLocation)
 {
-    _dx = dx;
-}
-
-void Actor::setDy (int dy)
-{
-    _dy = dy;
-}
-
-PhysicalObject::Direction Actor::getXDirection () const
-{
-    return (_vx + _dx)>0?Right:((_vx+_dx)<0?Left:No); //bad thing No ? how person can't have direction in what he is looking
-}
-
-PhysicalObject::Direction Actor::getYDirection () const
-{
-    return (_vy + _dy) > 0 ? Up : ((_vy + _dy) < 0 ? Down : No);
+    if (relativeLocation == axisX)
+    {
+        if (source.getX () < _x)
+        {
+            minDX.first = true;
+            minDX.second = source.getVx ();
+        } else
+        {
+            maxDX.first = true;
+            maxDX.second = source.getVx ();
+        }
+    } else
+    {
+        if (source.getY () < _y)
+        {
+            minDY.first = true;
+            minDY.second = source.getVy ();
+        } else
+        {
+            maxDY.first = true;
+            maxDY.second = source.getVy ();
+        }
+    }
 }
 
 void Actor::setAction(Action action) {
@@ -56,4 +59,24 @@ void Actor::setAction(Action action) {
 
 Actor::Action Actor::getAction() const {
     return _action;
+}
+
+PhysicalObject::Direction Actor::getLookDirection () const
+{
+    return lookDirection;
+}
+
+void Actor::setLookDirection (PhysicalObject::Direction direction)
+{
+    lookDirection = direction;
+}
+
+bool Actor::isMoving ()
+{
+    return moving;
+}
+
+void Actor::setMoving (bool moving)
+{
+    Actor::moving = moving;
 }

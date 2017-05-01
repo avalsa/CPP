@@ -16,7 +16,7 @@ const sf::Sprite Animation::getNextSprite(PhysicalObject::Direction direction) {
     _currentFrame += _frameRate;
     FrameSequence* frameSequence = _animations[_animationType];
     if (frameSequence->_FrameCount < _currentFrame) _currentFrame = .0f;
-    log(_currentFrame);
+    //log(_currentFrame);
     logger.warn(std::to_string(_currentFrame));
     static bool isInv;
     if (direction == PhysicalObject::Direction::Right) isInv=0;
@@ -55,8 +55,6 @@ _sprite(), _texture()
     char prefix[80]="view/res/";
     _texture.loadFromFile(strcat(prefix,fileName));
     _sprite.setTexture(_texture);
-
-    _sprite.rotate(90);
 
     switch (files[fileName])
     {

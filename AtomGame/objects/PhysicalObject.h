@@ -5,7 +5,8 @@
 #ifndef ATOMGAME_PHYSICALOBJECT_H
 #define ATOMGAME_PHYSICALOBJECT_H
 
-
+#include <log4cpp/Category.hh>
+#include <typeinfo>
 #include <queue>
 #include "GameObject.h"
 
@@ -15,7 +16,11 @@ public:
 
     enum Direction
     {
-        Up, Down, Left, Right, No
+        Up, Down, Left, Right, NoDirection
+    };
+    enum Axis
+    {
+        axisX, axisY
     };
 
     struct Position;
@@ -46,6 +51,13 @@ public:
 
     int getAy () const;
 
+    void addDx (int _dx);
+
+    void addDy (int _dy);
+
+    void addCollision (PhysicalObject *source, Axis relativeLocation);
+
+    void processCollisions ();
 
 protected:
     int _x;
@@ -56,7 +68,21 @@ protected:
     int _sizey;
     int _ax;
     int _ay;
+    int _dx;
+    int _dy;
+    std::pair<bool, int> minDX;
+    std::pair<bool, int> maxDX;
+    std::pair<bool, int> minDY;
+    std::pair<bool, int> maxDY;
     const int maxSpeed = 30;
+    Direction _blockedX;
+    Direction _blockedY;
+    std::vector<std::pair<PhysicalObject *, PhysicalObject::Axis>> collisions;
+    static log4cpp::Category &logger;
+
+    virtual void collided (PhysicalObject &source, Axis relativeLocation);
+
+
 };
 
 struct PhysicalObject::Position
@@ -64,7 +90,7 @@ struct PhysicalObject::Position
     int x;
     int y;
 
-    Position (int x, int y);
+    Position (int x = 0, int y = 0);
 };
 
 #endif //ATOMGAME_PHYSICALOBJECT_H

@@ -22,10 +22,35 @@ void Controller::onDownKeyPress() {
     model->movePlayer(Actor::Direction::Down);
 }
 
-void Controller::SetView(View* view) {
-    this->view = view;
+void Controller::onNoMovementKeyPress ()
+{
+    model->movePlayer (PhysicalObject::Direction::NoDirection);
 }
 
-Controller::Controller(Model *model): model(model), view(nullptr) {
+
+Controller::Controller (Model *model, View *view) : model (model), view (view)
+{
     logger.info("Controller init");
+}
+
+void Controller::tick ()
+{
+//all presses we need
+    bool movementKeyPressed = false;
+    if (sf::Keyboard::isKeyPressed (sf::Keyboard::Key::Right))
+    {
+        onRightKeyPress ();
+        movementKeyPressed = true;
+    }
+    if (sf::Keyboard::isKeyPressed (sf::Keyboard::Key::Left))
+    {
+        onLeftKeyPress ();
+        movementKeyPressed = true;
+    }
+    if (sf::Keyboard::isKeyPressed (sf::Keyboard::Key::Up))
+        onUpKeyPress ();
+    if (sf::Keyboard::isKeyPressed (sf::Keyboard::Key::Down))
+        onDownKeyPress ();
+    if (!movementKeyPressed)
+        onNoMovementKeyPress ();
 }

@@ -17,6 +17,8 @@ class Model {
 public:
     Model();        //init controller
 
+    ~Model ();
+
     void tick(); //do work of model
 
     bool isPlayerWin();
@@ -29,26 +31,34 @@ public:
 
     void actPlayer (Actor::Action action);
 
-    const std::vector<Bot> &getBots() const;
+    const std::vector<Bot *> &getBots () const;
 
     const GameField &getGameField() const;
 
-    const std::vector<PhysicalObject> &getNonActiveObjs () const;
+    const std::vector<PhysicalObject *> &getBlocks () const;
+
+    const std::vector<PhysicalObject *> &getObjs () const;
 
     const Player &getPlayer() const;
 
 private:
     static log4cpp::Category& logger;
-    Player player;
-    std::vector<Bot> bots;
-    std::vector<PhysicalObject> nonActiveObjs;
+    Player *player;
+    std::vector<Bot *> bots;
+    std::vector<PhysicalObject *> blocks;
+    std::vector<PhysicalObject *> objs; //for movement algorithm standardization
     GameField gameField;
 
-    PhysicalObject::Position canMove (PhysicalObject *obj, PhysicalObject::Position position);
+    void tryMove (PhysicalObject &obj, PhysicalObject::Position position);
 
-    static PhysicalObject::Position
-    collides (const PhysicalObject &obj1, const PhysicalObject &obj2, PhysicalObject::Position pos);
+    static std::pair<bool, int>
+    collidesOnX (const PhysicalObject &obj1, const PhysicalObject &obj2, PhysicalObject::Position pos);
 
+    static std::pair<bool, int>
+    collidesOnY (const PhysicalObject &obj1, const PhysicalObject &obj2, PhysicalObject::Position pos);
+
+    const int gravity = 1;
+    const int jumpStrength = 20;
     const int playerMovementSpeed = 5;
 
 };

@@ -16,7 +16,7 @@ class Controller;
 class View {
 public:
 
-    View(Model*, Controller*, int height, int width);
+    View (Model *, int height, int width);
 
     int tick();
 

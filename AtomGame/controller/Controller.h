@@ -12,7 +12,7 @@ class View;
 class Controller {
 public:
 
-    Controller(Model*);
+    Controller (Model *, View *);
 
     void onRightKeyPress();
 
@@ -22,7 +22,9 @@ public:
 
     void onDownKeyPress();
 
-    void SetView(View*);
+    void onNoMovementKeyPress ();
+
+    void tick ();
 
 private:
     static log4cpp::Category &logger;
