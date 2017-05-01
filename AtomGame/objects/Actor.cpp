@@ -42,10 +42,18 @@ void Actor::setDy (int dy)
 
 PhysicalObject::Direction Actor::getXDirection () const
 {
-    return (_vx + _dx)>0?Right:((_vx+_dx)<0?Left:No);
+    return (_vx + _dx)>0?Right:((_vx+_dx)<0?Left:No); //bad thing No ? how person can't have direction in what he is looking
 }
 
 PhysicalObject::Direction Actor::getYDirection () const
 {
-    return (_vy + _dy)>0?Up:((_vy+_dy)<0?Down:No);
+    return (_vy + _dy) > 0 ? Up : ((_vy + _dy) < 0 ? Down : No);
+}
+
+void Actor::setAction(Action action) {
+    _action = action;
+}
+
+Actor::Action Actor::getAction() const {
+    return _action;
 }

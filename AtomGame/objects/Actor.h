@@ -10,17 +10,16 @@
 
 class Actor : public PhysicalObject
 {
-private:
-
-    bool _onGround;
-
-protected:
-
-    int _dx;
-
-    int _dy;
-
 public:
+
+    enum Action
+    {
+        Jump, Cover, Shoot, Interact, NoAction, Move
+    };
+
+    Action getAction() const;
+
+    void setAction(Action action);
 
     void setDx (int _dx);
 
@@ -37,12 +36,26 @@ public:
     PhysicalObject::Direction getXDirection() const;
 
     PhysicalObject::Direction getYDirection() const;
+
     //virtual void jump() = 0;
 
     //virtual void attack() = 0;
 
 //    void setX(int x) { x_ = x; }
 //    void setY(int y) { y_ = y; }
+
+private:
+
+    bool _onGround;
+    Action _action;
+
+protected:
+
+    int _dx;
+
+    int _dy;
+
+
 };
 
 
