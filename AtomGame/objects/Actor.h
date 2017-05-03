@@ -17,13 +17,13 @@ public:
         Cover, Shoot, Interact, NoAction
     };
 
-    Action getAction() const;
+    Action getAction () const;
 
-    void setAction(Action action);
+    void setAction (Action action);
 
-    Actor (int x, int y, int sizex, int sizey);
+    Actor (int x, int y, int sizeX, int sizeY);
 
-    bool isOnGround() const;
+    bool isOnGround () const;
 
     virtual PhysicalObject::Position tick ();
 

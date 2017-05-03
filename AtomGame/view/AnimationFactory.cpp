@@ -4,11 +4,13 @@
 
 #include "AnimationFactory.h"
 
-AnimationFactory::AnimationFactory() {
+AnimationFactory::AnimationFactory ()
+{
 
 }
 
-Animation* AnimationFactory::getPlayerAnimation(){
+Animation *AnimationFactory::getPlayerAnimation ()
+{
     //todo find a better solution
     static Animation playerAnimation ("player.png", frameRate);
     return &playerAnimation;

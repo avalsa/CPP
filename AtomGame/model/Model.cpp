@@ -6,10 +6,11 @@
 
 #include "Model.h"
 
-log4cpp::Category& Model::logger = log4cpp::Category::getInstance(typeid(Model).name());
+log4cpp::Category &Model::logger = log4cpp::Category::getInstance (typeid (Model).name ());
 
-void Model::tick(){
-    logger.info("Model tick");
+void Model::tick ()
+{
+    logger.info ("Model tick");
     for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); i++)
     {
         PhysicalObject::Position pos = (*i)->tick ();
@@ -21,7 +22,8 @@ void Model::tick(){
     }
 }
 
-void Model::startGame() {
+void Model::startGame ()
+{
     blocks.push_back (PhysicalObject (-1000, 11, 100000, 10));
     PhysicalObject wall (-400, -125, 100, 100);
     wall.setVelocity (1, 0);
@@ -45,17 +47,19 @@ void Model::startGame() {
 
 void Model::actPlayer (Actor::Action action) {}
 
-bool Model::isPlayerWin() {
+bool Model::isPlayerWin ()
+{
     return false;
 }
 
 Model::Model () : bots (), objs (), gameField (100, 100), player (0, -200, 38, 42)
 {
-    logger.info("Model init");
+    logger.info ("Model init");
     objs.emplace_back (&player);
 }
 
-const Player &Model::getPlayer() const {
+const Player &Model::getPlayer () const
+{
     return player;
 }
 
@@ -64,7 +68,8 @@ const std::vector<Bot> &Model::getBots () const
     return bots;
 }
 
-const GameField &Model::getGameField() const {
+const GameField &Model::getGameField () const
+{
     return gameField;
 }
 
@@ -80,7 +85,8 @@ const std::vector<PhysicalObject> &Model::getBlocks () const
 
 void Model::movePlayer (Actor::Direction direction)
 {
-    switch(direction) {
+    switch (direction)
+    {
         case PhysicalObject::Direction::Up:
             if (player.isOnGround ())
             {
@@ -164,13 +170,13 @@ std::pair<bool, int>
 Model::collidesOnX (const PhysicalObject &obj1, const PhysicalObject &obj2, PhysicalObject::Position pos)
 {
     int y11 = obj1.getY ();
-    int y12 = y11 + obj1.getSizey () - 1;
+    int y12 = y11 + obj1.getSizeY () - 1;
     int y21 = obj2.getY ();
-    int y22 = y21 + obj2.getSizey () - 1;
+    int y22 = y21 + obj2.getSizeY () - 1;
     int x11 = obj1.getX ();
-    //int x12 = x11 + obj1.getSizex () -1;
+    //int x12 = x11 + obj1.getSizeX () -1;
     int x21 = obj2.getX ();
-    int x22 = x21 + obj2.getSizex () - 1;
+    int x22 = x21 + obj2.getSizeX () - 1;
     std::pair<bool, int> ret (false, pos.x);
     if (y11 >= y21 && y11 <= y22 || y21 >= y11 && y21 <= y12)
     {
@@ -183,9 +189,9 @@ Model::collidesOnX (const PhysicalObject &obj1, const PhysicalObject &obj2, Phys
             }
         } else
         {
-            if (ret.second + obj1.getSizex () >= x21)
+            if (ret.second + obj1.getSizeX () >= x21)
             {
-                ret.second = x21 - obj1.getSizex ();
+                ret.second = x21 - obj1.getSizeX ();
                 ret.first = true;
             }
         }
@@ -197,13 +203,13 @@ std::pair<bool, int>
 Model::collidesOnY (const PhysicalObject &obj1, const PhysicalObject &obj2, PhysicalObject::Position pos)
 {
     int y11 = obj1.getY ();
-    //int y12 = y11 + obj1.getSizey () -1;
+    //int y12 = y11 + obj1.getSizeY () -1;
     int y21 = obj2.getY ();
-    int y22 = y21 + obj2.getSizey () - 1;
+    int y22 = y21 + obj2.getSizeY () - 1;
     int x11 = obj1.getX ();
-    int x12 = x11 + obj1.getSizex () - 1;
+    int x12 = x11 + obj1.getSizeX () - 1;
     int x21 = obj2.getX ();
-    int x22 = x21 + obj2.getSizex () - 1;
+    int x22 = x21 + obj2.getSizeX () - 1;
     std::pair<bool, int> ret (false, pos.y);
     if (x11 >= x21 && x11 <= x22 || x21 >= x11 && x21 <= x12)
     {
@@ -216,9 +222,9 @@ Model::collidesOnY (const PhysicalObject &obj1, const PhysicalObject &obj2, Phys
             }
         } else
         {
-            if (ret.second + obj1.getSizey () >= y21)
+            if (ret.second + obj1.getSizeY () >= y21)
             {
-                ret.second = y21 - obj1.getSizey ();
+                ret.second = y21 - obj1.getSizeY ();
                 ret.first = true;
             }
         }

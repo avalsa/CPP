@@ -11,7 +11,7 @@
 class Player : public Actor
 {
 public:
-    Player (int x, int y, int sizex, int sizey);
+    Player (int x, int y, int sizeX, int sizeY);
 };
 
 

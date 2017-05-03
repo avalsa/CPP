@@ -7,16 +7,17 @@
 
 #include "GameObject.h"
 
-class GameField : public GameObject {
+class GameField : public GameObject
+{
 public:
 
-    GameField(int width, int height);
+    GameField (int width, int height);
 
-    int getWidth() const;
+    int getWidth () const;
 
-    int getHeight() const;
+    int getHeight () const;
 
-    char getCell(int x, int y);
+    char getCell (int x, int y);
 
 private:
     int width_;

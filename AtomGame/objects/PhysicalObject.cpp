@@ -1,13 +1,9 @@
-//
-// Created by svuatoslav on 4/25/17.
-//
-
 #include "PhysicalObject.h"
 
 log4cpp::Category &PhysicalObject::logger = log4cpp::Category::getInstance (typeid (PhysicalObject).name ());
 
 
-PhysicalObject::PhysicalObject (int x, int y, int sizex, int sizey) : _x (x), _y (y), _sizex (sizex), _sizey (sizey),
+PhysicalObject::PhysicalObject (int x, int y, int sizeX, int sizeY) : _x (x), _y (y), _sizeX (sizeX), _sizeY (sizeY),
                                                                       _vx (0), _vy (0), _ax (0), _ay (0),
                                                                       _blockedX (NoDirection), _blockedY (NoDirection),
                                                                       _dx (0), _dy (0), minDX (false, 0),
@@ -120,14 +116,14 @@ int PhysicalObject::getVy () const
     return _vy;
 }
 
-int PhysicalObject::getSizex () const
+int PhysicalObject::getSizeX () const
 {
-    return _sizex;
+    return _sizeX;
 }
 
-int PhysicalObject::getSizey () const
+int PhysicalObject::getSizeY () const
 {
-    return _sizey;
+    return _sizeY;
 }
 
 int PhysicalObject::getAx () const

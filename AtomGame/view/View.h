@@ -13,27 +13,28 @@
 
 class Controller;
 
-class View {
+class View
+{
 public:
 
     View (Model *, int height, int width);
 
-    int tick();
+    int tick ();
 
-    void ShowGameOver();
+    void ShowGameOver ();
 
-    void PlayerWin();
+    void PlayerWin ();
 
 
 private:
-    static log4cpp::Category& logger;
-    Model* model;
-    Controller* controller;
+    static log4cpp::Category &logger;
+    Model *model;
+    Controller *controller;
     sf::RenderWindow window;
     int offsetX;
     int offsetY;
 
-    Animation* _playerAnimation;
+    Animation *_playerAnimation;
 };
 
 

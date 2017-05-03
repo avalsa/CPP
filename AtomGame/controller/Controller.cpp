@@ -4,22 +4,26 @@
 
 #include "Controller.h"
 
-log4cpp::Category& Controller::logger = log4cpp::Category::getInstance(typeid(Controller).name());
+log4cpp::Category &Controller::logger = log4cpp::Category::getInstance (typeid (Controller).name ());
 
-void Controller::onRightKeyPress() {
-    model->movePlayer(Actor::Direction::Right);
+void Controller::onRightKeyPress ()
+{
+    model->movePlayer (Actor::Direction::Right);
 }
 
-void Controller::onLeftKeyPress() {
-    model->movePlayer(Actor::Direction::Left);
+void Controller::onLeftKeyPress ()
+{
+    model->movePlayer (Actor::Direction::Left);
 }
 
-void Controller::onUpKeyPress() {
-    model->movePlayer(Actor::Direction::Up);
+void Controller::onUpKeyPress ()
+{
+    model->movePlayer (Actor::Direction::Up);
 }
 
-void Controller::onDownKeyPress() {
-    model->movePlayer(Actor::Direction::Down);
+void Controller::onDownKeyPress ()
+{
+    model->movePlayer (Actor::Direction::Down);
 }
 
 void Controller::onNoMovementKeyPress ()
@@ -30,7 +34,7 @@ void Controller::onNoMovementKeyPress ()
 
 Controller::Controller (Model *model, View *view) : model (model), view (view)
 {
-    logger.info("Controller init");
+    logger.info ("Controller init");
 }
 
 void Controller::tick ()

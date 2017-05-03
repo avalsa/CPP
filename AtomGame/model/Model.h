@@ -13,34 +13,35 @@
 #include "../objects/Bot.h"
 #include "../objects/GameField.h"
 
-class Model {
+class Model
+{
 public:
-    Model();        //init controller
+    Model ();        //init controller
 
-    void tick(); //do work of model
+    void tick (); //do work of model
 
-    bool isPlayerWin();
+    bool isPlayerWin ();
 
-    bool isGameOver();
+    bool isGameOver ();
 
-    void startGame();
+    void startGame ();
 
-    void movePlayer(Actor::Direction direction);
+    void movePlayer (Actor::Direction direction);
 
     void actPlayer (Actor::Action action);
 
     const std::vector<Bot> &getBots () const;
 
-    const GameField &getGameField() const;
+    const GameField &getGameField () const;
 
     const std::vector<PhysicalObject> &getBlocks () const;
 
     const std::vector<PhysicalObject *> &getObjs () const;
 
-    const Player &getPlayer() const;
+    const Player &getPlayer () const;
 
 private:
-    static log4cpp::Category& logger;
+    static log4cpp::Category &logger;
     Player player;
     std::vector<Bot> bots;
     std::vector<PhysicalObject> blocks;

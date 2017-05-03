@@ -1,7 +1,3 @@
-//
-// Created by svuatoslav on 4/25/17.
-//
-
 #ifndef ATOMGAME_PHYSICALOBJECT_H
 #define ATOMGAME_PHYSICALOBJECT_H
 
@@ -25,7 +21,7 @@ public:
 
     struct Position;
 
-    PhysicalObject (int x, int y, int sizex, int sizey);
+    PhysicalObject (int x, int y, int sizeX, int sizeY);
 
     void move (Position position);
 
@@ -43,9 +39,9 @@ public:
 
     int getVy () const;
 
-    int getSizex () const;
+    int getSizeX () const;
 
-    int getSizey () const;
+    int getSizeY () const;
 
     int getAx () const;
 
@@ -64,8 +60,8 @@ protected:
     int _y;
     int _vx;
     int _vy;
-    int _sizex;
-    int _sizey;
+    int _sizeX;
+    int _sizeY;
     int _ax;
     int _ay;
     int _dx;

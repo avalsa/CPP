@@ -7,20 +7,22 @@
 
 #include "../model/Model.h"
 #include "../view/View.h"
+
 class View;
 
-class Controller {
+class Controller
+{
 public:
 
     Controller (Model *, View *);
 
-    void onRightKeyPress();
+    void onRightKeyPress ();
 
-    void onLeftKeyPress();
+    void onLeftKeyPress ();
 
-    void onUpKeyPress();
+    void onUpKeyPress ();
 
-    void onDownKeyPress();
+    void onDownKeyPress ();
 
     void onNoMovementKeyPress ();
 

@@ -4,7 +4,7 @@
 
 #include "Actor.h"
 
-Actor::Actor (int x, int y, int sizex, int sizey) : PhysicalObject (x, y, sizex, sizey), _action (NoAction),
+Actor::Actor (int x, int y, int sizeX, int sizeY) : PhysicalObject (x, y, sizeX, sizeY), _action (NoAction),
                                                     lookDirection (Right),
                                                     moving (false)
 {
@@ -75,11 +75,13 @@ void Actor::collided (const PhysicalObject &source, PhysicalObject::Axis relativ
     }
 }
 
-void Actor::setAction(Action action) {
+void Actor::setAction (Action action)
+{
     _action = action;
 }
 
-Actor::Action Actor::getAction() const {
+Actor::Action Actor::getAction () const
+{
     return _action;
 }
 
