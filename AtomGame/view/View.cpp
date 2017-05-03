@@ -38,7 +38,7 @@ int View::tick()     // 1 - window is open, 0 - closed, todo also better to make
     for (int i = 0; i < x; ++i)
         for (int j = 0; j < y; ++j)
             if (gameField.getCell(i, j)) {
-                wall.setPosition (j * 20.f - offsetX, i * 20.f - offsetY);
+                wall.setPosition (j * 20.f - offsetX, -i * 20.f - offsetY);
                 window.draw(wall);
             }
 
@@ -71,13 +71,13 @@ int View::tick()     // 1 - window is open, 0 - closed, todo also better to make
 
 
 //draw blocks
-    for (std::vector<PhysicalObject *>::const_iterator i = model->getBlocks ().cbegin ();
+    for (std::vector<PhysicalObject>::const_iterator i = model->getBlocks ().cbegin ();
          i != model->getBlocks ().cend (); ++i)
     {
         sf::RectangleShape obj;
-        obj.setSize (sf::Vector2f ((*i)->getSizex (), (*i)->getSizey ()));
+        obj.setSize (sf::Vector2f (i->getSizex (), i->getSizey ()));
         obj.setFillColor (sf::Color::Green);
-        obj.setPosition ((*i)->getX () - offsetX, (*i)->getY () - offsetY);
+        obj.setPosition (i->getX () - offsetX, i->getY () - offsetY);
         window.draw (obj);
     }
 

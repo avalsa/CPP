@@ -26,30 +26,52 @@ PhysicalObject::Position Actor::tick ()
     return PhysicalObject::tick ();
 }
 
-void Actor::collided (PhysicalObject &source, PhysicalObject::Axis relativeLocation)
+void Actor::collided (const PhysicalObject &source, PhysicalObject::Axis relativeLocation)
 {
     if (relativeLocation == axisX)
     {
         if (source.getX () < _x)
         {
-            minDX.first = true;
-            minDX.second = source.getVx ();
+            if (minDX.first)
+                minDX.second = std::max (minDX.second, source.getVx ());
+            else
+            {
+                minDX.first = true;
+                minDX.second = source.getVx ();
+            }
         } else
         {
-            maxDX.first = true;
-            maxDX.second = source.getVx ();
+            if (maxDX.first)
+                maxDX.second = std::min (maxDX.second, source.getVx ());
+            else
+            {
+                maxDX.first = true;
+                maxDX.second = source.getVx ();
+            }
         }
+        _dy += source.getVy ();
     } else
     {
         if (source.getY () < _y)
         {
-            minDY.first = true;
-            minDY.second = source.getVy ();
+            if (minDY.first)
+                minDY.second = std::max (minDY.second, source.getVy ());
+            else
+            {
+                minDY.first = true;
+                minDY.second = source.getVy ();
+            }
         } else
         {
-            maxDY.first = true;
-            maxDY.second = source.getVy ();
+            if (maxDY.first)
+                maxDY.second = std::min (maxDY.second, source.getVy ());
+            else
+            {
+                maxDY.first = true;
+                maxDY.second = source.getVy ();
+            }
         }
+        _dx += source.getVx ();
     }
 }
 

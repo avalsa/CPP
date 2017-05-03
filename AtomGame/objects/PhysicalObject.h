@@ -7,7 +7,7 @@
 
 #include <log4cpp/Category.hh>
 #include <typeinfo>
-#include <queue>
+#include <unordered_map>
 #include "GameObject.h"
 
 class PhysicalObject : public GameObject
@@ -77,11 +77,12 @@ protected:
     const int maxSpeed = 30;
     Direction _blockedX;
     Direction _blockedY;
-    std::vector<std::pair<PhysicalObject *, PhysicalObject::Axis>> collisions;
     static log4cpp::Category &logger;
 
-    virtual void collided (PhysicalObject &source, Axis relativeLocation);
+    virtual void collided (const PhysicalObject &source, Axis relativeLocation);
 
+private:
+    std::unordered_map<PhysicalObject *, PhysicalObject::Axis> collisions;
 
 };
 

@@ -2,7 +2,6 @@
 // Created by svuatoslav on 4/25/17.
 //
 
-#include <cstdlib>
 #include "PhysicalObject.h"
 
 log4cpp::Category &PhysicalObject::logger = log4cpp::Category::getInstance (typeid (PhysicalObject).name ());
@@ -141,27 +140,21 @@ int PhysicalObject::getAy () const
     return _ay;
 }
 
-void PhysicalObject::collided (PhysicalObject &source, PhysicalObject::Axis relativeLocation)
+void PhysicalObject::collided (const PhysicalObject &source, PhysicalObject::Axis relativeLocation)
 {
-    if (relativeLocation == axisX)
-        source.addDy (_vy);
-    else
-        source.addDx (_vx);
+
 }
 
 void PhysicalObject::addCollision (PhysicalObject *source, PhysicalObject::Axis relativeLocation)
 {
-    for (std::vector<std::pair<PhysicalObject *, Axis>>::const_iterator i = collisions.cbegin ();
-         i != collisions.cend (); ++i)
-        if (i->first == source)
-            return;
-    collisions.push_back (std::pair<PhysicalObject *, Axis> (source, relativeLocation));
+    if (collisions.find (source) != collisions.end ())
+        return;
+    collisions.insert (std::pair<PhysicalObject *, Axis> (source, relativeLocation));
 }
 
 void PhysicalObject::processCollisions ()
 {
-    //todo Replace with map for better search
-    for (std::vector<std::pair<PhysicalObject *, Axis>>::const_iterator i = collisions.cbegin ();
+    for (std::unordered_map<PhysicalObject *, Axis>::const_iterator i = collisions.cbegin ();
          i != collisions.cend (); ++i)
         collided (*(*i).first, (*i).second);
     collisions.clear ();

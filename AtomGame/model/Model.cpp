@@ -22,16 +22,18 @@ void Model::tick(){
 }
 
 void Model::startGame() {
-    PhysicalObject *floor = new PhysicalObject (-1000, 11, 100000, 10);
-    blocks.push_back (floor);
-    PhysicalObject *wall = new PhysicalObject (400, -100, 100, 100);
-    wall->setVelocity (-1, 0);
+    blocks.push_back (PhysicalObject (-1000, 11, 100000, 10));
+    PhysicalObject wall (-400, -125, 100, 100);
+    wall.setVelocity (1, 0);
     blocks.push_back (wall);
-    player->setAcceleration (0, gravity);
-    for (std::vector<Bot *>::const_iterator i = bots.cbegin (); i != bots.cend (); ++i)
-        objs.emplace_back (*i);
-    for (std::vector<PhysicalObject *>::const_iterator i = blocks.cbegin (); i != blocks.cend (); ++i)
-        objs.emplace_back (*i);
+    PhysicalObject rock (-500, -24, 10, 10);
+    rock.setVelocity (2, 0);
+    blocks.push_back (rock);
+    player.setAcceleration (0, gravity);
+    for (std::vector<Bot>::iterator i = bots.begin (); i != bots.end (); ++i)
+        objs.emplace_back (&(*i));
+    for (std::vector<PhysicalObject>::iterator i = blocks.begin (); i != blocks.end (); ++i)
+        objs.emplace_back (&(*i));
 }
 
 /*void Model::movePlayer(Actor::Direction direction) {
@@ -47,18 +49,17 @@ bool Model::isPlayerWin() {
     return false;
 }
 
-Model::Model () : bots (), objs (), gameField (100, 100)
+Model::Model () : bots (), objs (), gameField (100, 100), player (0, -200, 38, 42)
 {
     logger.info("Model init");
-    player = new Player (0, -200, 38, 42);
-    objs.emplace_back (player);
+    objs.emplace_back (&player);
 }
 
 const Player &Model::getPlayer() const {
-    return *player;
+    return player;
 }
 
-const std::vector<Bot *> &Model::getBots () const
+const std::vector<Bot> &Model::getBots () const
 {
     return bots;
 }
@@ -72,7 +73,7 @@ const std::vector<PhysicalObject *> &Model::getObjs () const
     return objs;
 }
 
-const std::vector<PhysicalObject *> &Model::getBlocks () const
+const std::vector<PhysicalObject> &Model::getBlocks () const
 {
     return blocks;
 }
@@ -81,26 +82,26 @@ void Model::movePlayer (Actor::Direction direction)
 {
     switch(direction) {
         case PhysicalObject::Direction::Up:
-            if (player->isOnGround ())
+            if (player.isOnGround ())
             {
-                player->setVelocity (player->getVx (), -jumpStrength);
+                player.setVelocity (player.getVx (), -jumpStrength);
             }
             break;
         case PhysicalObject::Direction::Right:
-            player->addDx (playerMovementSpeed);
-            player->setMoving (true);
-            player->setLookDirection (PhysicalObject::Direction::Right);
+            player.addDx (playerMovementSpeed);
+            player.setMoving (true);
+            player.setLookDirection (PhysicalObject::Direction::Right);
             break;
         case PhysicalObject::Direction::Down:
-            player->addDy (playerMovementSpeed);
+            player.addDy (playerMovementSpeed);
             break;
         case PhysicalObject::Direction::Left:
-            player->addDx (-playerMovementSpeed);
-            player->setMoving (true);
-            player->setLookDirection (PhysicalObject::Direction::Left);
+            player.addDx (-playerMovementSpeed);
+            player.setMoving (true);
+            player.setLookDirection (PhysicalObject::Direction::Left);
             break;
         case PhysicalObject::Direction::NoDirection:
-            player->setMoving (false);
+            player.setMoving (false);
             break;
         default:
             break;
@@ -225,11 +226,6 @@ Model::collidesOnY (const PhysicalObject &obj1, const PhysicalObject &obj2, Phys
     return ret;
 }
 
-Model::~Model ()
-{
-    for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); ++i)
-        delete *i;
-}
 
 
 
