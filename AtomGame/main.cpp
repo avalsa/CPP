@@ -9,24 +9,21 @@
 #include "view/View.h"
 
 
-int main()
+int main ()
 {
     std::string initFileName = "log4cpp.properties";
-    log4cpp::PropertyConfigurator::configure(initFileName);
+    log4cpp::PropertyConfigurator::configure (initFileName);
 
     Model model;
 
-    model.startGame();
+    model.startGame ();
 
-//    model.movePlayer(Actor::Direction::Right);
-
-    model.tick();
-
-    Controller controller(&model);
-    View view(&model, &controller, 600, 400);
-    controller.SetView(&view);
-    for (;;) {
+    View view (&model, 600, 400);
+    Controller controller (&model, &view);
+    for (;;)
+    {
+        controller.tick ();
         model.tick ();
-        if (!view.tick()) return 0;
+        if (!view.tick ()) return 0;
     }
 }

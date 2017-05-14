@@ -4,10 +4,15 @@
 
 #include "AnimationFactory.h"
 
-AnimationFactory::AnimationFactory() {
+AnimationFactory::AnimationFactory ()
+{
 
 }
 
-Animation* AnimationFactory::getPlayerAnimation(){
-    return new Animation("player.png", frameRate);  //fixme im eating your ram
+Animation *AnimationFactory::getPlayerAnimation ()
+{
+    //todo find a better solution
+    static Animation playerAnimation ("player.png", frameRate);
+    return &playerAnimation;
+    //return new Animation("player.png", frameRate);  //fixme im eating your ram
 }

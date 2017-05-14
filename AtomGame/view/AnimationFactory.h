@@ -8,15 +8,17 @@
 #include "Animation.h"
 #include "../objects/Player.h"
 
-class AnimationFactory {
+class AnimationFactory
+{
 public:
 
-    static Animation* getPlayerAnimation();
+    static Animation *getPlayerAnimation ();
 
 
 private:
     static constexpr float frameRate = 0.05f;
-    AnimationFactory();
+
+    AnimationFactory ();
 };
 
 

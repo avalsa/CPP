@@ -7,7 +7,7 @@ set(SOURCE_FILES View.cpp View.h Animation.cpp Animation.h AnimationFactory.cpp 
 
 add_subdirectory(res)
 
-add_library (Graphics STATIC ${SOURCE_FILES})
+add_library(Graphics STATIC ${SOURCE_FILES})
 
 target_link_libraries(Graphics Objects)
 

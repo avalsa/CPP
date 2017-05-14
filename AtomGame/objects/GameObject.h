@@ -4,6 +4,7 @@
 
 #ifndef ATOMGAME_GAMEOBJECT_H
 #define ATOMGAME_GAMEOBJECT_H
+
 class GameObject
 {
 public:
@@ -27,4 +28,5 @@ public:
 //private:
 //    int id_; //id image to draw it
 };
+
 #endif //ATOMGAME_GAMEOBJECT_H

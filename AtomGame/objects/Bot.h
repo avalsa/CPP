@@ -10,7 +10,7 @@
 
 class Bot : public Actor
 {
-    Bot (int x, int y, int sizex, int sizey);
+    Bot (int x, int y, int sizeX, int sizeY);
 
 };
 
