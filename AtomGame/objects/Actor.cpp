@@ -49,7 +49,6 @@ void Actor::collided (const PhysicalObject &source, PhysicalObject::Axis relativ
                 maxDX.second = source.getVx ();
             }
         }
-        _dy += source.getVy ();
     } else
     {
         if (source.getY () < _y)

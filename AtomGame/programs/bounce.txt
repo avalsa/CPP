@@ -1,0 +1,19 @@
+push 1
+pop x5
+push x6
+push x1
+cmp
+jnz end
+push x7
+push 0
+cmp
+jae end
+push -20
+pop x3
+end:
+push x1
+pop x6
+push x3
+pop x7
+pop
+end

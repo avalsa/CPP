@@ -74,13 +74,13 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
 
 
 //draw blocks
-    for (std::vector<PhysicalObject>::const_iterator i = model->getBlocks ().cbegin ();
+    for (std::vector<PhysicalObject *>::const_iterator i = model->getBlocks ().cbegin ();
          i != model->getBlocks ().cend (); ++i)
     {
         sf::RectangleShape obj;
-        obj.setSize (sf::Vector2f (i->getSizeX (), i->getSizeY ()));
+        obj.setSize (sf::Vector2f ((*i)->getSizeX (), (*i)->getSizeY ()));
         obj.setFillColor (sf::Color::Green);
-        obj.setPosition (i->getX () - offsetX, i->getY () - offsetY);
+        obj.setPosition ((*i)->getX () - offsetX, (*i)->getY () - offsetY);
         window.draw (obj);
     }
 

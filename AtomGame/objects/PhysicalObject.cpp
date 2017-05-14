@@ -16,18 +16,17 @@ void PhysicalObject::move (Position position)
 {
     if (abs (_vx) > abs (_x - position.x))
     {
-        int prevvx = _vx;
-        if (_blockedX != NoDirection && (_vx > 0) != (_x > position.x))
+        PhysicalObject::Direction newBlocked = (_x + _vx) > position.x ? Right : Left;
+        if (_blockedX == newBlocked)
             _vx = position.x - _x;
-        _blockedX = (_x + prevvx) > position.x ? Right : Left;
     } else
         _blockedX = NoDirection;
-    if (abs (_vy) > abs (_y - position.y))
+    if (abs (_vy) != abs (_y - position.y))
     {
-        int prevvy = _vy;
-        if (_blockedY != NoDirection && (_vy > 0) != (_y > position.y))
+        PhysicalObject::Direction newBlocked = (_y + _vy) > position.y ? Down : Up;
+        if (_blockedY == newBlocked)
             _vy = position.y - _y;
-        _blockedY = (_y + prevvy) > position.y ? Down : Up;
+        _blockedY = newBlocked;
     } else
         _blockedY = NoDirection;
     _x = position.x;

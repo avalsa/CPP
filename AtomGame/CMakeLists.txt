@@ -10,6 +10,7 @@ add_subdirectory(view)
 add_subdirectory(controller)
 add_subdirectory(tests)
 
+
 add_custom_target(PROPS SOURCES log4cpp.properties)
 
 set(SOURCE_FILES main.cpp)

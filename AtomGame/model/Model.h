@@ -18,6 +18,8 @@ class Model
 public:
     Model ();        //init controller
 
+    ~Model ();
+
     void tick (); //do work of model
 
     bool isPlayerWin ();
@@ -34,7 +36,7 @@ public:
 
     const GameField &getGameField () const;
 
-    const std::vector<PhysicalObject> &getBlocks () const;
+    const std::vector<PhysicalObject *> &getBlocks () const;
 
     const std::vector<PhysicalObject *> &getObjs () const;
 
@@ -44,7 +46,7 @@ private:
     static log4cpp::Category &logger;
     Player player;
     std::vector<Bot> bots;
-    std::vector<PhysicalObject> blocks;
+    std::vector<PhysicalObject *> blocks;
     std::vector<PhysicalObject *> objs; //for movement algorithm standardization
     GameField gameField;
 

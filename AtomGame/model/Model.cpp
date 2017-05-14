@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "Model.h"
+#include "../objects/ProgrammableObject.h"
 
 log4cpp::Category &Model::logger = log4cpp::Category::getInstance (typeid (Model).name ());
 
@@ -24,26 +25,24 @@ void Model::tick ()
 
 void Model::startGame ()
 {
-    blocks.push_back (PhysicalObject (-1000, 11, 100000, 10));
-    PhysicalObject wall (-400, -125, 100, 100);
-    wall.setVelocity (1, 0);
+    blocks.push_back (new PhysicalObject (-1000, 11, 100000, 10));
+    PhysicalObject *wall = new PhysicalObject (-400, -125, 100, 100);
+    wall->setVelocity (1, 0);
     blocks.push_back (wall);
-    PhysicalObject rock (-500, -24, 10, 10);
-    rock.setVelocity (2, 0);
+    PhysicalObject *rock = new PhysicalObject (-500, -24, 10, 10);
+    rock->setVelocity (2, 0);
     blocks.push_back (rock);
+    blocks.push_back (new ProgrammableObject (0, 0, 10, 10, "programs/bounce.bit"));
+    PhysicalObject *platform = new ProgrammableObject (50, -5, 50, 10, "programs/upDown.bit");
+    platform->setVelocity (0, -5);
+    blocks.push_back (platform);
+
     player.setAcceleration (0, gravity);
     for (std::vector<Bot>::iterator i = bots.begin (); i != bots.end (); ++i)
         objs.emplace_back (&(*i));
-    for (std::vector<PhysicalObject>::iterator i = blocks.begin (); i != blocks.end (); ++i)
-        objs.emplace_back (&(*i));
+    for (std::vector<PhysicalObject *>::iterator i = blocks.begin (); i != blocks.end (); ++i)
+        objs.emplace_back (*i);
 }
-
-/*void Model::movePlayer(Actor::Direction direction) {
-    if (direction==Actor::Direction::Right) player.move (1, 0);//todo add dependency on speed or smth more interesting
-    if (direction==Actor::Direction::Left) player.move (-1, 0);
-    if (direction==Actor::Direction::Up) player.move (0, 1);
-    if (direction==Actor::Direction::Down) player.move (0, -1);
-}*/
 
 void Model::actPlayer (Actor::Action action) {}
 
@@ -78,7 +77,7 @@ const std::vector<PhysicalObject *> &Model::getObjs () const
     return objs;
 }
 
-const std::vector<PhysicalObject> &Model::getBlocks () const
+const std::vector<PhysicalObject *> &Model::getBlocks () const
 {
     return blocks;
 }
@@ -230,6 +229,12 @@ Model::collidesOnY (const PhysicalObject &obj1, const PhysicalObject &obj2, Phys
         }
     }
     return ret;
+}
+
+Model::~Model ()
+{
+    for (std::vector<PhysicalObject *>::const_iterator i = blocks.cbegin (); i != blocks.cend (); i++)
+        delete *i;
 }
 
 
