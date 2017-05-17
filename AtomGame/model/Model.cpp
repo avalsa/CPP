@@ -27,10 +27,10 @@ void Model::startGame ()
 {
     blocks.push_back (new PhysicalObject (-1000, 11, 100000, 10));
     PhysicalObject *wall = new PhysicalObject (-400, -125, 100, 100);
-    wall->setVelocity (1, 0);
+    wall->setVelocity (-1, 0);
     blocks.push_back (wall);
     PhysicalObject *rock = new PhysicalObject (-500, -24, 10, 10);
-    rock->setVelocity (2, 0);
+    rock->setVelocity (-2, 0);
     blocks.push_back (rock);
     blocks.push_back (new ProgrammableObject (0, 0, 10, 10, "programs/bounce.bit"));
     PhysicalObject *platform = new ProgrammableObject (50, -5, 50, 10, "programs/upDown.bit");
