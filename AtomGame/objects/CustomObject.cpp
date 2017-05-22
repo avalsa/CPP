@@ -2,18 +2,16 @@
 // Created by svuatoslav on 5/14/17.
 //
 
-#include "ProgrammableObject.h"
+#include "CustomObject.h"
 #include "tinyxml2.h"
 
-ProgrammableObject::ProgrammableObject (int x, int y, int sizeX, int sizeY, const char *file) : PhysicalObject (x, y,
-                                                                                                                sizeX,
-                                                                                                                sizeY)
+CustomObject::CustomObject (int x, int y, int sizeX, int sizeY, const char *file) : PhysicalObject (x, y, sizeX, sizeY),
+                                                                                    proc (nullptr)
 {
     tinyxml2::XMLDocument settings;
     if (int err = settings.LoadFile (file))
     {
         logger.warn ("Failed to load settings from \"%s\", errorID = %d", file, err);
-        //return;
     } else
     {
         logger.info ("\"%s\" parsed", file);
@@ -24,11 +22,24 @@ ProgrammableObject::ProgrammableObject (int x, int y, int sizeX, int sizeY, cons
         {
             if (const char *prog = script->Attribute ("file"))
             {
-                std::ifstream in (prog, std::ios_base::binary);
-                if (proc.load (in))
-                    logger.info ("Loaded program from \"%s\"", file);
-                else
-                    logger.warn ("Failed to load program from \"%s\"", file);
+                proc = new (std::nothrow) VCPU;
+                if (proc)
+                {
+                    std::ifstream in (prog, std::ios_base::binary);
+                    if (proc->load (in))
+                        logger.info ("Loaded program from \"%s\"", prog);
+                    else
+                    {
+                        logger.warn ("Failed to load program from \"%s\"", prog);
+                        delete proc;
+                        proc = nullptr;
+                    }
+                } else
+                {
+                    logger.error ("Out of memory, aborting");
+                    abort ();
+                }
+
             }
         }
         if (tinyxml2::XMLElement *coordinates = block->FirstChildElement ("Place"))
@@ -62,21 +73,44 @@ ProgrammableObject::ProgrammableObject (int x, int y, int sizeX, int sizeY, cons
     }
 }
 
-PhysicalObject::Position ProgrammableObject::tick ()
+PhysicalObject::Position CustomObject::tick ()
 {
-    proc.setReg (_x, 0);
-    proc.setReg (_y, 1);
-    proc.setReg (_vx, 2);
-    proc.setReg (_vy, 3);
-    proc.setReg (_ax, 4);
-    proc.setReg (_ay, 5);
-    proc.execute ();
-    proc.reset ();
-    _x = proc.getReg (0);
-    _y = proc.getReg (1);
-    _vx = proc.getReg (2);
-    _vy = proc.getReg (3);
-    _ax = proc.getReg (4);
-    _ay = proc.getReg (5);
+    if (proc)
+    {
+        proc->setReg (_x, 0);
+        proc->setReg (_y, 1);
+        proc->setReg (_vx, 2);
+        proc->setReg (_vy, 3);
+        proc->setReg (_ax, 4);
+        proc->setReg (_ay, 5);
+        proc->execute ();
+        proc->reset ();
+        _x = proc->getReg (0);
+        _y = proc->getReg (1);
+        _vx = proc->getReg (2);
+        _vy = proc->getReg (3);
+        _ax = proc->getReg (4);
+        _ay = proc->getReg (5);
+    }
     return PhysicalObject::tick ();
+}
+
+CustomObject::~CustomObject ()
+{
+    delete proc;
+}
+
+CustomObject CustomObject::clone () const
+{
+    CustomObject obj (*this);
+    obj.proc = new (std::nothrow) VCPU (*(this->proc));
+    if (obj.proc == nullptr)
+    {
+        logger.error ("Out of memory, aborting");
+        abort ();
+    }
+}
+
+CustomObject::CustomObject (const CustomObject &that) : PhysicalObject (that._x, that._y, that._sizeX, that._sizeY)
+{
 }

@@ -5,7 +5,7 @@
 #include <memory>
 
 #include "Model.h"
-#include "../objects/ProgrammableObject.h"
+#include "../objects/CustomObject.h"
 
 log4cpp::Category &Model::logger = log4cpp::Category::getInstance (typeid (Model).name ());
 
@@ -32,8 +32,8 @@ void Model::startGame ()
     PhysicalObject *rock = new PhysicalObject (-500, -24, 10, 10);
     rock->setVelocity (2, 0);
     blocks.push_back (rock);
-    blocks.push_back (new ProgrammableObject (0, 0, 10, 10, "blocks/bouncy.xml"));
-    PhysicalObject *platform = new ProgrammableObject (50, -5, 50, 10, "blocks/upDown.xml");
+    blocks.push_back (new CustomObject (0, 0, 10, 10, "blocks/bouncy.xml"));
+    PhysicalObject *platform = new CustomObject (50, -5, 50, 10, "blocks/upDown.xml");
     platform->setVelocity (0, -5);
     blocks.push_back (platform);
 
