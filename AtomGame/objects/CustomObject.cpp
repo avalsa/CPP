@@ -5,9 +5,15 @@
 #include "CustomObject.h"
 #include "tinyxml2.h"
 
-CustomObject::CustomObject (int x, int y, int sizeX, int sizeY, const char *file) : PhysicalObject (x, y, sizeX, sizeY),
-                                                                                    proc (nullptr)
+CustomObject::CustomObject (int x, int y, int sizeX, int sizeY, const char *file, BlockType type) : PhysicalObject (x,
+                                                                                                                    y,
+                                                                                                                    sizeX,
+                                                                                                                    sizeY,
+                                                                                                                    type),
+                                                                                                    proc (nullptr)
 {
+    if (file == nullptr)
+        return;
     tinyxml2::XMLDocument settings;
     if (int err = settings.LoadFile (file))
     {

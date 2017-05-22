@@ -6,6 +6,7 @@
 
 #include "Model.h"
 #include "../objects/CustomObject.h"
+#include "../objects/Teleporter.h"
 
 log4cpp::Category &Model::logger = log4cpp::Category::getInstance (typeid (Model).name ());
 
@@ -27,13 +28,13 @@ void Model::startGame ()
 {
     blocks.push_back (new PhysicalObject (-1000, 11, 100000, 10));
     blocks.push_back (new PhysicalObject (-10, -10, 20, 5, PhysicalObject::BlockType::Respawn));
-    PhysicalObject *wall = new PhysicalObject (-400, -125, 100, 100);
+    PhysicalObject *wall = new Teleporter (-400, -125, 100, 100, 0, -1000);
     wall->setVelocity (1, 0);
     blocks.push_back (wall);
     PhysicalObject *rock = new PhysicalObject (-500, -24, 10, 10, PhysicalObject::BlockType::Deadly);
     rock->setVelocity (2, 0);
     blocks.push_back (rock);
-    blocks.push_back (new CustomObject (-10, 0, 10, 10, "blocks/bouncy.xml"));
+    blocks.push_back (new CustomObject (-20, 0, 10, 10, "blocks/bouncy.xml"));
     PhysicalObject *platform = new CustomObject (50, -5, 50, 10, "blocks/upDown.xml");
     platform->setVelocity (0, -5);
     blocks.push_back (platform);

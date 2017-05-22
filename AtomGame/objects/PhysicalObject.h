@@ -61,6 +61,8 @@ public:
 
     BlockType type () const;
 
+    virtual BlockType getClass () const;
+
 protected:
     int _x;
     int _y;
@@ -81,7 +83,7 @@ protected:
     Direction _blockedY;
     static log4cpp::Category &logger;
 
-    virtual void collided (const PhysicalObject &source, Axis relativeLocation);
+    virtual void collided (const PhysicalObject *source, Axis relativeLocation);
 
 private:
     std::unordered_map<PhysicalObject *, PhysicalObject::Axis> collisions;

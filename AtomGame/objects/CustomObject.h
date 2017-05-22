@@ -13,9 +13,9 @@ private:
 
     CustomObject (const CustomObject &);
 public:
-    CustomObject (int x, int y, int sizeX, int sizeY, const char *file);
+    CustomObject (int x, int y, int sizeX, int sizeY, const char *file = nullptr, BlockType type = Solid);
 
-    ~CustomObject ();
+    virtual ~CustomObject ();
 
     CustomObject clone () const;
 

@@ -148,7 +148,7 @@ int PhysicalObject::getAy () const
     return _ay;
 }
 
-void PhysicalObject::collided (const PhysicalObject &source, PhysicalObject::Axis relativeLocation)
+void PhysicalObject::collided (const PhysicalObject *source, PhysicalObject::Axis relativeLocation)
 {
 
 }
@@ -164,13 +164,18 @@ void PhysicalObject::processCollisions ()
 {
     for (std::unordered_map<PhysicalObject *, Axis>::const_iterator i = collisions.cbegin ();
          i != collisions.cend (); ++i)
-        collided (*(*i).first, (*i).second);
+        collided (i->first, i->second);
     collisions.clear ();
 }
 
 PhysicalObject::BlockType PhysicalObject::type () const
 {
     return _type;
+}
+
+PhysicalObject::BlockType PhysicalObject::getClass () const
+{
+    return Solid;
 }
 
 PhysicalObject::Position::Position (int x, int y) : x (x), y (y)
