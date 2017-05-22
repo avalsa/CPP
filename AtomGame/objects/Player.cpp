@@ -36,8 +36,8 @@ void Player::collided (const PhysicalObject *source, PhysicalObject::Axis relati
             } else
                 logger.warn ("Block type mismatch encountered");
             break;
-        case PhysicalObject::BlockType::TransDimensionalPortal :
-            if (source->getClass () == TransDimensionalPortal)
+        case PhysicalObject::BlockType::MapChange :
+            if (source->getClass () == MapChange)
             {
                 //todo
             } else

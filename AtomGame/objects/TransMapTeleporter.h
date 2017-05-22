@@ -11,8 +11,11 @@
 class TransMapTeleporter : public Teleporter
 {
 public:
-    TransMapTeleporter (int x, int y, int sizeX, int sizeY, int destX, int destY, const char *destMap,
-                        const char *file = nullptr);
+    TransMapTeleporter (int x, int y, int sizeX, int sizeY, const char *file);
+
+    TransMapTeleporter (int x, int y, int sizeX, int sizeY, tinyxml2::XMLElement *block);
+
+    TransMapTeleporter (int x, int y, int sizeX, int sizeY, int destX, int destY, const char *destMap);
 
     virtual ~TransMapTeleporter ();
 
@@ -22,6 +25,9 @@ private:
     char *_destination;
 
     virtual BlockType getClass () const;
+
+protected:
+    void load (tinyxml2::XMLElement *block);
 };
 
 

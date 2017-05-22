@@ -4,6 +4,7 @@
 #include <log4cpp/Category.hh>
 #include <typeinfo>
 #include <unordered_map>
+#include <tinyxml2.h>
 #include "GameObject.h"
 
 class PhysicalObject : public GameObject
@@ -20,7 +21,7 @@ public:
     };
     enum BlockType
     {
-        Solid, Deadly, Respawn, Portal, TransDimensionalPortal, Player
+        Solid, Deadly, Respawn, Portal, MapChange, Player
     };
 
     struct Position;
@@ -84,6 +85,8 @@ protected:
     static log4cpp::Category &logger;
 
     virtual void collided (const PhysicalObject *source, Axis relativeLocation);
+
+    void setType (const BlockType type);
 
 private:
     std::unordered_map<PhysicalObject *, PhysicalObject::Axis> collisions;

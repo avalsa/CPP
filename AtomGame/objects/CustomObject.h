@@ -12,8 +12,16 @@ private:
     VCPU *proc;
 
     CustomObject (const CustomObject &);
+
+protected:
+
+    void load (tinyxml2::XMLElement *block);
 public:
-    CustomObject (int x, int y, int sizeX, int sizeY, const char *file = nullptr, BlockType type = Solid);
+    CustomObject (int x, int y, int sizeX, int sizeY, const char *file);
+
+    CustomObject (int x, int y, int sizeX, int sizeY, tinyxml2::XMLElement *block = nullptr);
+
+    CustomObject (int x, int y, int sizeX, int sizeY, BlockType type);
 
     virtual ~CustomObject ();
 

@@ -34,7 +34,7 @@ void Model::startGame ()
     PhysicalObject *rock = new PhysicalObject (-500, -24, 10, 10, PhysicalObject::BlockType::Deadly);
     rock->setVelocity (2, 0);
     blocks.push_back (rock);
-    blocks.push_back (new CustomObject (-20, 0, 10, 10, "blocks/bouncy.xml"));
+    blocks.push_back (new Teleporter (-20, 0, 10, 10, "blocks/bouncy.xml"));
     PhysicalObject *platform = new CustomObject (50, -5, 50, 10, "blocks/upDown.xml");
     platform->setVelocity (0, -5);
     blocks.push_back (platform);

@@ -1,5 +1,6 @@
 <?xml version="1.0" ?>
-<Block>
+<Block Type="Portal">
     <Script file="blocks/programs/bounce.bit"/>
     <Acceleration Y="1"/>
+    <Portal X="0" Y="-2000"/>
 </Block>

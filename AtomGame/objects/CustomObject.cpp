@@ -5,12 +5,11 @@
 #include "CustomObject.h"
 #include "tinyxml2.h"
 
-CustomObject::CustomObject (int x, int y, int sizeX, int sizeY, const char *file, BlockType type) : PhysicalObject (x,
-                                                                                                                    y,
-                                                                                                                    sizeX,
-                                                                                                                    sizeY,
-                                                                                                                    type),
-                                                                                                    proc (nullptr)
+CustomObject::CustomObject (int x, int y, int sizeX, int sizeY, const char *file) : PhysicalObject (x,
+                                                                                                    y,
+                                                                                                    sizeX,
+                                                                                                    sizeY),
+                                                                                    proc (nullptr)
 {
     if (file == nullptr)
         return;
@@ -23,60 +22,7 @@ CustomObject::CustomObject (int x, int y, int sizeX, int sizeY, const char *file
         logger.info ("\"%s\" parsed", file);
     }
     if (tinyxml2::XMLElement *block = settings.FirstChildElement ("Block"))
-    {
-        if (tinyxml2::XMLElement *script = block->FirstChildElement ("Script"))
-        {
-            if (const char *prog = script->Attribute ("file"))
-            {
-                proc = new (std::nothrow) VCPU;
-                if (proc)
-                {
-                    std::ifstream in (prog, std::ios_base::binary);
-                    if (proc->load (in))
-                        logger.info ("Loaded program from \"%s\"", prog);
-                    else
-                    {
-                        logger.warn ("Failed to load program from \"%s\"", prog);
-                        delete proc;
-                        proc = nullptr;
-                    }
-                } else
-                {
-                    logger.error ("Out of memory, aborting");
-                    abort ();
-                }
-
-            }
-        }
-        if (tinyxml2::XMLElement *coordinates = block->FirstChildElement ("Place"))
-        {
-            if (coordinates->Attribute ("X"))
-                _x = coordinates->IntAttribute ("X");
-            if (coordinates->Attribute ("Y"))
-                _y = coordinates->IntAttribute ("Y");
-        }
-        if (tinyxml2::XMLElement *size = block->FirstChildElement ("Size"))
-        {
-            if (size->Attribute ("X"))
-                _sizeX = size->IntAttribute ("X");
-            if (size->Attribute ("Y"))
-                _sizeY = size->IntAttribute ("Y");
-        }
-        if (tinyxml2::XMLElement *velocity = block->FirstChildElement ("Velocity"))
-        {
-            if (velocity->Attribute ("X"))
-                _vx = velocity->IntAttribute ("X");
-            if (velocity->Attribute ("Y"))
-                _vy = velocity->IntAttribute ("Y");
-        }
-        if (tinyxml2::XMLElement *acceleration = block->FirstChildElement ("Acceleration"))
-        {
-            if (acceleration->Attribute ("X"))
-                _ax = acceleration->IntAttribute ("X");
-            if (acceleration->Attribute ("Y"))
-                _ay = acceleration->IntAttribute ("Y");
-        }
-    }
+        load (block);
 }
 
 PhysicalObject::Position CustomObject::tick ()
@@ -117,6 +63,93 @@ CustomObject CustomObject::clone () const
     }
 }
 
-CustomObject::CustomObject (const CustomObject &that) : PhysicalObject (that._x, that._y, that._sizeX, that._sizeY)
+CustomObject::CustomObject (const CustomObject &that) : PhysicalObject (that._x, that._y, that._sizeX, that._sizeY),
+                                                        proc (
+                                                                nullptr)
+{
+}
+
+CustomObject::CustomObject (int x, int y, int sizeX, int sizeY, tinyxml2::XMLElement *block) : PhysicalObject (x, y,
+                                                                                                               sizeX,
+                                                                                                               sizeY),
+                                                                                               proc (nullptr)
+{
+    if (block == nullptr)
+        return;
+    load (block);
+}
+
+void CustomObject::load (tinyxml2::XMLElement *block)
+{
+    if (tinyxml2::XMLElement *script = block->FirstChildElement ("Script"))
+    {
+        if (const char *prog = script->Attribute ("file"))
+        {
+            proc = new (std::nothrow) VCPU;
+            if (proc)
+            {
+                std::ifstream in (prog, std::ios_base::binary);
+                if (proc->load (in))
+                    logger.info ("Loaded program from \"%s\"", prog);
+                else
+                {
+                    logger.warn ("Failed to load program from \"%s\"", prog);
+                    delete proc;
+                    proc = nullptr;
+                }
+            } else
+            {
+                logger.error ("Out of memory, aborting");
+                abort ();
+            }
+
+        }
+    }
+    if (tinyxml2::XMLElement *coordinates = block->FirstChildElement ("Place"))
+    {
+        if (coordinates->Attribute ("X"))
+            _x = coordinates->IntAttribute ("X");
+        if (coordinates->Attribute ("Y"))
+            _y = coordinates->IntAttribute ("Y");
+    }
+    if (tinyxml2::XMLElement *size = block->FirstChildElement ("Size"))
+    {
+        if (size->Attribute ("X"))
+            _sizeX = size->IntAttribute ("X");
+        if (size->Attribute ("Y"))
+            _sizeY = size->IntAttribute ("Y");
+    }
+    if (tinyxml2::XMLElement *velocity = block->FirstChildElement ("Velocity"))
+    {
+        if (velocity->Attribute ("X"))
+            _vx = velocity->IntAttribute ("X");
+        if (velocity->Attribute ("Y"))
+            _vy = velocity->IntAttribute ("Y");
+    }
+    if (tinyxml2::XMLElement *acceleration = block->FirstChildElement ("Acceleration"))
+    {
+        if (acceleration->Attribute ("X"))
+            _ax = acceleration->IntAttribute ("X");
+        if (acceleration->Attribute ("Y"))
+            _ay = acceleration->IntAttribute ("Y");
+    }
+    if (const char *type = block->Attribute ("Type"))
+    {
+        if (strcmp (type, "Deadly") == 0)
+            setType (Deadly);
+        else if (strcmp (type, "Respawn") == 0)
+            setType (Respawn);
+        else if (strcmp (type, "Portal") == 0)
+            setType (Portal);
+        else if (strcmp (type, "MapChange") == 0)
+            setType (MapChange);
+    }
+}
+
+CustomObject::CustomObject (int x, int y, int sizeX, int sizeY, PhysicalObject::BlockType type) : PhysicalObject (x, y,
+                                                                                                                  sizeX,
+                                                                                                                  sizeY,
+                                                                                                                  type),
+                                                                                                  proc (nullptr)
 {
 }

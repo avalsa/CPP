@@ -93,7 +93,7 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
             case PhysicalObject::Portal:
                 obj.setFillColor (sf::Color::Cyan);
                 break;
-            case PhysicalObject::TransDimensionalPortal:
+            case PhysicalObject::MapChange:
                 obj.setFillColor (sf::Color::Magenta);
                 break;
             case PhysicalObject::Player:

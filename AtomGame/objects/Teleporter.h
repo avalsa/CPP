@@ -13,8 +13,15 @@ class Teleporter : public CustomObject
 private:
     int _destX;
     int _destY;
+
+protected:
+    void load (tinyxml2::XMLElement *block);
 public:
-    Teleporter (int x, int y, int sizeX, int sizeY, int destX, int destY, const char *file = nullptr);
+    Teleporter (int x, int y, int sizeX, int sizeY, int destX, int destY);
+
+    Teleporter (int x, int y, int sizeX, int sizeY, const char *file);
+
+    Teleporter (int x, int y, int sizeX, int sizeY, tinyxml2::XMLElement *block);
 
     int getDestX ();
 
@@ -23,7 +30,7 @@ public:
     virtual BlockType getClass () const;
 
 protected:
-    Teleporter (int x, int y, int sizeX, int sizeY, int destX, int destY, BlockType type, const char *file = nullptr);
+    Teleporter (int x, int y, int sizeX, int sizeY, int destX, int destY, BlockType type);
 };
 
 
