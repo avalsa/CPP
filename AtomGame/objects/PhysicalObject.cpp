@@ -3,12 +3,14 @@
 log4cpp::Category &PhysicalObject::logger = log4cpp::Category::getInstance (typeid (PhysicalObject).name ());
 
 
-PhysicalObject::PhysicalObject (int x, int y, int sizeX, int sizeY) : _x (x), _y (y), _sizeX (sizeX), _sizeY (sizeY),
-                                                                      _vx (0), _vy (0), _ax (0), _ay (0),
-                                                                      _blockedX (NoDirection), _blockedY (NoDirection),
-                                                                      _dx (0), _dy (0), minDX (false, 0),
-                                                                      maxDX (false, 0),
-                                                                      minDY (false, 0), maxDY (false, 0)
+PhysicalObject::PhysicalObject (int x, int y, int sizeX, int sizeY, BlockType type) : _x (x), _y (y), _sizeX (sizeX),
+                                                                                      _sizeY (sizeY),
+                                                                                      _vx (0), _vy (0), _ax (0), _ay (0),
+                                                                                      _blockedX (NoDirection), _blockedY (NoDirection),
+                                                                                      _dx (0), _dy (0), minDX (false, 0),
+                                                                                      maxDX (false, 0),
+                                                                                      minDY (false, 0),
+                                                                                      maxDY (false, 0), _type (type)
 {
 }
 
@@ -164,6 +166,11 @@ void PhysicalObject::processCollisions ()
          i != collisions.cend (); ++i)
         collided (*(*i).first, (*i).second);
     collisions.clear ();
+}
+
+PhysicalObject::BlockType PhysicalObject::type () const
+{
+    return _type;
 }
 
 PhysicalObject::Position::Position (int x, int y) : x (x), y (y)

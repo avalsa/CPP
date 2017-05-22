@@ -79,7 +79,28 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
     {
         sf::RectangleShape obj;
         obj.setSize (sf::Vector2f ((*i)->getSizeX (), (*i)->getSizeY ()));
-        obj.setFillColor (sf::Color::Green);
+        switch ((*i)->type ())
+        {
+            case PhysicalObject::BlockType::Solid:
+                obj.setFillColor (sf::Color::Green);
+                break;
+            case PhysicalObject::Deadly:
+                obj.setFillColor (sf::Color::Black);
+                break;
+            case PhysicalObject::Respawn:
+                obj.setFillColor (sf::Color::Yellow);
+                break;
+            case PhysicalObject::Portal:
+                obj.setFillColor (sf::Color::Cyan);
+                break;
+            case PhysicalObject::TransDimensionalPortal:
+                obj.setFillColor (sf::Color::Magenta);
+                break;
+            case PhysicalObject::Player:
+                obj.setFillColor (sf::Color::Transparent);
+                break;
+        }
+
         obj.setPosition ((*i)->getX () - offsetX, (*i)->getY () - offsetY);
         window.draw (obj);
     }

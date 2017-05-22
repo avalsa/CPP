@@ -12,6 +12,16 @@ class Player : public Actor
 {
 public:
     Player (int x, int y, int sizeX, int sizeY);
+
+    void respawn ();
+
+private:
+    int _respX;
+    int _respY;
+
+protected:
+    virtual void collided (const PhysicalObject &source, Axis relativeLocation);
+
 };
 
 

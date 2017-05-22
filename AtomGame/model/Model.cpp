@@ -26,20 +26,21 @@ void Model::tick ()
 void Model::startGame ()
 {
     blocks.push_back (new PhysicalObject (-1000, 11, 100000, 10));
+    blocks.push_back (new PhysicalObject (-10, -10, 20, 5, PhysicalObject::BlockType::Respawn));
     PhysicalObject *wall = new PhysicalObject (-400, -125, 100, 100);
     wall->setVelocity (1, 0);
     blocks.push_back (wall);
-    PhysicalObject *rock = new PhysicalObject (-500, -24, 10, 10);
+    PhysicalObject *rock = new PhysicalObject (-500, -24, 10, 10, PhysicalObject::BlockType::Deadly);
     rock->setVelocity (2, 0);
     blocks.push_back (rock);
-    blocks.push_back (new CustomObject (0, 0, 10, 10, "blocks/bouncy.xml"));
+    blocks.push_back (new CustomObject (-10, 0, 10, 10, "blocks/bouncy.xml"));
     PhysicalObject *platform = new CustomObject (50, -5, 50, 10, "blocks/upDown.xml");
     platform->setVelocity (0, -5);
     blocks.push_back (platform);
 
     player.setAcceleration (0, gravity);
-    for (std::vector<Bot>::iterator i = bots.begin (); i != bots.end (); ++i)
-        objs.emplace_back (&(*i));
+    /*for (std::vector<Bot>::iterator i = bots.begin (); i != bots.end (); ++i)
+        objs.emplace_back (&(*i));*/
     for (std::vector<PhysicalObject *>::iterator i = blocks.begin (); i != blocks.end (); ++i)
         objs.emplace_back (*i);
 }
@@ -51,7 +52,7 @@ bool Model::isPlayerWin ()
     return false;
 }
 
-Model::Model () : bots (), objs (), gameField (100, 100), player (0, -200, 38, 42)
+Model::Model () : /*bots (),*/ objs (), gameField (100, 100), player (0, -200, 38, 42)
 {
     logger.info ("Model init");
     objs.emplace_back (&player);
@@ -62,10 +63,10 @@ const Player &Model::getPlayer () const
     return player;
 }
 
-const std::vector<Bot> &Model::getBots () const
+/*const std::vector<Bot> &Model::getBots () const
 {
     return bots;
-}
+}*/
 
 const GameField &Model::getGameField () const
 {

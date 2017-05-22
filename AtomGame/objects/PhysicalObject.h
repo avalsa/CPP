@@ -18,10 +18,14 @@ public:
     {
         axisX, axisY
     };
+    enum BlockType
+    {
+        Solid, Deadly, Respawn, Portal, TransDimensionalPortal, Player
+    };
 
     struct Position;
 
-    PhysicalObject (int x, int y, int sizeX, int sizeY);
+    PhysicalObject (int x, int y, int sizeX, int sizeY, BlockType type = Solid);
 
     void move (Position position);
 
@@ -55,6 +59,8 @@ public:
 
     void processCollisions ();
 
+    BlockType type () const;
+
 protected:
     int _x;
     int _y;
@@ -79,6 +85,7 @@ protected:
 
 private:
     std::unordered_map<PhysicalObject *, PhysicalObject::Axis> collisions;
+    BlockType _type;
 
 };
 

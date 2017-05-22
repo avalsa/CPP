@@ -4,7 +4,7 @@
 
 #include "Actor.h"
 
-Actor::Actor (int x, int y, int sizeX, int sizeY) : PhysicalObject (x, y, sizeX, sizeY), _action (NoAction),
+Actor::Actor (int x, int y, int sizeX, int sizeY) : PhysicalObject (x, y, sizeX, sizeY, Player), _action (NoAction),
                                                     lookDirection (Right),
                                                     moving (false)
 {
