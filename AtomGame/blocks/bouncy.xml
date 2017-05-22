@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<Block>
+    <Script file="blocks/programs/bounce.bit"/>
+    <Acceleration Y="1"/>
+</Block>

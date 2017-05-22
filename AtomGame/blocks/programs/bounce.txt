@@ -1,5 +1,3 @@
-push 1
-pop x5
 push x6
 push x1
 cmp

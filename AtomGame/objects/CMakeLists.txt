@@ -7,4 +7,5 @@ set(SOURCE_FILES Player.cpp Actor.h Actor.cpp GameObject.h Player.h Weapon.h Bot
 
 add_subdirectory(VCPU)
 link_libraries(vcpu)
+link_libraries(tinyxml2)
 add_library(Objects STATIC ${SOURCE_FILES})
