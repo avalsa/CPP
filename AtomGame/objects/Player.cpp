@@ -29,7 +29,7 @@ void Player::collided (const PhysicalObject *source, PhysicalObject::Axis relati
             Actor::collided (source, relativeLocation);
             break;
         case PhysicalObject::BlockType::Portal :
-            if (source->getClass () == Portal)
+            if (source->getClass () == Portal || source->getClass () == MapChange)
             {
                 _x = ((Teleporter *) source)->getDestX ();
                 _y = ((Teleporter *) source)->getDestY ();
