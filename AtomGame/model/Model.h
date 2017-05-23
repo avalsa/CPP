@@ -12,6 +12,7 @@
 #include "../objects/Player.h"
 //#include "../objects/Bot.h"
 #include "../objects/GameField.h"
+#include "../objects/TransMapTeleporter.h"
 
 class Model
 {
@@ -55,6 +56,7 @@ private:
     std::vector<PhysicalObject *> blocks;
     std::vector<PhysicalObject *> objs; //for movement algorithm standardization
     GameField gameField;
+    TransMapTeleporter *teleporter;
 
     void tryMove (PhysicalObject &obj, PhysicalObject::Position position);
 

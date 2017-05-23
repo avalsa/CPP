@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<Map Name="Init">
+    <Block Type="Solid">
+        <Place X="-1000" Y="10"/>
+        <Size X="2000" Y="10"/>
+    </Block>
+    <Block Type="Portal">
+        <Place X="-30" Y="-10"/>
+        <Size X="10" Y="10"/>
+        <Acceleration X="0" Y="1"/>
+        <Script file="blocks/programs/bounce.bit"/>
+        <Acceleration Y="1"/>
+        <Portal X="0" Y="-2000"/>
+    </Block>
+    <Block Type="MapChange">
+        <Place X="-100" Y="-50"/>
+        <Size X="10" Y="50"/>
+        <Portal X="0" Y="-100"/>
+        <Map File="maps/init.xml" Name="New"/>
+    </Block>
+</Map>
+
+<Map Name="New">
+<Block Type="Solid">
+    <Place X="-1000" Y="10"/>
+    <Size X="2000" Y="10"/>
+</Block>
+<Block Type="MapChange">
+    <Place X="100" Y="-50"/>
+    <Size X="10" Y="50"/>
+    <Portal X="0" Y="-100"/>
+    <Map File="maps/init.xml" Name="Init"/>
+</Block>
+</Map>

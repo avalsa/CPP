@@ -5,28 +5,33 @@
 #include <memory>
 
 #include "Model.h"
-#include "../objects/CustomObject.h"
-#include "../objects/Teleporter.h"
-#include "../objects/TransMapTeleporter.h"
 
 log4cpp::Category &Model::logger = log4cpp::Category::getInstance (typeid (Model).name ());
 
 void Model::tick ()
 {
-    logger.info ("Model tick");
-    for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); i++)
+    if (teleporter)
     {
-        PhysicalObject::Position pos = (*i)->tick ();
-        tryMove (**i, pos);
-    }
-    for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); i++)
+        load (teleporter->getDestFile (), teleporter->getDest ());
+        teleporter = nullptr;
+    } else
     {
-        (*i)->processCollisions ();
+        logger.info ("Model tick");
+        for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); i++)
+        {
+            PhysicalObject::Position pos = (*i)->tick ();
+            tryMove (**i, pos);
+        }
+        for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); i++)
+        {
+            (*i)->processCollisions ();
+        }
     }
 }
 
 void Model::startGame ()
 {
+    teleporter = nullptr;
     player.setAcceleration (0, gravity);
     load ("maps/init.xml", "Init");
 }
@@ -123,6 +128,19 @@ void Model::tryMove (PhysicalObject &obj, PhysicalObject::Position position)
     }
     for (std::vector<PhysicalObject *>::iterator i = collides.begin (); i != collides.end (); i++)
     {
+        if (obj.type () == PhysicalObject::BlockType::Player && obj.getClass () == PhysicalObject::BlockType::Player &&
+            (*i)->type () == PhysicalObject::BlockType::MapChange &&
+            (*i)->getClass () == PhysicalObject::BlockType::MapChange)
+        {
+            teleporter = (TransMapTeleporter *) *i;
+        }
+        if ((*i)->type () == PhysicalObject::BlockType::Player &&
+            (*i)->getClass () == PhysicalObject::BlockType::Player &&
+            obj.type () == PhysicalObject::BlockType::MapChange &&
+            obj.getClass () == PhysicalObject::BlockType::MapChange)
+        {
+            teleporter = (TransMapTeleporter *) &obj;
+        }
         (*i)->addCollision (&obj, PhysicalObject::Axis::axisX);
         obj.addCollision (*i, PhysicalObject::Axis::axisX);
     }
@@ -231,6 +249,10 @@ void Model::load (const char *xmlfile, const char *name)
         logger.warn ("Trying to load map from nullptr");
         return;
     }
+    if (name)
+        logger.info ("Loading map \"%s\" from \"%s\"", name, xmlfile);
+    else
+        logger.info ("Loading map from \"%s\"", xmlfile);
     tinyxml2::XMLDocument map;
     if (int err = map.LoadFile (xmlfile))
     {

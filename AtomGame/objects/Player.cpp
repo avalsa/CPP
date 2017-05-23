@@ -39,7 +39,8 @@ void Player::collided (const PhysicalObject *source, PhysicalObject::Axis relati
         case PhysicalObject::BlockType::MapChange :
             if (source->getClass () == MapChange)
             {
-                //todo
+                _x = ((Teleporter *) source)->getDestX ();
+                _y = ((Teleporter *) source)->getDestY ();
             } else
                 logger.warn ("Block type mismatch encountered");
             break;

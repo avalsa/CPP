@@ -19,10 +19,14 @@ const char *TransMapTeleporter::getDest ()
     return _destination;
 }
 
-TransMapTeleporter::TransMapTeleporter (int x, int y, int sizeX, int sizeY, int destX, int destY, const char *destMap) :
+TransMapTeleporter::TransMapTeleporter (int x, int y, int sizeX, int sizeY, int destX, int destY, const char *destFile,
+                                        const char *destMap) :
         Teleporter (x, y, sizeX, sizeY, destX, destY, PhysicalObject::BlockType::MapChange),
-        _destination (nullptr)
+        _destinationFile (nullptr), _destination (nullptr)
 {
+    if (!destFile)
+        return;
+    _destinationFile = strdup (destFile);
     if (!destMap)
         return;
     _destination = strdup (destMap);
@@ -32,11 +36,20 @@ void TransMapTeleporter::load (tinyxml2::XMLElement *block)
 {
     if (tinyxml2::XMLElement *map = block->FirstChildElement ("Map"))
     {
-        if (const char *file = map->Attribute ("file"))
+        if (const char *file = map->Attribute ("File"))
         {
-            _destination = strdup (file);
+            _destinationFile = strdup (file);
+        } else
+        {
+            logger.warn ("Map for change is not specified, creating portal instead");
+            block->SetAttribute ("Type", "Portal");
             return;
         }
+        if (const char *name = map->Attribute ("Name"))
+        {
+            _destination = strdup (name);
+        }
+        return;
     }
     logger.warn ("Map for change is not specified, creating portal instead");
     block->SetAttribute ("Type", "Portal");
@@ -71,4 +84,9 @@ TransMapTeleporter::TransMapTeleporter (int x, int y, int sizeX, int sizeY, cons
         load (block);
         Teleporter::load (block);
     }
+}
+
+const char *TransMapTeleporter::getDestFile ()
+{
+    return _destinationFile;
 }
