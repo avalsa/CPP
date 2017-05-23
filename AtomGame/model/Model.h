@@ -40,7 +40,13 @@ public:
 
     const std::vector<PhysicalObject *> &getObjs () const;
 
-    const Player &getPlayer () const;
+    Player &getPlayer ();
+
+    void load(const char* xmlfile, const char* name = nullptr);
+
+    void load(tinyxml2::XMLDocument& xmlDocument, const char* name = nullptr);
+
+    void load(tinyxml2::XMLElement* map);
 
 private:
     static log4cpp::Category &logger;
