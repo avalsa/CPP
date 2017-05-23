@@ -1,0 +1,28 @@
+push x3
+push 0
+cmp
+jnz main
+push x7
+pop x3
+main:
+push 50
+push x6
+cmp
+jb skip
+push 0
+pop x6
+revert:
+push x3
+push -1
+mul
+pop x3
+jmp end
+skip:
+push x6
+push 1
+add
+pop x6
+end:
+push x3
+pop x7
+end
