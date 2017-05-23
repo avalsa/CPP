@@ -37,7 +37,7 @@ public:
 
 protected:
 
-    virtual void collided (const PhysicalObject &source, Axis relativeLocation);
+    virtual void collided (const PhysicalObject *source, Axis relativeLocation);
 
 private:
 

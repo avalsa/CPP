@@ -10,13 +10,15 @@
 #include <typeinfo>
 #include <queue>
 #include "../objects/Player.h"
-#include "../objects/Bot.h"
+//#include "../objects/Bot.h"
 #include "../objects/GameField.h"
 
 class Model
 {
 public:
     Model ();        //init controller
+
+    ~Model ();
 
     void tick (); //do work of model
 
@@ -30,11 +32,11 @@ public:
 
     void actPlayer (Actor::Action action);
 
-    const std::vector<Bot> &getBots () const;
+    //const std::vector<Bot> &getBots () const;
 
     const GameField &getGameField () const;
 
-    const std::vector<PhysicalObject> &getBlocks () const;
+    const std::vector<PhysicalObject *> &getBlocks () const;
 
     const std::vector<PhysicalObject *> &getObjs () const;
 
@@ -43,8 +45,8 @@ public:
 private:
     static log4cpp::Category &logger;
     Player player;
-    std::vector<Bot> bots;
-    std::vector<PhysicalObject> blocks;
+    //std::vector<Bot> bots;
+    std::vector<PhysicalObject *> blocks;
     std::vector<PhysicalObject *> objs; //for movement algorithm standardization
     GameField gameField;
 

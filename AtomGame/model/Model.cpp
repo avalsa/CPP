@@ -5,6 +5,8 @@
 #include <memory>
 
 #include "Model.h"
+#include "../objects/CustomObject.h"
+#include "../objects/Teleporter.h"
 
 log4cpp::Category &Model::logger = log4cpp::Category::getInstance (typeid (Model).name ());
 
@@ -24,26 +26,25 @@ void Model::tick ()
 
 void Model::startGame ()
 {
-    blocks.push_back (PhysicalObject (-1000, 11, 100000, 10));
-    PhysicalObject wall (-400, -125, 100, 100);
-    wall.setVelocity (1, 0);
+    blocks.push_back (new PhysicalObject (-1000, 11, 100000, 10));
+    blocks.push_back (new PhysicalObject (-10, -10, 20, 5, PhysicalObject::BlockType::Respawn));
+    PhysicalObject *wall = new Teleporter (-400, -125, 100, 100, 0, -1000);
+    wall->setVelocity (1, 0);
     blocks.push_back (wall);
-    PhysicalObject rock (-500, -24, 10, 10);
-    rock.setVelocity (2, 0);
+    PhysicalObject *rock = new PhysicalObject (-500, -24, 10, 10, PhysicalObject::BlockType::Deadly);
+    rock->setVelocity (2, 0);
     blocks.push_back (rock);
-    player.setAcceleration (0, gravity);
-    for (std::vector<Bot>::iterator i = bots.begin (); i != bots.end (); ++i)
-        objs.emplace_back (&(*i));
-    for (std::vector<PhysicalObject>::iterator i = blocks.begin (); i != blocks.end (); ++i)
-        objs.emplace_back (&(*i));
-}
+    blocks.push_back (new Teleporter (-20, 0, 10, 10, "blocks/bouncy.xml"));
+    PhysicalObject *platform = new CustomObject (50, -5, 50, 10, "blocks/upDown.xml");
+    platform->setVelocity (0, -5);
+    blocks.push_back (platform);
 
-/*void Model::movePlayer(Actor::Direction direction) {
-    if (direction==Actor::Direction::Right) player.move (1, 0);//todo add dependency on speed or smth more interesting
-    if (direction==Actor::Direction::Left) player.move (-1, 0);
-    if (direction==Actor::Direction::Up) player.move (0, 1);
-    if (direction==Actor::Direction::Down) player.move (0, -1);
-}*/
+    player.setAcceleration (0, gravity);
+    /*for (std::vector<Bot>::iterator i = bots.begin (); i != bots.end (); ++i)
+        objs.emplace_back (&(*i));*/
+    for (std::vector<PhysicalObject *>::iterator i = blocks.begin (); i != blocks.end (); ++i)
+        objs.emplace_back (*i);
+}
 
 void Model::actPlayer (Actor::Action action) {}
 
@@ -52,7 +53,7 @@ bool Model::isPlayerWin ()
     return false;
 }
 
-Model::Model () : bots (), objs (), gameField (100, 100), player (0, -200, 38, 42)
+Model::Model () : /*bots (),*/ objs (), gameField (100, 100), player (0, -200, 38, 42)
 {
     logger.info ("Model init");
     objs.emplace_back (&player);
@@ -63,10 +64,10 @@ const Player &Model::getPlayer () const
     return player;
 }
 
-const std::vector<Bot> &Model::getBots () const
+/*const std::vector<Bot> &Model::getBots () const
 {
     return bots;
-}
+}*/
 
 const GameField &Model::getGameField () const
 {
@@ -78,7 +79,7 @@ const std::vector<PhysicalObject *> &Model::getObjs () const
     return objs;
 }
 
-const std::vector<PhysicalObject> &Model::getBlocks () const
+const std::vector<PhysicalObject *> &Model::getBlocks () const
 {
     return blocks;
 }
@@ -230,6 +231,12 @@ Model::collidesOnY (const PhysicalObject &obj1, const PhysicalObject &obj2, Phys
         }
     }
     return ret;
+}
+
+Model::~Model ()
+{
+    for (std::vector<PhysicalObject *>::const_iterator i = blocks.cbegin (); i != blocks.cend (); i++)
+        delete *i;
 }
 
 

@@ -74,13 +74,34 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
 
 
 //draw blocks
-    for (std::vector<PhysicalObject>::const_iterator i = model->getBlocks ().cbegin ();
+    for (std::vector<PhysicalObject *>::const_iterator i = model->getBlocks ().cbegin ();
          i != model->getBlocks ().cend (); ++i)
     {
         sf::RectangleShape obj;
-        obj.setSize (sf::Vector2f (i->getSizeX (), i->getSizeY ()));
-        obj.setFillColor (sf::Color::Green);
-        obj.setPosition (i->getX () - offsetX, i->getY () - offsetY);
+        obj.setSize (sf::Vector2f ((*i)->getSizeX (), (*i)->getSizeY ()));
+        switch ((*i)->type ())
+        {
+            case PhysicalObject::BlockType::Solid:
+                obj.setFillColor (sf::Color::Green);
+                break;
+            case PhysicalObject::Deadly:
+                obj.setFillColor (sf::Color::Black);
+                break;
+            case PhysicalObject::Respawn:
+                obj.setFillColor (sf::Color::Yellow);
+                break;
+            case PhysicalObject::Portal:
+                obj.setFillColor (sf::Color::Cyan);
+                break;
+            case PhysicalObject::MapChange:
+                obj.setFillColor (sf::Color::Magenta);
+                break;
+            case PhysicalObject::Player:
+                obj.setFillColor (sf::Color::Transparent);
+                break;
+        }
+
+        obj.setPosition ((*i)->getX () - offsetX, (*i)->getY () - offsetY);
         window.draw (obj);
     }
 
