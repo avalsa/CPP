@@ -12,6 +12,7 @@
 #include "../objects/Player.h"
 //#include "../objects/Bot.h"
 #include "../objects/GameField.h"
+#include "../objects/TransMapTeleporter.h"
 
 class Model
 {
@@ -40,7 +41,13 @@ public:
 
     const std::vector<PhysicalObject *> &getObjs () const;
 
-    const Player &getPlayer () const;
+    Player &getPlayer ();
+
+    void load(const char* xmlfile, const char* name = nullptr);
+
+    void load(tinyxml2::XMLDocument& xmlDocument, const char* name = nullptr);
+
+    void load(tinyxml2::XMLElement* map);
 
 private:
     static log4cpp::Category &logger;
@@ -49,6 +56,7 @@ private:
     std::vector<PhysicalObject *> blocks;
     std::vector<PhysicalObject *> objs; //for movement algorithm standardization
     GameField gameField;
+    TransMapTeleporter *teleporter;
 
     void tryMove (PhysicalObject &obj, PhysicalObject::Position position);
 

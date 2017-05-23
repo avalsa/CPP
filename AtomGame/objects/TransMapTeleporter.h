@@ -15,14 +15,19 @@ public:
 
     TransMapTeleporter (int x, int y, int sizeX, int sizeY, tinyxml2::XMLElement *block);
 
-    TransMapTeleporter (int x, int y, int sizeX, int sizeY, int destX, int destY, const char *destMap);
+    TransMapTeleporter (int x, int y, int sizeX, int sizeY, int destX, int destY, const char *destFile,
+                        const char *destMap = nullptr);
 
     virtual ~TransMapTeleporter ();
 
     const char *getDest ();
 
+    const char *getDestFile ();
+
 private:
     char *_destination;
+
+    char *_destinationFile;
 
     virtual BlockType getClass () const;
 

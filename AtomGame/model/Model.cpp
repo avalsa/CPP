@@ -5,45 +5,35 @@
 #include <memory>
 
 #include "Model.h"
-#include "../objects/CustomObject.h"
-#include "../objects/Teleporter.h"
 
 log4cpp::Category &Model::logger = log4cpp::Category::getInstance (typeid (Model).name ());
 
 void Model::tick ()
 {
-    logger.info ("Model tick");
-    for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); i++)
+    if (teleporter)
     {
-        PhysicalObject::Position pos = (*i)->tick ();
-        tryMove (**i, pos);
-    }
-    for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); i++)
+        load (teleporter->getDestFile (), teleporter->getDest ());
+        teleporter = nullptr;
+    } else
     {
-        (*i)->processCollisions ();
+        logger.info ("Model tick");
+        for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); i++)
+        {
+            PhysicalObject::Position pos = (*i)->tick ();
+            tryMove (**i, pos);
+        }
+        for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); i++)
+        {
+            (*i)->processCollisions ();
+        }
     }
 }
 
 void Model::startGame ()
 {
-    blocks.push_back (new PhysicalObject (-1000, 11, 100000, 10));
-    blocks.push_back (new PhysicalObject (-10, -10, 20, 5, PhysicalObject::BlockType::Respawn));
-    PhysicalObject *wall = new Teleporter (-400, -125, 100, 100, 0, -1000);
-    wall->setVelocity (1, 0);
-    blocks.push_back (wall);
-    PhysicalObject *rock = new PhysicalObject (-500, -24, 10, 10, PhysicalObject::BlockType::Deadly);
-    rock->setVelocity (2, 0);
-    blocks.push_back (rock);
-    blocks.push_back (new Teleporter (-20, 0, 10, 10, "blocks/bouncy.xml"));
-    PhysicalObject *platform = new CustomObject (50, -5, 50, 10, "blocks/upDown.xml");
-    platform->setVelocity (0, -5);
-    blocks.push_back (platform);
-
+    teleporter = nullptr;
     player.setAcceleration (0, gravity);
-    /*for (std::vector<Bot>::iterator i = bots.begin (); i != bots.end (); ++i)
-        objs.emplace_back (&(*i));*/
-    for (std::vector<PhysicalObject *>::iterator i = blocks.begin (); i != blocks.end (); ++i)
-        objs.emplace_back (*i);
+    load ("maps/init.xml", "Init");
 }
 
 void Model::actPlayer (Actor::Action action) {}
@@ -59,7 +49,7 @@ Model::Model () : /*bots (),*/ objs (), gameField (100, 100), player (0, -200, 3
     objs.emplace_back (&player);
 }
 
-const Player &Model::getPlayer () const
+Player &Model::getPlayer ()
 {
     return player;
 }
@@ -138,6 +128,19 @@ void Model::tryMove (PhysicalObject &obj, PhysicalObject::Position position)
     }
     for (std::vector<PhysicalObject *>::iterator i = collides.begin (); i != collides.end (); i++)
     {
+        if (obj.type () == PhysicalObject::BlockType::Player && obj.getClass () == PhysicalObject::BlockType::Player &&
+            (*i)->type () == PhysicalObject::BlockType::MapChange &&
+            (*i)->getClass () == PhysicalObject::BlockType::MapChange)
+        {
+            teleporter = (TransMapTeleporter *) *i;
+        }
+        if ((*i)->type () == PhysicalObject::BlockType::Player &&
+            (*i)->getClass () == PhysicalObject::BlockType::Player &&
+            obj.type () == PhysicalObject::BlockType::MapChange &&
+            obj.getClass () == PhysicalObject::BlockType::MapChange)
+        {
+            teleporter = (TransMapTeleporter *) &obj;
+        }
         (*i)->addCollision (&obj, PhysicalObject::Axis::axisX);
         obj.addCollision (*i, PhysicalObject::Axis::axisX);
     }
@@ -237,6 +240,77 @@ Model::~Model ()
 {
     for (std::vector<PhysicalObject *>::const_iterator i = blocks.cbegin (); i != blocks.cend (); i++)
         delete *i;
+}
+
+void Model::load (const char *xmlfile, const char *name)
+{
+    if (xmlfile == nullptr)
+    {
+        logger.warn ("Trying to load map from nullptr");
+        return;
+    }
+    if (name)
+        logger.info ("Loading map \"%s\" from \"%s\"", name, xmlfile);
+    else
+        logger.info ("Loading map from \"%s\"", xmlfile);
+    tinyxml2::XMLDocument map;
+    if (int err = map.LoadFile (xmlfile))
+    {
+        logger.warn ("Failed to load map from \"%s\", errorID = %d", xmlfile, err);
+    } else
+    {
+        logger.info ("\"%s\" parsed", xmlfile);
+        load (map, name);
+    }
+}
+
+void Model::load (tinyxml2::XMLDocument &xmlDocument, const char *name)
+{
+    if(tinyxml2::XMLElement* map = xmlDocument.FirstChildElement ("Map"))
+    {
+        if(name)
+        {
+            while(map != nullptr)
+            {
+                if(const char* mapName = map->Attribute ("Name"))
+                {
+                    if(strcmp (mapName, name) == 0)
+                        break;
+                }
+                map = map->NextSiblingElement ("Map");
+            }
+        }
+        load (map);
+    }
+    else
+        logger.warn ("Map file has no maps");
+}
+
+void Model::load (tinyxml2::XMLElement *map)
+{
+    objs.clear ();
+    for(std::vector<PhysicalObject*>::const_iterator i = blocks.cbegin (); i != blocks.cend (); i++)
+        delete *i;
+    blocks.clear ();
+    for(tinyxml2::XMLElement* block = map->FirstChildElement ("Block"); block != nullptr; block = block->NextSiblingElement ("Block") )
+    {
+        if(const char* type = block->Attribute ("Type"))
+        {
+            if(strcmp (type, "Portal") == 0)
+                blocks.push_back (new Teleporter(0,0,10,10,block));
+            else if(strcmp (type, "MapChange") == 0)
+                blocks.push_back (new TransMapTeleporter(0,0,10,10, block));
+            else
+                blocks.push_back (new CustomObject(0,0,10,10, block));
+        }
+        else
+            logger.warn ("Block misses type, ignoring");
+    }
+    objs.emplace_back (&player);
+    /*for (std::vector<Bot>::iterator i = bots.begin (); i != bots.end (); ++i)
+        objs.emplace_back (&(*i));*/
+    for (std::vector<PhysicalObject *>::iterator i = blocks.begin (); i != blocks.end (); ++i)
+        objs.emplace_back (*i);
 }
 
 
