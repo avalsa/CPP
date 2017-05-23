@@ -37,9 +37,9 @@ public:
 
     const GameField &getGameField () const;
 
-    const std::vector<PhysicalObject *> &getBlocks () const;
+    std::vector<PhysicalObject *> &getBlocks ();
 
-    const std::vector<PhysicalObject *> &getObjs () const;
+    std::vector<PhysicalObject *> &getObjs ();
 
     Player &getPlayer ();
 

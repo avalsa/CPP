@@ -64,12 +64,12 @@ const GameField &Model::getGameField () const
     return gameField;
 }
 
-const std::vector<PhysicalObject *> &Model::getObjs () const
+std::vector<PhysicalObject *> &Model::getObjs ()
 {
     return objs;
 }
 
-const std::vector<PhysicalObject *> &Model::getBlocks () const
+std::vector<PhysicalObject *> &Model::getBlocks ()
 {
     return blocks;
 }

@@ -58,3 +58,8 @@ void Controller::tick ()
     if (!movementKeyPressed)
         onNoMovementKeyPress ();
 }
+
+bool Controller::isPressed (sf::Keyboard::Key key)
+{
+    return sf::Keyboard::isKeyPressed (key);
+}
