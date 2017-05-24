@@ -20,7 +20,6 @@ void Rain::tick ()
         drop->setVelocity (0, 1);
         drop->setAcceleration (0, 1);
         drops.push_back (drop);
-        _model->getBlocks ().push_back (drop);
         _model->getObjs ().push_back (drop);
         timer = 0;
     } else
@@ -29,15 +28,6 @@ void Rain::tick ()
     {
         if ((*i)->getVy () <= 0)
         {
-            for (std::vector<PhysicalObject *>::const_iterator j = _model->getBlocks ().cbegin ();
-                 j != _model->getBlocks ().cend (); j++)
-            {
-                if (*j == *i)
-                {
-                    _model->getBlocks ().erase (j);
-                    break;
-                }
-            }
             for (std::vector<PhysicalObject *>::const_iterator j = _model->getObjs ().cbegin ();
                  j != _model->getObjs ().cend (); j++)
             {

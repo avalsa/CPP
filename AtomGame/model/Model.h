@@ -37,8 +37,6 @@ public:
 
     const GameField &getGameField () const;
 
-    std::vector<PhysicalObject *> &getBlocks ();
-
     std::vector<PhysicalObject *> &getObjs ();
 
     Player &getPlayer ();
@@ -53,7 +51,6 @@ private:
     static log4cpp::Category &logger;
     Player player;
     //std::vector<Bot> bots;
-    std::vector<PhysicalObject *> blocks;
     std::vector<PhysicalObject *> objs; //for movement algorithm standardization
     GameField gameField;
     TransMapTeleporter *teleporter;
