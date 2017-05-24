@@ -38,7 +38,7 @@ int main (int argc, char **argv)
     for (std::vector<Plugin *>::iterator i = plugins.begin (); i != plugins.end (); i++)
         (*i)->start (&model, &controller, &view);
 
-    for (;;)
+    while (!controller.isEnd ())
     {
         controller.tick ();
         model.tick ();

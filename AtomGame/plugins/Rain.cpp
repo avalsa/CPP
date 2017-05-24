@@ -13,34 +13,38 @@ void Rain::start (Model *model, Controller *controller, View *view)
 
 void Rain::tick ()
 {
-    if (timer == period)
+    if (!_model->isReloading ())
     {
-        PhysicalObject *drop = new PhysicalObject (rand () % diameter - diameter / 2 + _model->getPlayer ().getX (),
-                                                   _model->getPlayer ().getY () - height, size, size);
-        drop->setVelocity (0, 1);
-        drop->setAcceleration (0, 1);
-        drops.push_back (drop);
-        _model->getObjs ().push_back (drop);
-        timer = 0;
-    } else
-        timer++;
-    for (std::vector<PhysicalObject *>::const_iterator i = drops.cbegin (); i != drops.cend (); i++)
-    {
-        if ((*i)->getVy () <= 0)
+        if (timer == period)
         {
-            for (std::vector<PhysicalObject *>::const_iterator j = _model->getObjs ().cbegin ();
-                 j != _model->getObjs ().cend (); j++)
+            PhysicalObject *drop = new PhysicalObject (rand () % diameter - diameter / 2 + _model->getPlayer ().getX (),
+                                                       _model->getPlayer ().getY () - height, size, size);
+            drop->setVelocity (0, 1);
+            drop->setAcceleration (0, 1);
+            drops.push_back (drop);
+            _model->getObjs ().push_back (drop);
+            timer = 0;
+        } else
+            timer++;
+        for (std::vector<PhysicalObject *>::const_iterator i = drops.cbegin (); i != drops.cend (); i++)
+        {
+            if ((*i)->getVy () <= 0)
             {
-                if (*j == *i)
+                for (std::vector<PhysicalObject *>::const_iterator j = _model->getObjs ().cbegin ();
+                     j != _model->getObjs ().cend (); j++)
                 {
-                    _model->getObjs ().erase (j);
-                    break;
+                    if (*j == *i)
+                    {
+                        _model->getObjs ().erase (j);
+                        break;
+                    }
                 }
+                delete *i;
+                i = drops.erase (i);
             }
-            delete *i;
-            i = drops.erase (i);
         }
-    }
+    } else
+        drops.clear ();
 }
 
 extern "C" Plugin *create ()

@@ -47,6 +47,8 @@ public:
 
     void load(tinyxml2::XMLElement* map);
 
+    bool isReloading () const;
+
 private:
     static log4cpp::Category &logger;
     Player player;

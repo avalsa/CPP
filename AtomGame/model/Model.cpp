@@ -305,6 +305,11 @@ void Model::load (tinyxml2::XMLElement *map)
     objs.emplace_back (&player);
 }
 
+bool Model::isReloading () const
+{
+    return teleporter != nullptr;
+}
+
 
 
 

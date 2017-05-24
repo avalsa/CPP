@@ -31,6 +31,8 @@ public:
 
     bool isPressed (sf::Keyboard::Key key);
 
+    bool isEnd ();
+
 private:
     static log4cpp::Category &logger;
     Model *model;
