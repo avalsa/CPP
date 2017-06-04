@@ -5,6 +5,7 @@
 #ifndef ATOMGAME_ATOMGAME_H
 #define ATOMGAME_ATOMGAME_H
 
+#include <SFML/Window.hpp>
 #include "../model/Model.h"
 #include "../view/View.h"
 
@@ -27,6 +28,10 @@ public:
     void onNoMovementKeyPress ();
 
     void tick ();
+
+    bool isPressed (sf::Keyboard::Key key);
+
+    bool isEnd ();
 
 private:
     static log4cpp::Category &logger;

@@ -37,9 +37,7 @@ public:
 
     const GameField &getGameField () const;
 
-    const std::vector<PhysicalObject *> &getBlocks () const;
-
-    const std::vector<PhysicalObject *> &getObjs () const;
+    std::vector<PhysicalObject *> &getObjs ();
 
     Player &getPlayer ();
 
@@ -49,11 +47,12 @@ public:
 
     void load(tinyxml2::XMLElement* map);
 
+    bool isReloading () const;
+
 private:
     static log4cpp::Category &logger;
     Player player;
     //std::vector<Bot> bots;
-    std::vector<PhysicalObject *> blocks;
     std::vector<PhysicalObject *> objs; //for movement algorithm standardization
     GameField gameField;
     TransMapTeleporter *teleporter;

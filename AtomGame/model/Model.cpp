@@ -64,14 +64,9 @@ const GameField &Model::getGameField () const
     return gameField;
 }
 
-const std::vector<PhysicalObject *> &Model::getObjs () const
+std::vector<PhysicalObject *> &Model::getObjs ()
 {
     return objs;
-}
-
-const std::vector<PhysicalObject *> &Model::getBlocks () const
-{
-    return blocks;
 }
 
 void Model::movePlayer (Actor::Direction direction)
@@ -238,8 +233,9 @@ Model::collidesOnY (const PhysicalObject &obj1, const PhysicalObject &obj2, Phys
 
 Model::~Model ()
 {
-    for (std::vector<PhysicalObject *>::const_iterator i = blocks.cbegin (); i != blocks.cend (); i++)
-        delete *i;
+    for (std::vector<PhysicalObject *>::const_iterator i = objs.cbegin (); i != objs.cend (); i++)
+        if (*i != &player)
+            delete *i;
 }
 
 void Model::load (const char *xmlfile, const char *name)
@@ -288,29 +284,30 @@ void Model::load (tinyxml2::XMLDocument &xmlDocument, const char *name)
 
 void Model::load (tinyxml2::XMLElement *map)
 {
+    for (std::vector<PhysicalObject *>::const_iterator i = objs.cbegin (); i != objs.cend (); i++)
+        if (*i != &player)
+            delete *i;
     objs.clear ();
-    for(std::vector<PhysicalObject*>::const_iterator i = blocks.cbegin (); i != blocks.cend (); i++)
-        delete *i;
-    blocks.clear ();
     for(tinyxml2::XMLElement* block = map->FirstChildElement ("Block"); block != nullptr; block = block->NextSiblingElement ("Block") )
     {
         if(const char* type = block->Attribute ("Type"))
         {
             if(strcmp (type, "Portal") == 0)
-                blocks.push_back (new Teleporter(0,0,10,10,block));
+                objs.push_back (new Teleporter (0, 0, 10, 10, block));
             else if(strcmp (type, "MapChange") == 0)
-                blocks.push_back (new TransMapTeleporter(0,0,10,10, block));
+                objs.push_back (new TransMapTeleporter (0, 0, 10, 10, block));
             else
-                blocks.push_back (new CustomObject(0,0,10,10, block));
+                objs.push_back (new CustomObject (0, 0, 10, 10, block));
         }
         else
             logger.warn ("Block misses type, ignoring");
     }
     objs.emplace_back (&player);
-    /*for (std::vector<Bot>::iterator i = bots.begin (); i != bots.end (); ++i)
-        objs.emplace_back (&(*i));*/
-    for (std::vector<PhysicalObject *>::iterator i = blocks.begin (); i != blocks.end (); ++i)
-        objs.emplace_back (*i);
+}
+
+bool Model::isReloading () const
+{
+    return teleporter != nullptr;
 }
 
 
