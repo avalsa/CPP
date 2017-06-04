@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES View.cpp View.h Animation.cpp Animation.h AnimationFactory.cpp AnimationFactory.h)
 
-add_subdirectory(res)
 
 add_library(Graphics STATIC ${SOURCE_FILES})
 

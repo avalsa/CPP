@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<Actions>
+    <Action Type="Move">
+        <Place X="0" Y="80"/>
+        <Size X="38" Y="42"/>
+        <Frames Count="4"/>
+    </Action>
+    <Action Type="Jump">
+        <Place X="0" Y="48"/>
+        <Size X="29" Y="26"/>
+        <Frames Count="4"/>
+    </Action>
+    <Action Type="Stand">
+        <Place X="0" Y="1"/>
+        <Size X="37" Y="42"/>
+        <Frames Count="2"/>
+    </Action>
+</Actions>

@@ -7,6 +7,8 @@
 
 #include "Animation.h"
 #include "../objects/Player.h"
+#include <tinyxml2.h>
+#include <memory>
 
 class AnimationFactory
 {
@@ -14,12 +16,21 @@ public:
 
     static Animation *getPlayerAnimation ();
 
-
 private:
+
+    static Animation playerAnimation;
+
+    static log4cpp::Category &logger;
+
     static constexpr float frameRate = 0.05f;
 
     AnimationFactory ();
-};
 
+    static
+    std::shared_ptr<std::map<std::shared_ptr<Animation::AnimationType>, std::shared_ptr<Animation::FrameSequence>, Animation::Comp>> load(const char *file);
+
+    static
+    std::shared_ptr<std::map<std::shared_ptr<Animation::AnimationType>, std::shared_ptr<Animation::FrameSequence>, Animation::Comp>> load(tinyxml2::XMLDocument& xmlDocument, const char *file);
+};
 
 #endif //ATOMGAME_ANIMATIONFATORY_H

@@ -47,7 +47,6 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
 
 //here we draw player
     sf::Sprite playerSprite;
-    logger.warn (std::to_string (player.getAction ()));
     if (player.isOnGround ())
     {
         if (player.isMoving ())
