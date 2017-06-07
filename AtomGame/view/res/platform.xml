@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<Objects>
+    <Object Type="SolidBlock">
+        <Place X="204" Y="245"/>
+        <Size X="86" Y="10"/>
+    </Object>
+</Objects>

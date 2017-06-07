@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<Actions>
+    <Action Type="None">
+        <Place X="1" Y="0"/>
+        <Size X="38" Y="40"/>
+        <Frames Count="12"/>
+    </Action>
+</Actions>
