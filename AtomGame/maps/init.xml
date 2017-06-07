@@ -2,13 +2,44 @@
 <Map Name="Init">
     <Block Type="Solid">
         <Place X="-1000" Y="10"/>
-        <Size X="2000" Y="10"/>
+        <Size X="1978" Y="10"/>
     </Block>
+    <Block Type="Solid">
+        <Place X="1060" Y="-50"/>
+        <Size X="86" Y="10"/>
+    </Block>
+    <Block Type="Solid">
+        <Place X="1150" Y="-100"/>
+        <Size X="86" Y="10"/>
+    </Block>
+    <Block Type="Solid">
+        <Place X="1250" Y="-150"/>
+        <Size X="86" Y="10"/>
+    </Block>
+
+    <Block Type="Solid">
+        <Place X="1400" Y="-200"/>
+        <Size X="1000" Y="10"/>
+    </Block>
+    <Block Type="Solid">
+        <Place X="2500" Y="0"/>
+        <Size X="1000" Y="10"/>
+    </Block>
+    <Block Type="Solid">
+        <Place X="3600" Y="500"/>
+        <Size X="1000" Y="10"/>
+    </Block>
+    <Block Type="Solid">
+        <Place X="4700" Y="1000"/>
+        <Size X="1000" Y="10"/>
+    </Block>
+
+
     <Block Type="Portal">
-        <Place X="-30" Y="-10"/>
-        <Size X="10" Y="10"/>
-        <Acceleration X="0" Y="1"/>
-        <Script file="blocks/programs/bounce.bit"/>
+        <Place X="-10" Y="-60"/>
+        <Size X="50" Y="50"/>
+        <!--<Acceleration X="0" Y="1"/>-->
+        <!--<Script file="blocks/programs/bounce.bit"/>-->
         <Acceleration Y="1"/>
         <Portal X="0" Y="-2000"/>
     </Block>

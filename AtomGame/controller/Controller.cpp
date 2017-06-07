@@ -39,7 +39,7 @@ Controller::Controller (Model *model, View *view) : model (model), view (view)
 
 void Controller::tick ()
 {
-//all presses we need
+    //all presses we need
     bool movementKeyPressed = false;
     if (sf::Keyboard::isKeyPressed (sf::Keyboard::Key::Right))
     {

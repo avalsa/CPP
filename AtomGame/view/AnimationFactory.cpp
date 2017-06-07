@@ -6,7 +6,9 @@
 
 log4cpp::Category &AnimationFactory::logger = log4cpp::Category::getInstance (typeid (AnimationFactory).name ());
 
-Animation AnimationFactory::playerAnimation = Animation("player.png", load("player.xml"), frameRate);
+Animation AnimationFactory::playerAnimation = Animation("player.png", load("player.xml"), frameRate * 1.5);
+
+Animation AnimationFactory::teleportAnimation = Animation("teleport.png", load("teleport.xml"), frameRate*4);
 
 AnimationFactory::AnimationFactory ()
 {
@@ -15,8 +17,11 @@ AnimationFactory::AnimationFactory ()
 
 Animation *AnimationFactory::getPlayerAnimation ()
 {
-
     return &playerAnimation;
+}
+
+Animation *AnimationFactory::getTeleportAnimation() {
+    return &teleportAnimation;
 }
 
 std::shared_ptr<std::map<std::shared_ptr<Animation::AnimationType>, std::shared_ptr<Animation::FrameSequence>, Animation::Comp>>
@@ -74,3 +79,5 @@ AnimationFactory::load(tinyxml2::XMLDocument& xmlDocument, const char* file)
     else
         logger.warn ("Animation file \"%s\" has no animations", file);
 }
+
+

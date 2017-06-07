@@ -6,7 +6,8 @@
 #define ATOMGAME_ANIMATION_H
 
 #include <log4cpp/Category.hh>
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Texture.hpp>
 #include <memory>
 #include "../objects/PhysicalObject.h"
 
@@ -16,7 +17,7 @@ public:
 
     enum AnimationType
     { //not the same as objects/action
-        Move, Jump, Stand, Die
+        Move, Jump, Stand, Die, None
     };
 
     struct FrameSequence
@@ -44,7 +45,7 @@ public:
 
     Animation (const char *, std::shared_ptr<std::map<std::shared_ptr<Animation::AnimationType> , std::shared_ptr<Animation::FrameSequence>, Comp>> frames,  float frameRate); //file name, frameRate << 1
 
-    const sf::Sprite getNextSprite (PhysicalObject::Direction direction);
+    sf::Sprite getNextSprite (PhysicalObject::Direction direction);
 
 private:
 

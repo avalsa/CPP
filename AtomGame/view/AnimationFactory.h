@@ -16,9 +16,13 @@ public:
 
     static Animation *getPlayerAnimation ();
 
+    static Animation *getTeleportAnimation();
+
 private:
 
     static Animation playerAnimation;
+
+    static Animation teleportAnimation;
 
     static log4cpp::Category &logger;
 
@@ -27,10 +31,12 @@ private:
     AnimationFactory ();
 
     static
-    std::shared_ptr<std::map<std::shared_ptr<Animation::AnimationType>, std::shared_ptr<Animation::FrameSequence>, Animation::Comp>> load(const char *file);
+    std::shared_ptr<std::map<std::shared_ptr<Animation::AnimationType>, std::shared_ptr<Animation::FrameSequence>, Animation::Comp>>
+    load(const char *file);
 
     static
-    std::shared_ptr<std::map<std::shared_ptr<Animation::AnimationType>, std::shared_ptr<Animation::FrameSequence>, Animation::Comp>> load(tinyxml2::XMLDocument& xmlDocument, const char *file);
+    std::shared_ptr<std::map<std::shared_ptr<Animation::AnimationType>, std::shared_ptr<Animation::FrameSequence>, Animation::Comp>>
+    load(tinyxml2::XMLDocument& xmlDocument, const char *file);
 };
 
 #endif //ATOMGAME_ANIMATIONFATORY_H

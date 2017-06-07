@@ -10,6 +10,7 @@
 #include "../controller/Controller.h"
 #include "Animation.h"
 #include <SFML/Graphics.hpp>
+#include <memory>
 
 class Controller;
 
@@ -27,12 +28,17 @@ public:
 
 
 private:
+
+    bool isVisible(const PhysicalObject* obj) const;
+
     static log4cpp::Category &logger;
     Model *model;
     Controller *controller;
     sf::RenderWindow window;
     int offsetX;
     int offsetY;
+
+    void drawObject(sf::Sprite* sprite, PhysicalObject* object, bool slaceX, bool scaleY);
 
     Animation *_playerAnimation;
 };

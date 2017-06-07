@@ -5,6 +5,7 @@
 
 #include "View.h"
 #include "AnimationFactory.h"
+#include "SpriteFactory.h"
 
 
 log4cpp::Category &View::logger = log4cpp::Category::getInstance (typeid (View).name ());
@@ -14,7 +15,7 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
     logger.info ("View tick");
     if (!window.isOpen ()) return 0;
 
-    //  get all events we are interested in..
+// get all events we are interested in..
     sf::Event event;
     while (window.pollEvent (event))
     {
@@ -25,25 +26,50 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
         }
     }
 
-    //process all objs we know
-    window.clear (sf::Color::Blue);
+//process all objs we know
+    window.clear (sf::Color::Black);
 
     Player player = model->getPlayer ();
     offsetX = player.getX (); //for map moving
     offsetY = player.getY ();
 
-    GameField gameField = model->getGameField ();
-    int x = gameField.getWidth ();
-    int y = gameField.getHeight ();
+//    GameField gameField = model->getGameField ();
+//    int x = gameField.getWidth ();
+//    int y = gameField.getHeight ();
+//
+//    sf::RectangleShape wall (sf::Vector2f (20.f, 20.f));
+//    for (int i = 0; i < x; ++i)
+//        for (int j = 0; j < y; ++j)
+//            if (gameField.getCell (i, j))
+//            {
+//                wall.setPosition (j * 20.f - offsetX, -i * 20.f - offsetY);
+//                window.draw (wall);
+//            }
 
-    sf::RectangleShape wall (sf::Vector2f (20.f, 20.f));
-    for (int i = 0; i < x; ++i)
-        for (int j = 0; j < y; ++j)
-            if (gameField.getCell (i, j))
-            {
-                wall.setPosition (j * 20.f - offsetX, -i * 20.f - offsetY);
-                window.draw (wall);
-            }
+    model->
+
+//draw background
+    int k = 3; //>=1
+    int initY = -1000;
+    int initX = 0;
+    auto bg = SpriteFactory::getBackgroundSprite();
+    int sizeX = (int)bg->getLocalBounds().width;
+    int sizeY = (int)bg->getLocalBounds().height;
+    int a = ( ( offsetX / k - initX ) / sizeX ) * sizeX + initX;
+    if (offsetX < 0) a-=sizeX;
+    int b = initY;
+    bg->setPosition(a - offsetX / k, b - offsetY / k);
+    window.draw(*bg);
+    if (offsetX / k - a < window.getSize().x/2)
+    {
+        bg->setPosition(a - sizeX - offsetX / k, b - offsetY / k);
+        window.draw(*bg);
+    }
+    if (sizeX - (offsetX / k - a) < window.getSize().x/2)
+    {
+        bg->setPosition(a + sizeX - offsetX / k, b - offsetY / k);
+        window.draw(*bg);
+    }
 
 //here we draw player
     sf::Sprite playerSprite;
@@ -73,53 +99,46 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
 
 
 //draw blocks
+    static std::map<PhysicalObject*, Animation*> block_animations;
     for (std::vector<PhysicalObject *>::const_iterator i = model->getBlocks ().cbegin ();
          i != model->getBlocks ().cend (); ++i)
     {
-        sf::RectangleShape obj;
-        obj.setSize (sf::Vector2f ((*i)->getSizeX (), (*i)->getSizeY ()));
+        if (!isVisible(*i)) continue;
         switch ((*i)->type ())
         {
             case PhysicalObject::BlockType::Solid:
-                obj.setFillColor (sf::Color::Green);
+                drawObject(SpriteFactory::getSolidBlockSprite().get(), *i, 0, 1);
                 break;
             case PhysicalObject::Deadly:
-                obj.setFillColor (sf::Color::Black);
+
                 break;
             case PhysicalObject::Respawn:
-                obj.setFillColor (sf::Color::Yellow);
+
                 break;
             case PhysicalObject::Portal:
-                obj.setFillColor (sf::Color::Cyan);
+                if (block_animations[*i] == nullptr) {
+                    Animation *a = AnimationFactory::getTeleportAnimation();
+                    a->setAnimationType(Animation::AnimationType::None);
+                    block_animations[*i] = a;
+                }
+                else {
+                    sf::Sprite s = block_animations[*i]->getNextSprite(PhysicalObject::Direction::Right);
+                    drawObject(&s, *i, 1, 1);
+                }
                 break;
             case PhysicalObject::MapChange:
-                obj.setFillColor (sf::Color::Magenta);
+
                 break;
             case PhysicalObject::Player:
-                obj.setFillColor (sf::Color::Transparent);
+
                 break;
         }
-
-        obj.setPosition ((*i)->getX () - offsetX, (*i)->getY () - offsetY);
-        window.draw (obj);
     }
 
-//    sf::Sprite s;
-//
-//    sf::Texture t;
-//    t.loadFromFile("player.gif");
-//
-//    s.setTexture(t);
-//    s.setTextureRect(sf::IntRect(0, 80, 38, 42));
-//    s.setPosition(player.getY()-offsetY, player.getX()-offsetX);
-//    window.draw(s);
 //finish
-
     window.display ();
-
     sf::sleep (sf::milliseconds (10));
     return 1;
-
 }
 
 void View::ShowGameOver ()
@@ -145,5 +164,45 @@ View::View (Model *model, int height, int width) :
 
     window.setView (view);
     logger.info ("View init");
+}
+
+bool View::isVisible(const PhysicalObject* obj) const
+{
+    const int pl_x = model->getPlayer().getX(); const int pl_y = model->getPlayer().getY();
+    const int obj_x = obj->getX(); const int obj_y = obj->getY();
+    const int obj_s_x = obj->getSizeX(); const int obj_s_y = obj->getSizeY();
+    return !(std::abs(pl_x - obj_x) > window.getSize().x/2
+             && std::abs(pl_x - (obj_x + obj_s_x)) > window.getSize().x/2
+             && ! (pl_x > obj_x && pl_x < obj_x + obj_s_x)
+             ||
+             std::abs(pl_y - obj_y) > window.getSize().y/2
+             && std::abs(pl_y - (obj_y + obj_s_y)) > window.getSize().y/2
+             && ! (pl_y > obj_y && pl_y < obj_y + obj_s_y)
+    );
+}
+
+void View::drawObject(sf::Sprite *sprite, PhysicalObject *object, bool scaleX, bool scaleY) {
+    if (scaleY) {
+        float scaleY = 1.f * object->getSizeY() / sprite->getLocalBounds().height;
+        sprite->setScale(1.f, scaleY);
+    }
+    if (scaleX)
+    {
+        float scaleX = 1.f * object->getSizeX() / sprite->getLocalBounds().width;
+        sprite->scale(scaleX, 1.f);
+    }
+    if (scaleX && scaleY)
+    {
+        sprite->setPosition(object->getX() - offsetX, object->getY() - offsetY);
+        window.draw (*sprite);
+    }
+    else {
+        int cnt = object->getSizeX() / sprite->getLocalBounds().width;
+        for (int j = 0; j < std::max(cnt, 1); j++) {
+            sprite->setPosition(object->getX() + j * sprite->getLocalBounds().width - offsetX,
+                                object->getY() - offsetY);
+            window.draw(*sprite);
+        }
+    }
 }
 

@@ -8,7 +8,7 @@
 
 log4cpp::Category &Animation::logger = log4cpp::Category::getInstance (typeid (Animation).name ());
 
-const sf::Sprite Animation::getNextSprite (PhysicalObject::Direction direction)
+sf::Sprite Animation::getNextSprite (PhysicalObject::Direction direction)
 {
     _currentFrame += _frameRate;
     std::shared_ptr<Animation::AnimationType> key(new AnimationType(_animationType));
@@ -60,6 +60,8 @@ Animation::Animation (const char *fileName, std::shared_ptr<std::map<std::shared
 
 Animation::AnimationType Animation::makeAnimationType(const char *string, int& retcode) {
     retcode = 0;
+    if (!strcmp(string, "None"))
+        return AnimationType::None;
     if (!strcmp(string, "Move"))
         return AnimationType::Move;
     if (!strcmp(string, "Jump"))
@@ -70,6 +72,7 @@ Animation::AnimationType Animation::makeAnimationType(const char *string, int& r
         return AnimationType::Die;
     logger.warn("No animation Type associated with \"%s\" found", string);
     retcode = 1;
+    return  AnimationType::None;
 }
 
 Animation::FrameSequence::FrameSequence (int frameCount, int init_x, int init_y, int size_x, int size_y) :
