@@ -33,11 +33,15 @@ public:
 
     void setLookDirection (Direction direction);
 
+    bool isAlive() const;
+
     //virtual void attack() = 0;
 
 protected:
 
     virtual void collided (const PhysicalObject *source, Axis relativeLocation);
+
+    bool alive;
 
 private:
 

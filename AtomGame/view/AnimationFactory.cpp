@@ -10,10 +10,14 @@ Animation AnimationFactory::playerAnimation = Animation("player.png", load("play
 
 Animation AnimationFactory::teleportAnimation = Animation("teleport.png", load("teleport.xml"), frameRate*4);
 
-AnimationFactory::AnimationFactory ()
-{
+Animation AnimationFactory::mapchangeAnimation = Animation("mapch.png", load("mapch.xml"), frameRate*2);
 
-}
+Animation AnimationFactory::respawnAnimation = Animation("lightning.png", load("lightning.xml"), frameRate*2);
+
+Animation AnimationFactory::coinAnimation = Animation("coin.png", load("coin.xml"), frameRate * 1.5f);
+
+AnimationFactory::AnimationFactory ()
+{}
 
 Animation *AnimationFactory::getPlayerAnimation ()
 {
@@ -22,6 +26,19 @@ Animation *AnimationFactory::getPlayerAnimation ()
 
 Animation *AnimationFactory::getTeleportAnimation() {
     return &teleportAnimation;
+}
+
+Animation *AnimationFactory::getMapChangeAnimation() {
+    return &mapchangeAnimation;
+}
+
+Animation *AnimationFactory::getRespawnAnimation() {
+    return &respawnAnimation;
+}
+
+
+Animation *AnimationFactory::getCoinAnimation() {
+    return &coinAnimation;
 }
 
 std::shared_ptr<std::map<std::shared_ptr<Animation::AnimationType>, std::shared_ptr<Animation::FrameSequence>, Animation::Comp>>
@@ -79,5 +96,4 @@ AnimationFactory::load(tinyxml2::XMLDocument& xmlDocument, const char* file)
     else
         logger.warn ("Animation file \"%s\" has no animations", file);
 }
-
 

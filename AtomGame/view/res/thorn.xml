@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<Objects>
+    <Object Type="DeadlyBlock">
+        <Place X="0" Y="0"/>
+        <Size X="150" Y="39"/>
+    </Object>
+</Objects>

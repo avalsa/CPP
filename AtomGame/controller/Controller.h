@@ -5,10 +5,13 @@
 #ifndef ATOMGAME_ATOMGAME_H
 #define ATOMGAME_ATOMGAME_H
 
+#include <SFML/Window.hpp>
 #include "../model/Model.h"
 #include "../view/View.h"
 
 class View;
+
+class Model;
 
 class Controller
 {
@@ -27,6 +30,12 @@ public:
     void onNoMovementKeyPress ();
 
     void tick ();
+
+    bool isPressed (sf::Keyboard::Key key);
+
+    bool isEnd ();
+
+    void onMapChange(const char* mapName);
 
 private:
     static log4cpp::Category &logger;

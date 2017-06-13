@@ -11,6 +11,7 @@
 #include <tinyxml2.h>
 #include <log4cpp/Category.hh>
 #include <memory>
+#include "View.h"
 
 class SpriteFactory
 {
@@ -18,13 +19,22 @@ class SpriteFactory
 public:
 
     enum ObjectType
-    { SolidBlock, DeadlyBlock, Background };
+    { SolidBlock, DeadlyBlock, GameOver,
+        Background1, Background2,
+        Number0, Number1, Number2, Number3, Number4, Number5, Number6, Number7, Number8, Number9
+    };
 
     static std::shared_ptr<sf::Sprite> getSprite(ObjectType objectType);
 
     static std::shared_ptr<sf::Sprite> getSolidBlockSprite();
 
-    static std::shared_ptr<sf::Sprite> getBackgroundSprite();
+    static std::shared_ptr<sf::Sprite> getDeadlyBlockSprite();
+
+    static std::shared_ptr<sf::Sprite> getBackgroundSprite(View::BackgroundType );
+
+    static std::shared_ptr<sf::Sprite> getGameOverSprite();
+
+    static std::shared_ptr<sf::Sprite> getNumberSprite(int);
 
 private:
 

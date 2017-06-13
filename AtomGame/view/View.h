@@ -14,20 +14,28 @@
 
 class Controller;
 
+class Model;
+
 class View
 {
 public:
+
+    enum BackgroundType
+    { City1, City2};
 
     View (Model *, int height, int width);
 
     int tick ();
 
-    void ShowGameOver ();
-
-    void PlayerWin ();
-
+    void changeMap(const char *string);
 
 private:
+
+    void showGameOver ();
+
+    void showPlayerWin ();
+
+    void clear();
 
     bool isVisible(const PhysicalObject* obj) const;
 
@@ -37,10 +45,13 @@ private:
     sf::RenderWindow window;
     int offsetX;
     int offsetY;
+    Animation *_playerAnimation;
+    BackgroundType backgroundType;
 
     void drawObject(sf::Sprite* sprite, PhysicalObject* object, bool slaceX, bool scaleY);
 
-    Animation *_playerAnimation;
+
+
 };
 
 

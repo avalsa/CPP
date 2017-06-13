@@ -8,6 +8,7 @@ set(SOURCE_FILES
         Animation.cpp Animation.h
         AnimationFactory.cpp AnimationFactory.h
         SpriteFactory.cpp SpriteFactory.h
+        ScorePanel.cpp ScorePanel.h
         )
 
 

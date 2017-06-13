@@ -6,7 +6,8 @@
 
 Actor::Actor (int x, int y, int sizeX, int sizeY) : PhysicalObject (x, y, sizeX, sizeY, Player), _action (NoAction),
                                                     lookDirection (Right),
-                                                    moving (false)
+                                                    moving (false),
+                                                    alive(true)
 {
 
 }
@@ -103,4 +104,8 @@ bool Actor::isMoving ()
 void Actor::setMoving (bool moving)
 {
     Actor::moving = moving;
+}
+
+bool Actor::isAlive() const {
+    return alive;
 }

@@ -5,10 +5,8 @@
 #include "Player.h"
 #include "Teleporter.h"
 
-Player::Player (int x, int y, int sizeX, int sizeY) : Actor (x, y, sizeX, sizeY), _respX (x), _respY (y)
-{
-
-}
+Player::Player (int x, int y, int sizeX, int sizeY) : Actor (x, y, sizeX, sizeY), _respX (x), _respY (y), _coins(0)
+{}
 
 void Player::respawn ()
 {
@@ -21,6 +19,7 @@ void Player::collided (const PhysicalObject *source, PhysicalObject::Axis relati
     switch (source->type ())
     {
         case PhysicalObject::BlockType::Deadly :
+            alive = false;
             respawn ();
             break;
         case PhysicalObject::BlockType::Respawn :
@@ -44,6 +43,10 @@ void Player::collided (const PhysicalObject *source, PhysicalObject::Axis relati
             } else
                 logger.warn ("Block type mismatch encountered");
             break;
+
+        case PhysicalObject::BlockType::Coin:
+            _coins++;
+            break;
         default:
             Actor::collided (source, relativeLocation);
             break;
@@ -53,4 +56,8 @@ void Player::collided (const PhysicalObject *source, PhysicalObject::Axis relati
 PhysicalObject::BlockType Player::getClass () const
 {
     return PhysicalObject::BlockType::Player;
+}
+
+int Player::getScore() {
+    return _coins;
 }

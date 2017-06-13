@@ -21,7 +21,7 @@ public:
     };
     enum BlockType
     {
-        Solid, Deadly, Respawn, Portal, MapChange, Player
+        Solid, Deadly, Respawn, Portal, MapChange, Player, Coin
     };
 
     struct Position;

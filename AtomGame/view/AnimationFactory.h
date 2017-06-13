@@ -18,11 +18,24 @@ public:
 
     static Animation *getTeleportAnimation();
 
+    static Animation *getMapChangeAnimation();
+
+    static Animation *getRespawnAnimation();
+
+    static Animation *getCoinAnimation();
+
+
 private:
 
     static Animation playerAnimation;
 
     static Animation teleportAnimation;
+
+    static Animation mapchangeAnimation;
+
+    static Animation respawnAnimation;
+
+    static Animation coinAnimation;
 
     static log4cpp::Category &logger;
 

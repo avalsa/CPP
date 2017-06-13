@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <Objects>
-    <Object Type="Background">
+    <Object Type="Background1">
         <Place X="0" Y="0"/>
         <Size X="2880" Y="2050"/>
     </Object>

@@ -10,9 +10,10 @@
 #include <typeinfo>
 #include <queue>
 #include "../objects/Player.h"
-//#include "../objects/Bot.h"
-#include "../objects/GameField.h"
 #include "../objects/TransMapTeleporter.h"
+#include "../controller/Controller.h"
+
+class Controller;
 
 class Model
 {
@@ -35,11 +36,7 @@ public:
 
     //const std::vector<Bot> &getBots () const;
 
-    const GameField &getGameField () const;
-
-    const std::vector<PhysicalObject *> &getBlocks () const;
-
-    const std::vector<PhysicalObject *> &getObjs () const;
+    std::vector<PhysicalObject *> &getObjs ();
 
     Player &getPlayer ();
 
@@ -49,13 +46,16 @@ public:
 
     void load(tinyxml2::XMLElement* map);
 
+    bool isReloading () const;
+
+    void setController(Controller * controller);
+
 private:
+    Controller* controller;
     static log4cpp::Category &logger;
     Player player;
     //std::vector<Bot> bots;
-    std::vector<PhysicalObject *> blocks;
     std::vector<PhysicalObject *> objs; //for movement algorithm standardization
-    GameField gameField;
     TransMapTeleporter *teleporter;
 
     void tryMove (PhysicalObject &obj, PhysicalObject::Position position);

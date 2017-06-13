@@ -7,7 +7,20 @@
 
 std::map<SpriteFactory::ObjectType, std::pair<const char*, const char*>> SpriteFactory::_files = {
         {ObjectType::SolidBlock, {"platform.xml", "platform.png"}},
-        {ObjectType::Background, {"background1.xml", "background1.png"}},
+        {ObjectType::DeadlyBlock, {"thorn.xml", "thorn.png"}},
+        {ObjectType::Background1, {"background1.xml", "background1.png"}},
+        {ObjectType::Background2, {"background2.xml", "background2.png"}},
+        {ObjectType::GameOver, {"gameover.xml", "gameover.png"}},
+        {ObjectType::Number0, {"number_0.xml", "number_0.png"}},
+        {ObjectType::Number1, {"number_1.xml", "number_1.png"}},
+        {ObjectType::Number2, {"number_2.xml", "number_2.png"}},
+        {ObjectType::Number3, {"number_3.xml", "number_3.png"}},
+        {ObjectType::Number4, {"number_4.xml", "number_4.png"}},
+        {ObjectType::Number5, {"number_5.xml", "number_5.png"}},
+        {ObjectType::Number6, {"number_6.xml", "number_6.png"}},
+        {ObjectType::Number7, {"number_7.xml", "number_7.png"}},
+        {ObjectType::Number8, {"number_8.xml", "number_8.png"}},
+        {ObjectType::Number9, {"number_9.xml", "number_9.png"}},
 };
 
 std::vector<std::shared_ptr<sf::Texture>> SpriteFactory::_textures = std::vector<std::shared_ptr<sf::Texture>>();
@@ -20,7 +33,8 @@ log4cpp::Category &SpriteFactory::logger = log4cpp::Category::getInstance (typei
 SpriteFactory::SpriteFactory()
 {}
 
-std::shared_ptr<sf::Sprite> SpriteFactory::getSprite(ObjectType objectType) {
+std::shared_ptr<sf::Sprite> SpriteFactory::getSprite(ObjectType objectType)
+{
     std::shared_ptr<ObjectType> type(new ObjectType(objectType));
     if (_sprites[type] == nullptr){
         std::pair<const char*, const char*> file = _files[objectType];
@@ -36,8 +50,41 @@ std::shared_ptr<sf::Sprite> SpriteFactory::getSolidBlockSprite()
     return getSprite(ObjectType::SolidBlock);
 }
 
-std::shared_ptr<sf::Sprite> SpriteFactory::getBackgroundSprite() {
-    return getSprite(ObjectType::Background);
+std::shared_ptr<sf::Sprite> SpriteFactory::getDeadlyBlockSprite()
+{
+    return getSprite(ObjectType::DeadlyBlock);
+}
+
+std::shared_ptr<sf::Sprite> SpriteFactory::getGameOverSprite()
+{
+    return getSprite(ObjectType::GameOver);
+}
+
+std::shared_ptr<sf::Sprite> SpriteFactory::getNumberSprite(int number)
+{
+    switch(number)
+    {
+        case 0: return getSprite(ObjectType::Number0);
+        case 1: return getSprite(ObjectType::Number1);
+        case 2: return getSprite(ObjectType::Number2);
+        case 3: return getSprite(ObjectType::Number3);
+        case 4: return getSprite(ObjectType::Number4);
+        case 5: return getSprite(ObjectType::Number5);
+        case 6: return getSprite(ObjectType::Number6);
+        case 7: return getSprite(ObjectType::Number7);
+        case 8: return getSprite(ObjectType::Number8);
+        case 9: return getSprite(ObjectType::Number9);
+    }
+}
+
+std::shared_ptr<sf::Sprite> SpriteFactory::getBackgroundSprite(View::BackgroundType bt) {
+    switch (bt){
+        case View::BackgroundType::City1 :
+            return getSprite(ObjectType::Background1);
+        case View::BackgroundType::City2 :
+            return getSprite(ObjectType::Background2);
+    }
+
 }
 
 void SpriteFactory::load(const char *filexml, const char* fileimg)
@@ -106,13 +153,26 @@ SpriteFactory::ObjectType SpriteFactory::makeObjectType(const char *str, int &re
         return SolidBlock;
     if (!strcmp(str, "DeadlyBlock"))
         return DeadlyBlock;
-    if (!strcmp(str, "Background"))
-        return Background;
+    if (!strcmp(str, "Background1"))
+        return Background1;
+    if (!strcmp(str, "Background2"))
+        return Background2;
+    if (!strcmp(str, "GameOver"))
+        return GameOver;
+    if (!strcmp(str, "Number0")) return Number0;
+    if (!strcmp(str, "Number1")) return Number1;
+    if (!strcmp(str, "Number2")) return Number2;
+    if (!strcmp(str, "Number3")) return Number3;
+    if (!strcmp(str, "Number4")) return Number4;
+    if (!strcmp(str, "Number5")) return Number5;
+    if (!strcmp(str, "Number6")) return Number6;
+    if (!strcmp(str, "Number7")) return Number7;
+    if (!strcmp(str, "Number8")) return Number8;
+    if (!strcmp(str, "Number9")) return Number9;
+
     res = 1;
     return SolidBlock;
 }
-
-
 
 SpriteFactory::Block::Block(tinyxml2::XMLElement *action) :
         _init_x (-1), _init_y (-1), _size_x (-1), _size_y (-1)

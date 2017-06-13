@@ -58,3 +58,17 @@ void Controller::tick ()
     if (!movementKeyPressed)
         onNoMovementKeyPress ();
 }
+
+bool Controller::isPressed (sf::Keyboard::Key key)
+{
+    return sf::Keyboard::isKeyPressed (key);
+}
+
+bool Controller::isEnd ()
+{
+    return sf::Keyboard::isKeyPressed (sf::Keyboard::Key::Escape);
+}
+
+void Controller::onMapChange(const char* mapName) {
+    view->changeMap(mapName);
+}

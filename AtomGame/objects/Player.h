@@ -14,12 +14,14 @@ public:
     Player (int x, int y, int sizeX, int sizeY);
     void respawn ();
 
+    int getScore();
+
     virtual BlockType getClass () const;
 
 private:
     int _respX;
     int _respY;
-
+    int _coins;
 protected:
     virtual void collided (const PhysicalObject *source, Axis relativeLocation);
 
