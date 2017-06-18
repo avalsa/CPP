@@ -6,7 +6,7 @@
 
 log4cpp::Category &AnimationFactory::logger = log4cpp::Category::getInstance (typeid (AnimationFactory).name ());
 
-Animation AnimationFactory::playerAnimation = Animation("player.png", load("player.xml"), frameRate * 1.5);
+Animation AnimationFactory::playerAnimation = Animation("player.png", load("player.xml"), frameRate * 2);
 
 Animation AnimationFactory::teleportAnimation = Animation("teleport.png", load("teleport.xml"), frameRate*4);
 
@@ -15,6 +15,8 @@ Animation AnimationFactory::mapchangeAnimation = Animation("mapch.png", load("ma
 Animation AnimationFactory::respawnAnimation = Animation("lightning.png", load("lightning.xml"), frameRate*2);
 
 Animation AnimationFactory::coinAnimation = Animation("coin.png", load("coin.xml"), frameRate * 1.5f);
+
+Animation AnimationFactory::botAnimation = Animation("zombie.png", load("zombie.xml"), frameRate * 1.5f);;
 
 AnimationFactory::AnimationFactory ()
 {}
@@ -36,6 +38,9 @@ Animation *AnimationFactory::getRespawnAnimation() {
     return &respawnAnimation;
 }
 
+Animation *AnimationFactory::getBotAnimation() {
+    return &botAnimation;
+}
 
 Animation *AnimationFactory::getCoinAnimation() {
     return &coinAnimation;
@@ -96,4 +101,3 @@ AnimationFactory::load(tinyxml2::XMLDocument& xmlDocument, const char* file)
     else
         logger.warn ("Animation file \"%s\" has no animations", file);
 }
-

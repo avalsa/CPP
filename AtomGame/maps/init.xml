@@ -6,11 +6,18 @@
     </Block>
     <Block Type="Deadly">
         <Place X="400" Y="-500"/>
-        <Size X="30" Y="500"/>
+        <Size X="30" Y="400"/>
     </Block>
     <Block Type="Coin">
         <Place X="300" Y="-100"/>
         <Size X="16" Y="16"/>
+    </Block>
+    <Block Type="Bot">
+        <Step Count="100"/>
+        <Script file="blocks/programs/leftRight.bit"/>
+        <Place X="500" Y="-50"/>
+        <Size X="30" Y="50"/>
+        <Speed X="3" Y="0"/>
     </Block>
     <Block Type="Deadly">
         <Place X="-1000" Y="30"/>
@@ -49,8 +56,8 @@
     <Block Type="Portal">
         <Place X="-10" Y="-60"/>
         <Size X="50" Y="50"/>
-        <!--<Acceleration X="0" Y="1"/>-->
-        <!--<Script file="blocks/programs/bounce.bit"/>-->
+        <Acceleration X="0" Y="1"/>
+        <Script file="blocks/programs/bounce.bit"/>
         <Acceleration Y="1"/>
         <Portal X="0" Y="-2000"/>
     </Block>

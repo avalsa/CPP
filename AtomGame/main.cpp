@@ -7,7 +7,6 @@
 #include <dlfcn.h>
 #include "objects/Player.h"
 #include "model/Model.h"
-#include "view/View.h"
 #include "plugins/plugin/Plugin.h"
 
 
@@ -39,14 +38,16 @@ int main (int argc, char **argv)
 
     for (std::vector<std::pair<void *, Plugin *>>::iterator i = plugins.begin (); i != plugins.end (); i++)
         i->second->start (&model, &controller, &view);
-
     while (!controller.isEnd ())
     {
+        const clock_t begin_time = clock();
         controller.tick ();
         model.tick ();
         if (!view.tick ()) break;
         for (std::vector<std::pair<void *, Plugin *>>::iterator i = plugins.begin (); i != plugins.end (); i++)
             i->second->tick ();
+        int time =  (int)(clock () - begin_time);
+        sf::sleep(sf::microseconds (10000 - time));
     }
 
     for (std::vector<std::pair<void *, Plugin *>>::const_iterator i = plugins.cbegin (); i != plugins.cend (); i++)

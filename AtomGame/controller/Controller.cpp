@@ -72,3 +72,7 @@ bool Controller::isEnd ()
 void Controller::onMapChange(const char* mapName) {
     view->changeMap(mapName);
 }
+
+void Controller::onCoinPicked() {
+    view->onCoinPick();
+}

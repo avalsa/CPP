@@ -22,6 +22,7 @@ const char *TransMapTeleporter::getDest ()
 TransMapTeleporter::TransMapTeleporter (int x, int y, int sizeX, int sizeY, int destX, int destY, const char *destFile,
                                         const char *destMap) :
         Teleporter (x, y, sizeX, sizeY, destX, destY, PhysicalObject::BlockType::MapChange),
+        PhysicalObject(x, y, sizeX, sizeY),
         _destinationFile (nullptr), _destination (nullptr)
 {
     if (!destFile)
@@ -56,7 +57,8 @@ void TransMapTeleporter::load (tinyxml2::XMLElement *block)
 }
 
 TransMapTeleporter::TransMapTeleporter (int x, int y, int sizeX, int sizeY, tinyxml2::XMLElement *block) :
-        Teleporter (x, y, sizeX, sizeY, block)
+        Teleporter (x, y, sizeX, sizeY, block),
+        PhysicalObject(x, y, sizeX, sizeY, BlockType::Portal)
 {
     if (block != nullptr)
     {
@@ -66,8 +68,9 @@ TransMapTeleporter::TransMapTeleporter (int x, int y, int sizeX, int sizeY, tiny
         logger.warn ("Missing XML element for MapChanger, created solid block instead");
 }
 
-TransMapTeleporter::TransMapTeleporter (int x, int y, int sizeX, int sizeY, const char *file) : Teleporter (x, y, sizeX,
-                                                                                                            sizeY, file)
+TransMapTeleporter::TransMapTeleporter (int x, int y, int sizeX, int sizeY, const char *file) :
+        Teleporter (x, y, sizeX, sizeY, file),
+        PhysicalObject(x, y, sizeX, sizeY, BlockType::Portal)
 {
     if (file == nullptr)
         return;

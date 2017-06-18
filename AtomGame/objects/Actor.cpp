@@ -5,9 +5,9 @@
 #include "Actor.h"
 
 Actor::Actor (int x, int y, int sizeX, int sizeY) : PhysicalObject (x, y, sizeX, sizeY, Player), _action (NoAction),
-                                                    lookDirection (Right),
-                                                    moving (false),
-                                                    alive(true)
+                                                    _lookDirection (Right),
+                                                    _moving (false),
+                                                    _alive(true)
 {
 
 }
@@ -88,24 +88,24 @@ Actor::Action Actor::getAction () const
 
 PhysicalObject::Direction Actor::getLookDirection () const
 {
-    return lookDirection;
+    return _lookDirection;
 }
 
 void Actor::setLookDirection (PhysicalObject::Direction direction)
 {
-    lookDirection = direction;
+    _lookDirection = direction;
 }
 
-bool Actor::isMoving ()
+bool Actor::isMoving () const
 {
-    return moving;
+    return _moving;
 }
 
 void Actor::setMoving (bool moving)
 {
-    Actor::moving = moving;
+    _moving = moving;
 }
 
 bool Actor::isAlive() const {
-    return alive;
+    return _alive;
 }

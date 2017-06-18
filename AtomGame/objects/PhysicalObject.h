@@ -5,9 +5,8 @@
 #include <typeinfo>
 #include <unordered_map>
 #include <tinyxml2.h>
-#include "GameObject.h"
 
-class PhysicalObject : public GameObject
+class PhysicalObject
 {
 public:
 
@@ -21,7 +20,7 @@ public:
     };
     enum BlockType
     {
-        Solid, Deadly, Respawn, Portal, MapChange, Player, Coin
+        Solid, Deadly, Respawn, Portal, MapChange, Player, Coin, Bot
     };
 
     struct Position;

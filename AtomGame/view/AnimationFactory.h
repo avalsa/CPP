@@ -25,6 +25,8 @@ public:
     static Animation *getCoinAnimation();
 
 
+    static Animation *getBotAnimation();
+
 private:
 
     static Animation playerAnimation;
@@ -36,6 +38,8 @@ private:
     static Animation respawnAnimation;
 
     static Animation coinAnimation;
+
+    static Animation botAnimation;
 
     static log4cpp::Category &logger;
 

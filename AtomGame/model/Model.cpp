@@ -6,6 +6,7 @@
 
 #include "Model.h"
 #include "../objects/Coin.h"
+#include "../objects/Bot.h"
 
 log4cpp::Category &Model::logger = log4cpp::Category::getInstance (typeid (Model).name ());
 
@@ -20,6 +21,7 @@ void Model::tick ()
             Coin *c = (Coin *) (*i);
             if (c->isPicked())
             {
+                controller->onCoinPicked();
                 delete *i;
                 objs.erase(i);
                 i = prev;
@@ -140,14 +142,14 @@ void Model::tryMove (PhysicalObject &obj, PhysicalObject::Position position)
             (*i)->type () == PhysicalObject::BlockType::MapChange &&
             (*i)->getClass () == PhysicalObject::BlockType::MapChange)
         {
-            teleporter = (TransMapTeleporter *) *i;
+            teleporter = dynamic_cast<TransMapTeleporter *>(*i);
         }
         if ((*i)->type () == PhysicalObject::BlockType::Player &&
             (*i)->getClass () == PhysicalObject::BlockType::Player &&
             obj.type () == PhysicalObject::BlockType::MapChange &&
             obj.getClass () == PhysicalObject::BlockType::MapChange)
         {
-            teleporter = (TransMapTeleporter *) &obj;
+            teleporter = dynamic_cast<TransMapTeleporter *>(&obj);
         }
         (*i)->addCollision (&obj, PhysicalObject::Axis::axisX);
         obj.addCollision (*i, PhysicalObject::Axis::axisX);
@@ -312,6 +314,8 @@ void Model::load (tinyxml2::XMLElement *map)
                 objs.push_back (new TransMapTeleporter (0, 0, 10, 10, block));
             else if (strcmp (type, "Coin") == 0)
                 objs.push_back(new Coin(0, 0, 10, 10, block));
+            else if (strcmp (type, "Bot") == 0)
+                objs.push_back(new Bot(0, 0, 10, 10, 10,  block));
             else
                 objs.push_back (new CustomObject (0, 0, 10, 10, block));
         }

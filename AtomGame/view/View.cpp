@@ -7,6 +7,8 @@
 #include "AnimationFactory.h"
 #include "SpriteFactory.h"
 #include "ScorePanel.h"
+#include "Sounds.h"
+#include "../objects/Bot.h"
 
 
 log4cpp::Category &View::logger = log4cpp::Category::getInstance (typeid (View).name ());
@@ -27,9 +29,26 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
         }
     }
 
+//background sound
+    static sf::Music * music = nullptr;
+    if (!music)
+    {
+        music = Sounds::getMainMusic();
+        music->setLoop(true);
+        music->play();
+    }
+
 //check game end
     if (model->isGameOver())
     {
+        static sf::Sound * gomus = nullptr;
+        music->setVolume(music->getVolume() - music->getVolume() / 30);
+        if (!gomus)
+        {
+            gomus = Sounds::getGameOverSound();
+            gomus->play();
+        }
+
         showGameOver();
         window.display();
         sf::sleep(sf::milliseconds(10));
@@ -131,6 +150,17 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
                     drawObject(&s, *i, 1, 1);
                 }
                 break;
+            case PhysicalObject::Bot:
+                if (block_animations[*i] == nullptr) {
+                    Animation *a = AnimationFactory::getBotAnimation();
+                    a->setAnimationType(Animation::AnimationType::Stand);
+                    block_animations[*i] = a;
+                } else {
+                    sf::Sprite s = getActionSprite(dynamic_cast<const Actor*>(*i), block_animations[*i]);
+                    drawObject(&s, *i, 1, 1);
+                }
+
+                break;
         }
     }
 //draw score
@@ -140,7 +170,7 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
 
 //finish
     window.display ();
-    sf::sleep (sf::milliseconds (10));
+//    sf::sleep (sf::milliseconds (10));
     return 1;
 }
 
@@ -185,7 +215,7 @@ bool View::isVisible(const PhysicalObject* obj) const
     return !(std::abs(pl_x - obj_x) > window.getSize().x/2
              && std::abs(pl_x - (obj_x + obj_s_x)) > window.getSize().x/2
              && ! (pl_x > obj_x && pl_x < obj_x + obj_s_x)
-             ||
+             &&
              std::abs(pl_y - obj_y) > window.getSize().y/2
              && std::abs(pl_y - (obj_y + obj_s_y)) > window.getSize().y/2
              && ! (pl_y > obj_y && pl_y < obj_y + obj_s_y)
@@ -277,6 +307,38 @@ void View::clear() {
     }
 }
 
-void View::showPlayerWin() {
+void View::showPlayerWin()
+{
 
 }
+
+void View::onCoinPick()
+{
+    Sounds::getCoinPickSound()->play();
+}
+
+sf::Sprite View::getActionSprite(const Actor *pActor, Animation *&pAnimation) {
+    sf::Sprite ret;
+    if (pActor->isOnGround ())
+    {
+        if (pActor->isMoving ())
+        {
+            if (pAnimation->getAnimationType () != Animation::AnimationType::Move)
+                pAnimation->setAnimationType (Animation::AnimationType::Move);
+            ret = pAnimation->getNextSprite (pActor->getLookDirection ());
+        } else
+        {
+            if (pAnimation->getAnimationType () != Animation::AnimationType::Stand)
+                pAnimation->setAnimationType (Animation::AnimationType::Stand);
+            ret = pAnimation->getNextSprite (pActor->getLookDirection ());
+        }
+    } else
+    {
+        if (pAnimation->getAnimationType () != Animation::AnimationType::Jump)
+            pAnimation->setAnimationType (Animation::AnimationType::Jump);
+        ret = pAnimation->getNextSprite (pActor->getLookDirection ());
+    }
+    ret.setPosition (pActor->getX () - offsetX, pActor->getY () - offsetY);
+    return ret;
+}
+

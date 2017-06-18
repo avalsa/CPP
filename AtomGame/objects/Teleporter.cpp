@@ -20,7 +20,8 @@ int Teleporter::getDestY ()
 }
 
 Teleporter::Teleporter (int x, int y, int sizeX, int sizeY, const char *file) :
-        CustomObject (x, y, sizeX, sizeY)
+        CustomObject (x, y, sizeX, sizeY),
+        PhysicalObject(x, y, sizeX, sizeY, BlockType::Portal)
 {
     if (file == nullptr)
         return;
@@ -68,14 +69,17 @@ void Teleporter::load (tinyxml2::XMLElement *block)
     }
 }
 
-Teleporter::Teleporter (int x, int y, int sizeX, int sizeY, int destX, int destY) : CustomObject (x, y, sizeX, sizeY,
-                                                                                                  Portal),
-                                                                                    _destX (destX), _destY (destY)
+Teleporter::Teleporter (int x, int y, int sizeX, int sizeY, int destX, int destY) :
+        CustomObject (x, y, sizeX, sizeY, Portal),
+        PhysicalObject(x, y, sizeX, sizeY, Portal),
+        _destX (destX), _destY (destY)
+
 {
 }
 
-Teleporter::Teleporter (int x, int y, int sizeX, int sizeY, tinyxml2::XMLElement *block) : CustomObject (x, y, sizeX,
-                                                                                                         sizeY, block)
+Teleporter::Teleporter (int x, int y, int sizeX, int sizeY, tinyxml2::XMLElement *block) :
+        CustomObject (x, y, sizeX, sizeY, block),
+        PhysicalObject(x, y, sizeX, sizeY, BlockType::Portal)
 {
     if (block != nullptr)
     {
@@ -87,6 +91,7 @@ Teleporter::Teleporter (int x, int y, int sizeX, int sizeY, tinyxml2::XMLElement
 
 Teleporter::Teleporter (int x, int y, int sizeX, int sizeY, int destX, int destY, PhysicalObject::BlockType type)
         : CustomObject (x, y, sizeX, sizeY, type),
+          PhysicalObject(x, y, sizeX, sizeY, BlockType::Portal),
           _destX (destX), _destY (destY)
 {
 }

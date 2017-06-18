@@ -143,6 +143,10 @@ void CustomObject::load (tinyxml2::XMLElement *block)
             setType (Portal);
         else if (strcmp (type, "MapChange") == 0)
             setType (MapChange);
+        else if (strcmp (type, "Coin") == 0)
+            setType (Coin);
+        else if (strcmp (type, "Bot") == 0)
+            setType (Bot);
     }
 }
 

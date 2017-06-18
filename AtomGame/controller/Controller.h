@@ -37,6 +37,8 @@ public:
 
     void onMapChange(const char* mapName);
 
+    void onCoinPicked();
+
 private:
     static log4cpp::Category &logger;
     Model *model;

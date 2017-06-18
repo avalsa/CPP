@@ -5,7 +5,6 @@
 #ifndef ATOMGAME_VISUALIZER_H
 #define ATOMGAME_VISUALIZER_H
 
-#include "../objects/GameObject.h"
 #include "../model/Model.h"
 #include "../controller/Controller.h"
 #include "Animation.h"
@@ -29,6 +28,8 @@ public:
 
     void changeMap(const char *string);
 
+    void onCoinPick();
+
 private:
 
     void showGameOver ();
@@ -50,9 +51,7 @@ private:
 
     void drawObject(sf::Sprite* sprite, PhysicalObject* object, bool slaceX, bool scaleY);
 
-
-
+    sf::Sprite getActionSprite(const Actor *pActor, Animation *&pAnimation);
 };
-
 
 #endif //ATOMGAME_VISUALIZER_H

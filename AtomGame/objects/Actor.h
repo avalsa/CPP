@@ -8,7 +8,7 @@
 #include "Weapon.h"
 #include "PhysicalObject.h"
 
-class Actor : public PhysicalObject
+class Actor : virtual public PhysicalObject
 {
 public:
 
@@ -27,7 +27,7 @@ public:
 
     virtual PhysicalObject::Position tick ();
 
-    bool isMoving ();
+    bool isMoving () const;
 
     PhysicalObject::Direction getLookDirection () const;
 
@@ -35,24 +35,21 @@ public:
 
     bool isAlive() const;
 
+    void setMoving (bool moving);
+
     //virtual void attack() = 0;
 
 protected:
 
     virtual void collided (const PhysicalObject *source, Axis relativeLocation);
 
-    bool alive;
-
-private:
+    bool _alive;
 
     Action _action;
 
-    Direction lookDirection;
+    Direction _lookDirection;
 
-    bool moving;
-
-public:
-    void setMoving (bool moving);
+    bool _moving;
 
 };
 

@@ -5,7 +5,10 @@
 #include "Player.h"
 #include "Teleporter.h"
 
-Player::Player (int x, int y, int sizeX, int sizeY) : Actor (x, y, sizeX, sizeY), _respX (x), _respY (y), _coins(0)
+Player::Player (int x, int y, int sizeX, int sizeY) :
+        Actor (x, y, sizeX, sizeY),
+        PhysicalObject(x, y, sizeX, sizeY, BlockType::Player),
+        _respX (x), _respY (y), _coins(0)
 {}
 
 void Player::respawn ()
@@ -19,7 +22,7 @@ void Player::collided (const PhysicalObject *source, PhysicalObject::Axis relati
     switch (source->type ())
     {
         case PhysicalObject::BlockType::Deadly :
-            alive = false;
+            _alive = false;
             respawn ();
             break;
         case PhysicalObject::BlockType::Respawn :
@@ -30,16 +33,16 @@ void Player::collided (const PhysicalObject *source, PhysicalObject::Axis relati
         case PhysicalObject::BlockType::Portal :
             if (source->getClass () == Portal || source->getClass () == MapChange)
             {
-                _x = ((Teleporter *) source)->getDestX ();
-                _y = ((Teleporter *) source)->getDestY ();
+                _x = dynamic_cast<Teleporter*>(const_cast<PhysicalObject *>(source))->getDestX ();
+                _y = dynamic_cast<Teleporter*>(const_cast<PhysicalObject *>(source))->getDestY ();
             } else
                 logger.warn ("Block type mismatch encountered");
             break;
         case PhysicalObject::BlockType::MapChange :
             if (source->getClass () == MapChange)
             {
-                _x = ((Teleporter *) source)->getDestX ();
-                _y = ((Teleporter *) source)->getDestY ();
+                _x = dynamic_cast<Teleporter*>(const_cast<PhysicalObject *>(source))->getDestX ();
+                _y = dynamic_cast<Teleporter*>(const_cast<PhysicalObject *>(source))->getDestY ();
             } else
                 logger.warn ("Block type mismatch encountered");
             break;
