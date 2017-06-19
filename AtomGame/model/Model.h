@@ -50,6 +50,8 @@ public:
 
     void setController(Controller * controller);
 
+    void shootPlayer();
+
 private:
     Controller* controller;
     static log4cpp::Category &logger;

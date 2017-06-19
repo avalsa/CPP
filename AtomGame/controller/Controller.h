@@ -27,6 +27,8 @@ public:
 
     void onDownKeyPress ();
 
+    void onSpacePress();
+
     void onNoMovementKeyPress ();
 
     void tick ();

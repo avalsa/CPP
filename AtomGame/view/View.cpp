@@ -159,8 +159,16 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
                     sf::Sprite s = getActionSprite(dynamic_cast<const Actor*>(*i), block_animations[*i]);
                     drawObject(&s, *i, 1, 1);
                 }
-
                 break;
+
+            case PhysicalObject::Bullet:
+                auto s = SpriteFactory::getBulletSprite();
+                Bullet * b = dynamic_cast<Bullet*>(*i);
+                if (b->getDirection() == PhysicalObject::Direction::Left)
+                    s->rotate(180.f);
+                drawObject(s.get(), *i, 1, 1);
+                break;
+
         }
     }
 //draw score

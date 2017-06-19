@@ -31,6 +31,10 @@ void Controller::onNoMovementKeyPress ()
     model->movePlayer (PhysicalObject::Direction::NoDirection);
 }
 
+void Controller::onSpacePress()
+{
+    model->shootPlayer();
+}
 
 Controller::Controller (Model *model, View *view) : model (model), view (view)
 {
@@ -57,6 +61,8 @@ void Controller::tick ()
         onDownKeyPress ();
     if (!movementKeyPressed)
         onNoMovementKeyPress ();
+    if (sf::Keyboard::isKeyPressed (sf::Keyboard::Key::Space))
+        onSpacePress();
 }
 
 bool Controller::isPressed (sf::Keyboard::Key key)

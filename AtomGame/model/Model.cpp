@@ -339,12 +339,23 @@ bool Model::isReloading () const
     return teleporter != nullptr;
 }
 
-void Model::setController(Controller *controller) {
+void Model::setController(Controller *controller)
+{
     this->controller = controller;
 }
 
-bool Model::isGameOver() {
+bool Model::isGameOver()
+{
     return !player.isAlive();
+}
+
+void Model::shootPlayer()
+{
+    auto e = (Bullet *) player.tryShoot();
+    if (!e)
+        return;
+    objs.push_back((Bullet*)e);
+
 }
 
 

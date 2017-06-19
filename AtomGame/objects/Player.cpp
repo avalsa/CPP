@@ -8,7 +8,7 @@
 Player::Player (int x, int y, int sizeX, int sizeY) :
         Actor (x, y, sizeX, sizeY),
         PhysicalObject(x, y, sizeX, sizeY, BlockType::Player),
-        _respX (x), _respY (y), _coins(0)
+        _respX (x), _respY (y), _coins(0), weapon(10, 10)
 {}
 
 void Player::respawn ()
@@ -63,4 +63,28 @@ PhysicalObject::BlockType Player::getClass () const
 
 int Player::getScore() {
     return _coins;
+}
+
+PhysicalObject::Position Player::tick() {
+    weapon.tick();
+    return Actor::tick();
+}
+
+PhysicalObject* Player::tryShoot()
+{
+    auto bullet = weapon.tryShoot();
+    if (!bullet)
+        return nullptr;
+    bullet->setVelocity(getLookDirection() == PhysicalObject::Direction::Right
+                        ? std::abs(bullet->getVx()) : -std::abs(bullet->getVx()), bullet->getVy());
+    if (_lookDirection == Right) {
+        bullet->setX(_x + _sizeX);
+        bullet->setY(_y + _sizeY / 2);
+    }
+    else
+    {
+        bullet->setX(_x - bullet->getSizeX());
+        bullet->setY(_y + _sizeY / 2);
+    }
+    return bullet;
 }

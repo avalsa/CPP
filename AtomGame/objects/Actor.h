@@ -5,7 +5,6 @@
 #ifndef ATOMGAME_ACTOR_H
 #define ATOMGAME_ACTOR_H
 
-#include "Weapon.h"
 #include "PhysicalObject.h"
 
 class Actor : virtual public PhysicalObject

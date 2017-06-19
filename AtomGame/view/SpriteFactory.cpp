@@ -21,6 +21,7 @@ std::map<SpriteFactory::ObjectType, std::pair<const char*, const char*>> SpriteF
         {ObjectType::Number7, {"number_7.xml", "number_7.png"}},
         {ObjectType::Number8, {"number_8.xml", "number_8.png"}},
         {ObjectType::Number9, {"number_9.xml", "number_9.png"}},
+        {ObjectType::Bullet, {"bullet.xml", "bullet.png"}}
 };
 
 std::vector<std::shared_ptr<sf::Texture>> SpriteFactory::_textures = std::vector<std::shared_ptr<sf::Texture>>();
@@ -58,6 +59,10 @@ std::shared_ptr<sf::Sprite> SpriteFactory::getDeadlyBlockSprite()
 std::shared_ptr<sf::Sprite> SpriteFactory::getGameOverSprite()
 {
     return getSprite(ObjectType::GameOver);
+}
+
+std::shared_ptr<sf::Sprite> SpriteFactory::getBulletSprite() {
+    return getSprite(ObjectType::Bullet);
 }
 
 std::shared_ptr<sf::Sprite> SpriteFactory::getNumberSprite(int number)
@@ -169,6 +174,7 @@ SpriteFactory::ObjectType SpriteFactory::makeObjectType(const char *str, int &re
     if (!strcmp(str, "Number7")) return Number7;
     if (!strcmp(str, "Number8")) return Number8;
     if (!strcmp(str, "Number9")) return Number9;
+    if (!strcmp(str, "Bullet")) return Bullet;
 
     res = 1;
     return SolidBlock;
