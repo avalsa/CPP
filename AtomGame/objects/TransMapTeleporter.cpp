@@ -11,7 +11,7 @@ PhysicalObject::BlockType TransMapTeleporter::getClass () const
 
 TransMapTeleporter::~TransMapTeleporter ()
 {
-    delete _destination;
+    delete _destinationFile;
 }
 
 const char *TransMapTeleporter::getDest ()
@@ -23,14 +23,14 @@ TransMapTeleporter::TransMapTeleporter (int x, int y, int sizeX, int sizeY, int 
                                         const char *destMap) :
         Teleporter (x, y, sizeX, sizeY, destX, destY, PhysicalObject::BlockType::MapChange),
         PhysicalObject(x, y, sizeX, sizeY),
-        _destinationFile (nullptr), _destination (nullptr)
+        _destinationFile (nullptr)
 {
     if (!destFile)
         return;
     _destinationFile = strdup (destFile);
     if (!destMap)
         return;
-    _destination = strdup (destMap);
+   strcpy(_destination, destMap);
 }
 
 void TransMapTeleporter::load (tinyxml2::XMLElement *block)
@@ -48,7 +48,7 @@ void TransMapTeleporter::load (tinyxml2::XMLElement *block)
         }
         if (const char *name = map->Attribute ("Name"))
         {
-            _destination = strdup (name);
+            strcpy(_destination, name);
         }
         return;
     }
@@ -91,5 +91,5 @@ TransMapTeleporter::TransMapTeleporter (int x, int y, int sizeX, int sizeY, cons
 
 const char *TransMapTeleporter::getDestFile ()
 {
-    return _destinationFile;
+    return &_destinationFile[0];
 }

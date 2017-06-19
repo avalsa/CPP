@@ -25,7 +25,7 @@ public:
     const char *getDestFile ();
 
 private:
-    char *_destination;
+    char _destination[50];
 
     char *_destinationFile;
 

@@ -1,0 +1,48 @@
+push x8
+push x0
+sub
+push 0
+cmp
+pop
+jb n
+push -1
+mul
+n:
+push 100
+cmp
+jb walk
+push 0
+push x2
+cmp
+jnb e
+push -1
+mul
+pop x2
+e:
+push x8
+push x0
+cmp
+jb en
+push -1
+push x2
+mul
+pop x2
+jmp en
+walk:
+push x7
+push x6
+cmp
+jnz fin
+push 0
+pop x7
+push -1
+push x2
+mul
+pop x2
+fin:
+push 1
+push x7
+add
+pop x7
+en:
+end

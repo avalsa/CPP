@@ -14,10 +14,10 @@
     </Block>
     <Block Type="Bot">
         <Step Count="100"/>
-        <Script file="blocks/programs/leftRight.bit"/>
+        <Script file="blocks/programs/patrol.bit"/>
         <Place X="500" Y="-50"/>
         <Size X="30" Y="50"/>
-        <Speed X="3" Y="0"/>
+        <Speed X="1" Y="0"/>
     </Block>
     <Block Type="Deadly">
         <Place X="-1000" Y="30"/>

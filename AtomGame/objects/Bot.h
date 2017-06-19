@@ -20,6 +20,8 @@ public:
 
     Position tick();
 
+    void setPlayerPosition(Position);
+
 protected:
 
     void load (tinyxml2::XMLElement *block);
@@ -27,6 +29,7 @@ protected:
     virtual void collided (const PhysicalObject *source, Axis relativeLocation);
 
 private:
+    Position _plPos;
     int _stepCount;
 };
 

@@ -35,6 +35,8 @@ public:
 
     virtual Position tick ();
 
+    virtual ~PhysicalObject();
+
     int getX () const;
 
     int getY () const;

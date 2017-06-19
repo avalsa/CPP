@@ -183,6 +183,9 @@ void PhysicalObject::setType (const PhysicalObject::BlockType type)
     _type = type;
 }
 
+PhysicalObject::~PhysicalObject()
+{}
+
 PhysicalObject::Position::Position (int x, int y) : x (x), y (y)
 {
 }

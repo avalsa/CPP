@@ -49,7 +49,8 @@ PhysicalObject::Position CustomObject::tick ()
 
 CustomObject::~CustomObject ()
 {
-    delete proc;
+    if (proc != NULL)
+        delete proc;
 }
 
 CustomObject CustomObject::clone () const

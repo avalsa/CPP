@@ -27,11 +27,17 @@ void Model::tick ()
                 i = prev;
             }
         }
+        if (((*i)->type() == PhysicalObject::BlockType::Bot))
+        {
+            Bot *b = dynamic_cast<Bot *>(*i);
+            b->setPlayerPosition(PhysicalObject::Position(player.getX(), player.getY()));
+        }
         prev = i;
     }
     if (teleporter)
     {
         load (teleporter->getDestFile (), teleporter->getDest ());
+        logger.warn(teleporter->getDest ());
         teleporter = nullptr;
     } else
     {
@@ -271,8 +277,8 @@ void Model::load (const char *xmlfile, const char *name)
     } else
     {
         logger.info ("\"%s\" parsed", xmlfile);
-        load (map, name);
         controller->onMapChange(name);
+        load (map, name);
     }
 }
 
@@ -302,7 +308,10 @@ void Model::load (tinyxml2::XMLElement *map)
 {
     for (std::vector<PhysicalObject *>::const_iterator i = objs.cbegin (); i != objs.cend (); i++)
         if (*i != &player)
+        {
             delete *i;
+        }
+
     objs.clear ();
     for(tinyxml2::XMLElement* block = map->FirstChildElement ("Block"); block != nullptr; block = block->NextSiblingElement ("Block") )
     {

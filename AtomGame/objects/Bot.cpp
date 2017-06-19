@@ -42,6 +42,7 @@ PhysicalObject::Position Bot::tick()
         proc->setReg (_ax, 4);
         proc->setReg (_ay, 5);
         proc->setReg(_stepCount, 6);
+        proc->setReg(_plPos.x, 8);
         proc->execute ();
         proc->reset ();
         _x = proc->getReg (0);
@@ -70,4 +71,9 @@ void Bot::load(tinyxml2::XMLElement *block) {
         if (info->Attribute ("Y"))
             _vy = info->IntAttribute ("Y");
     }
+}
+
+void Bot::setPlayerPosition(PhysicalObject::Position position)
+{
+    _plPos = position;
 }
