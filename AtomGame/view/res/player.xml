@@ -6,8 +6,8 @@
         <Frames Count="4"/>
     </Action>
     <Action Type="Jump">
-        <Place X="0" Y="48"/>
-        <Size X="29" Y="26"/>
+        <Place X="0" Y="123"/>
+        <Size X="38" Y="42"/>
         <Frames Count="4"/>
     </Action>
     <Action Type="Stand">

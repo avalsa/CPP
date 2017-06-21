@@ -18,6 +18,8 @@ public:
 
     static sf::Sound* getGameOverSound();
 
+    static sf::Sound* getShotSound();
+
 private:
     static void loadSound(const char*, sf::SoundBuffer*, sf::Sound*);
 

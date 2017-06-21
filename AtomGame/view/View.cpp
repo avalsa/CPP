@@ -63,33 +63,6 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
 //draw background
     clear();
 
-//here we draw player
-    sf::Sprite playerSprite;
-
-    playerSprite = _playerAnimation->getNextSprite (player.getLookDirection ());
-    if (player.isOnGround ())
-    {
-        if (player.isMoving ())
-        {
-            if (_playerAnimation->getAnimationType () != Animation::AnimationType::Move)
-                _playerAnimation->setAnimationType (Animation::AnimationType::Move);
-            playerSprite = _playerAnimation->getNextSprite (player.getLookDirection ());
-        } else
-        {
-            if (_playerAnimation->getAnimationType () != Animation::AnimationType::Stand)
-                _playerAnimation->setAnimationType (Animation::AnimationType::Stand);
-            playerSprite = _playerAnimation->getNextSprite (player.getLookDirection ());
-        }
-    } else
-    {
-        if (_playerAnimation->getAnimationType () != Animation::AnimationType::Jump)
-            _playerAnimation->setAnimationType (Animation::AnimationType::Jump);
-        playerSprite = _playerAnimation->getNextSprite (player.getLookDirection ());
-    }
-    playerSprite.setPosition (player.getX () - offsetX, player.getY () - offsetY);
-
-    window.draw (playerSprite);
-
 //draw blocks
     static std::map<PhysicalObject*, Animation*> block_animations;
     for (std::vector<PhysicalObject *>::const_iterator i = model->getObjs ().cbegin ();
@@ -97,7 +70,14 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
         if (!isVisible(*i)) continue;
         switch ((*i)->type()) {
             case PhysicalObject::BlockType::Solid:
-                drawObject(SpriteFactory::getSolidBlockSprite().get(), *i, 0, 1);
+                if ((*i)->getSizeX() >= (*i)->getSizeY())
+                    drawObject(SpriteFactory::getSolidBlockSprite().get(), *i, 0, 1);
+                else
+                {
+                    auto s = SpriteFactory::getSolidBlockSprite();
+                    s->rotate(90.f);
+                    drawObject(s.get(), *i, 1, 0);
+                }
                 break;
             case PhysicalObject::Deadly:
                 if ((*i)->getSizeX() >= (*i)->getSizeY())
@@ -140,7 +120,14 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
                 }
                 break;
             case PhysicalObject::Player:
-
+                if (block_animations[*i] == nullptr) {
+                    Animation *a = AnimationFactory::getPlayerAnimation();
+                    a->setAnimationType(Animation::AnimationType::Stand);
+                    block_animations[*i] = a;
+                } else {
+                    sf::Sprite s = getActionSprite(dynamic_cast<const Actor*>(*i), block_animations[*i]);
+                    drawObject(&s, *i, 1, 1);
+                }
                 break;
             case PhysicalObject::Coin:
                 if (block_animations[*i] == nullptr) {
@@ -172,6 +159,7 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
 
         }
     }
+
 //draw nonObjAnims
     if (_tempAnim.size())
     {
@@ -349,6 +337,10 @@ void View::showPlayerWin()
 void View::onCoinPick()
 {
     Sounds::getCoinPickSound()->play();
+}
+
+void View::onShot() {
+    Sounds::getShotSound()->play();
 }
 
 sf::Sprite View::getActionSprite(const Actor *pActor, Animation *&pAnimation) {

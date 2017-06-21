@@ -13,7 +13,6 @@ sf::Sound* Sounds::getCoinPickSound() {
     if (buffer.getDuration() == sf::Time::Zero)
         loadSound("coin.wav", &buffer, &sound);
     return &sound;
-
 }
 
 sf::Sound *Sounds::getGameOverSound() {
@@ -21,6 +20,14 @@ sf::Sound *Sounds::getGameOverSound() {
     static sf::Sound sound;
     if (buffer.getDuration() == sf::Time::Zero)
         loadSound("gameover.wav", &buffer, &sound);
+    return &sound;
+}
+
+sf::Sound *Sounds::getShotSound() {
+    static sf::SoundBuffer buffer;
+    static sf::Sound sound;
+    if (buffer.getDuration() == sf::Time::Zero)
+        loadSound("shot.wav", &buffer, &sound);
     return &sound;
 }
 

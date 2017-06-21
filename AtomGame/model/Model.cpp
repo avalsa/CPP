@@ -379,5 +379,6 @@ void Model::shootPlayer()
     if (!e)
         return;
     objs.push_back((Bullet*)e);
+    controller->onShot();
 
 }

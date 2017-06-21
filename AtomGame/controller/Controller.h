@@ -43,6 +43,8 @@ public:
 
     void onDieBot(Actor*);
 
+    void onShot();
+
 private:
     static log4cpp::Category &logger;
     Model *model;

@@ -87,3 +87,8 @@ void Controller::onDieBot(Actor* obj)
 {
     view->onDieBot(obj);
 }
+
+void Controller::onShot()
+{
+    view->onShot();
+}

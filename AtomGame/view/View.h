@@ -32,6 +32,8 @@ public:
 
     void onDieBot(Actor* bot);
 
+    void onShot();
+
     struct AnimInfo
     {
         Actor* _obj;
