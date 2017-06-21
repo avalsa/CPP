@@ -30,6 +30,17 @@ public:
 
     void onCoinPick();
 
+    void onDieBot(Actor* bot);
+
+    struct AnimInfo
+    {
+        Actor* _obj;
+        Animation* _anim;
+        int _left;
+
+        AnimInfo( Animation *anim, Actor* obj);
+    };
+
 private:
 
     void showGameOver ();
@@ -48,6 +59,8 @@ private:
     int offsetY;
     Animation *_playerAnimation;
     BackgroundType backgroundType;
+    std::vector<struct AnimInfo> _tempAnim;
+
 
     void drawObject(sf::Sprite* sprite, PhysicalObject* object, bool slaceX, bool scaleY);
 

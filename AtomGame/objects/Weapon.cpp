@@ -7,7 +7,7 @@
 Bullet *Weapon::tryShoot() {
     if (isOnCoolDown())
         return nullptr;
-    Bullet *b =  new Bullet(0, 0, 5, 5, _damage);
+    Bullet *b =  new Bullet(0, 0, 6, 4, _damage, 500);
     b->setVelocity(10, 0);
     _steps = 0;
     return b;

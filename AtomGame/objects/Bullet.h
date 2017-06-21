@@ -10,7 +10,7 @@
 class Bullet : public PhysicalObject
 {
 public:
-    Bullet(int x, int y, int sizeX, int sizeY, int damage);
+    Bullet(int x, int y, int sizeX, int sizeY, int damage, int _lifeTime);
 
     PhysicalObject::BlockType getClass() const;
 
@@ -22,10 +22,15 @@ public:
 
     void setY(int y);
 
+    virtual Position tick ();
+
+    bool isDestroyed();
 protected:
     virtual void collided (const PhysicalObject *source, Axis relativeLocation);
 
 private:
+    int _lifeTime;
+    int _curTime;
     int _damage;
 };
 

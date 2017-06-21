@@ -2,6 +2,6 @@
 <Objects>
     <Object Type="Bullet">
         <Place X="0" Y="12"/>
-        <Size X="11" Y="26"/>
+        <Size X="26" Y="11"/>
     </Object>
 </Objects>

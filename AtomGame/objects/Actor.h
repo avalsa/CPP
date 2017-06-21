@@ -22,6 +22,8 @@ public:
 
     Actor (int x, int y, int sizeX, int sizeY);
 
+    void setSize(int x, int y);
+
     bool isOnGround () const;
 
     virtual PhysicalObject::Position tick ();

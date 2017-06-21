@@ -5,15 +5,19 @@
 #include "Bullet.h"
 
 
-Bullet::Bullet(int x, int y, int sizeX, int sizeY, int damage):
-        PhysicalObject(x, y, sizeX, sizeY, PhysicalObject::BlockType::Bullet), _damage(damage)
+Bullet::Bullet(int x, int y, int sizeX, int sizeY, int damage, int lifeTime):
+        PhysicalObject(x, y, sizeX, sizeY, PhysicalObject::BlockType::Bullet),
+        _damage(damage), _lifeTime(lifeTime), _curTime(0)
 {}
 
-PhysicalObject::BlockType Bullet::getClass() const {
+PhysicalObject::BlockType Bullet::getClass() const
+{
     return PhysicalObject::BlockType::Bullet;
 }
 
-void Bullet::collided(const PhysicalObject *source, PhysicalObject::Axis relativeLocation) {
+void Bullet::collided(const PhysicalObject *source, PhysicalObject::Axis relativeLocation)
+{
+    _curTime = _lifeTime;
     PhysicalObject::collided(source, relativeLocation);
 }
 
@@ -33,4 +37,14 @@ void Bullet::setX(int x)
 void Bullet::setY(int y)
 {
     _y = y;
+}
+
+PhysicalObject::Position Bullet::tick()
+{
+    _curTime++;
+    return PhysicalObject::tick();
+}
+
+bool Bullet::isDestroyed() {
+    return _curTime >= _lifeTime;
 }

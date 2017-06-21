@@ -16,21 +16,45 @@ void Model::tick ()
     std::vector<PhysicalObject *>::iterator prev = objs.begin();
     while (++i != objs.end())
     {
-        if ((*i)->type() == PhysicalObject::BlockType::Coin)
+        switch ((*i)->type())
         {
-            Coin *c = (Coin *) (*i);
-            if (c->isPicked())
+            case PhysicalObject::BlockType::Coin:
             {
-                controller->onCoinPicked();
-                delete *i;
-                objs.erase(i);
-                i = prev;
+                Coin *c = (Coin *) (*i);
+                if (c->isPicked())
+                {
+                    controller->onCoinPicked();
+                    delete *i;
+                    objs.erase(i);
+                    i = prev;
+                }
             }
-        }
-        if (((*i)->type() == PhysicalObject::BlockType::Bot))
-        {
-            Bot *b = dynamic_cast<Bot *>(*i);
-            b->setPlayerPosition(PhysicalObject::Position(player.getX(), player.getY()));
+                break;
+            case PhysicalObject::BlockType::Bot:
+            {
+                Bot *b = dynamic_cast<Bot *>(*i);
+                b->setPlayerPosition(PhysicalObject::Position(player.getX(), player.getY()));
+                if (!b->isAlive())
+                {
+                    auto a = new Actor(*b);
+                    a->setSize(50, 50);
+                    controller->onDieBot(a);
+                    delete *i;
+                    objs.erase(i);
+                    i = prev;
+                }
+            }
+                break;
+            case PhysicalObject::Bullet:
+            {
+                Bullet *bullet = (Bullet *) (*i);
+                if (bullet->isDestroyed()) {
+                    delete *i;
+                    objs.erase(i);
+                    i = prev;
+                }
+            }
+                break;
         }
         prev = i;
     }
@@ -357,8 +381,3 @@ void Model::shootPlayer()
     objs.push_back((Bullet*)e);
 
 }
-
-
-
-
-

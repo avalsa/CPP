@@ -109,3 +109,7 @@ void Actor::setMoving (bool moving)
 bool Actor::isAlive() const {
     return _alive;
 }
+
+void Actor::setSize(int x, int y) {
+    _sizeX = x; _sizeY = y;
+}

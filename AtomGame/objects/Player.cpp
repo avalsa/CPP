@@ -23,7 +23,10 @@ void Player::collided (const PhysicalObject *source, PhysicalObject::Axis relati
     {
         case PhysicalObject::BlockType::Deadly :
             _alive = false;
-            respawn ();
+            //respawn ();
+            break;
+        case PhysicalObject::BlockType::Bot:
+            _alive = false;
             break;
         case PhysicalObject::BlockType::Respawn :
             _respX = _x;
@@ -77,14 +80,10 @@ PhysicalObject* Player::tryShoot()
         return nullptr;
     bullet->setVelocity(getLookDirection() == PhysicalObject::Direction::Right
                         ? std::abs(bullet->getVx()) : -std::abs(bullet->getVx()), bullet->getVy());
-    if (_lookDirection == Right) {
-        bullet->setX(_x + _sizeX);
-        bullet->setY(_y + _sizeY / 2);
-    }
+    bullet->setY(_y + _sizeY / 3);
+    if (_lookDirection == Right)
+        bullet->setX(_x + _sizeX + 6);
     else
-    {
-        bullet->setX(_x - bullet->getSizeX());
-        bullet->setY(_y + _sizeY / 2);
-    }
+        bullet->setX(_x - bullet->getSizeX() - 6);
     return bullet;
 }

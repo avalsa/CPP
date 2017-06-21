@@ -82,3 +82,8 @@ void Controller::onMapChange(const char* mapName) {
 void Controller::onCoinPicked() {
     view->onCoinPick();
 }
+
+void Controller::onDieBot(Actor* obj)
+{
+    view->onDieBot(obj);
+}

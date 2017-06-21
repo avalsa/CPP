@@ -47,6 +47,9 @@ public:
 
     sf::Sprite getNextSprite (PhysicalObject::Direction direction);
 
+    float getFrameRate();
+
+    int getCountFrames();
 private:
 
     static log4cpp::Category &logger;

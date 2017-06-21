@@ -41,6 +41,8 @@ public:
 
     void onCoinPicked();
 
+    void onDieBot(Actor*);
+
 private:
     static log4cpp::Category &logger;
     Model *model;

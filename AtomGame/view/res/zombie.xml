@@ -15,4 +15,10 @@
         <Size X="77" Y="95"/>
         <Frames Count="4"/>
     </Action>
+   <Action Type="Die">
+        <Place X="0" Y="492"/>
+        <Size X="118" Y="95"/>
+        <Frames Count="8"/>
+    </Action>
+
 </Actions>

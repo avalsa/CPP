@@ -65,6 +65,8 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
 
 //here we draw player
     sf::Sprite playerSprite;
+
+    playerSprite = _playerAnimation->getNextSprite (player.getLookDirection ());
     if (player.isOnGround ())
     {
         if (player.isMoving ())
@@ -160,7 +162,6 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
                     drawObject(&s, *i, 1, 1);
                 }
                 break;
-
             case PhysicalObject::Bullet:
                 auto s = SpriteFactory::getBulletSprite();
                 Bullet * b = dynamic_cast<Bullet*>(*i);
@@ -171,6 +172,31 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
 
         }
     }
+//draw nonObjAnims
+    if (_tempAnim.size())
+    {
+        std::vector<struct AnimInfo>::iterator i = _tempAnim.begin ();
+        std::vector<struct AnimInfo>::iterator* prev = nullptr;
+        while (i != _tempAnim.end())
+        {
+            if ( 1.f * i->_anim->getCountFrames() / i->_anim->getFrameRate() - 10 < i->_left)
+            {
+                delete i->_obj;
+                _tempAnim.erase(i);
+                i = (prev == nullptr) ? _tempAnim.begin () : *prev;
+            }
+            else
+            {
+                i->_left++;
+                sf::Sprite s = i->_anim->getNextSprite(i->_obj->getLookDirection());
+                drawObject(&s, i->_obj, 1, 1);
+                window.draw(s);
+                i++;
+            }
+            prev = &i;
+        }
+    }
+
 //draw score
     static ScorePanel scorePanel;
     scorePanel.setScore(player.getScore());
@@ -178,7 +204,6 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
 
 //finish
     window.display ();
-//    sf::sleep (sf::milliseconds (10));
     return 1;
 }
 
@@ -205,7 +230,8 @@ View::View (Model *model, int height, int width) :
         window (sf::VideoMode (width, height), "AtomGame"),
         offsetX (0),
         offsetY (0), backgroundType(BackgroundType::City2),
-        _playerAnimation (AnimationFactory::getPlayerAnimation ())
+        _playerAnimation (AnimationFactory::getPlayerAnimation ()),
+        _tempAnim(std::vector<struct AnimInfo>())
 {
 
     sf::View view = window.getDefaultView ();
@@ -350,3 +376,13 @@ sf::Sprite View::getActionSprite(const Actor *pActor, Animation *&pAnimation) {
     return ret;
 }
 
+void View::onDieBot(Actor* o)
+{
+    Animation* a = AnimationFactory::getBotAnimation();
+    a->setAnimationType(Animation::AnimationType::Die);
+    _tempAnim.push_back(AnimInfo(a, o));
+}
+
+View::AnimInfo::AnimInfo(Animation *anim, Actor* obj) :
+        _anim(anim), _obj(obj), _left(0)
+{}

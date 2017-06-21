@@ -23,7 +23,13 @@ PhysicalObject::BlockType Bot::getClass() const {
     return PhysicalObject::BlockType::Bot;
 }
 
-void Bot::collided(const PhysicalObject *source, PhysicalObject::Axis relativeLocation) {
+void Bot::collided(const PhysicalObject *source, PhysicalObject::Axis relativeLocation)
+{
+    switch (source->type ()) {
+        case PhysicalObject::BlockType::Bullet :
+            _alive = false;
+            break;
+    }
     PhysicalObject::collided(source, relativeLocation);
 }
 

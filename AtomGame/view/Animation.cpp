@@ -75,6 +75,16 @@ Animation::AnimationType Animation::makeAnimationType(const char *string, int& r
     return  AnimationType::None;
 }
 
+int Animation::getCountFrames() {
+    std::shared_ptr<Animation::AnimationType> key(new AnimationType(_animationType));
+    std::shared_ptr<FrameSequence> frameSequence = (*_animations)[key];
+    return frameSequence->_FrameCount;
+}
+
+float Animation::getFrameRate() {
+    return _frameRate;
+}
+
 Animation::FrameSequence::FrameSequence (int frameCount, int init_x, int init_y, int size_x, int size_y) :
         _FrameCount (frameCount),
         _init_x (init_x), _init_y (init_y),
