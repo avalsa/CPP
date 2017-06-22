@@ -30,11 +30,11 @@ int main (int argc, char **argv)
     }
     Model model;
 
-    model.startGame ();
-
     View view (&model, 600, 400);
     Controller controller (&model, &view);
     model.setController(&controller);
+
+    model.startGame ();
 
     for (std::vector<std::pair<void *, Plugin *>>::iterator i = plugins.begin (); i != plugins.end (); i++)
         i->second->start (&model, &controller, &view);

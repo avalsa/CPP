@@ -69,7 +69,8 @@ void Model::tick ()
         for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); i++)
         {
             PhysicalObject::Position pos = (*i)->tick ();
-            tryMove (**i, pos);
+            if(pos.x != (*i)->getX () || pos.y != (*i)->getY ())
+                tryMove (**i, pos);
         }
         for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); i++)
         {
@@ -168,7 +169,8 @@ void Model::tryMove (PhysicalObject &obj, PhysicalObject::Position position)
     }
     for (std::vector<PhysicalObject *>::iterator i = collides.begin (); i != collides.end (); i++)
     {
-        if (obj.type () == PhysicalObject::BlockType::Player && obj.getClass () == PhysicalObject::BlockType::Player &&
+        if (obj.type () == PhysicalObject::BlockType::Player &&
+            obj.getClass () == PhysicalObject::BlockType::Player &&
             (*i)->type () == PhysicalObject::BlockType::MapChange &&
             (*i)->getClass () == PhysicalObject::BlockType::MapChange)
         {
@@ -204,6 +206,20 @@ void Model::tryMove (PhysicalObject &obj, PhysicalObject::Position position)
     }
     for (std::vector<PhysicalObject *>::iterator i = collides.begin (); i != collides.end (); i++)
     {
+        if (obj.type () == PhysicalObject::BlockType::Player &&
+            obj.getClass () == PhysicalObject::BlockType::Player &&
+            (*i)->type () == PhysicalObject::BlockType::MapChange &&
+            (*i)->getClass () == PhysicalObject::BlockType::MapChange)
+        {
+            teleporter = dynamic_cast<TransMapTeleporter *>(*i);
+        }
+        if ((*i)->type () == PhysicalObject::BlockType::Player &&
+            (*i)->getClass () == PhysicalObject::BlockType::Player &&
+            obj.type () == PhysicalObject::BlockType::MapChange &&
+            obj.getClass () == PhysicalObject::BlockType::MapChange)
+        {
+            teleporter = dynamic_cast<TransMapTeleporter *>(&obj);
+        }
         (*i)->addCollision (&obj, PhysicalObject::Axis::axisY);
         obj.addCollision (*i, PhysicalObject::Axis::axisY);
     }

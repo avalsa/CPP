@@ -64,7 +64,6 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
     clear();
 
 //draw blocks
-    static std::map<PhysicalObject*, Animation*> block_animations;
     for (std::vector<PhysicalObject *>::const_iterator i = model->getObjs ().cbegin ();
          i != model->getObjs ().cend (); ++i) {
         if (!isVisible(*i)) continue;
@@ -290,6 +289,7 @@ void View::changeMap(const char *string) {
         if (!strcmp(string, "Init"))
             backgroundType = BackgroundType::City2;
     }
+    block_animations.clear();
 }
 
 void View::clear() {

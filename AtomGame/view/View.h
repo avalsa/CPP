@@ -62,7 +62,7 @@ private:
     Animation *_playerAnimation;
     BackgroundType backgroundType;
     std::vector<struct AnimInfo> _tempAnim;
-
+    std::map<PhysicalObject*, Animation*> block_animations;
 
     void drawObject(sf::Sprite* sprite, PhysicalObject* object, bool slaceX, bool scaleY);
 

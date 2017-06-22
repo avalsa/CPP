@@ -83,6 +83,8 @@ protected:
     const int maxSpeed = 30;
     Direction _blockedX;
     Direction _blockedY;
+    Direction _newBlockedX;
+    Direction _newBlockedY;
     static log4cpp::Category &logger;
 
     virtual void collided (const PhysicalObject *source, Axis relativeLocation);
