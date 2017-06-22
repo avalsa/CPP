@@ -19,13 +19,13 @@ public:
 
     Controller (Model *, View *);
 
-    void onRightKeyPress ();
+    void onRightKeyPress (float stregth);
 
-    void onLeftKeyPress ();
+    void onLeftKeyPress (float stregth);
 
     void onUpKeyPress ();
 
-    void onDownKeyPress ();
+    void onDownKeyPress (float stregth);
 
     void onSpacePress();
 

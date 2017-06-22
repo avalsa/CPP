@@ -36,6 +36,10 @@ void Actor::collided (const PhysicalObject *source, PhysicalObject::Axis relativ
             _alive = false;
             //respawn ();
             break;
+        case PhysicalObject::BlockType::Bullet:
+            _alive = false;
+            //respawn ();
+            break;
         case PhysicalObject::BlockType::Portal :
             if (source->getClass () == Portal || source->getClass () == MapChange)
             {

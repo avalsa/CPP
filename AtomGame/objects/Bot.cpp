@@ -25,15 +25,7 @@ PhysicalObject::BlockType Bot::getClass() const {
 
 void Bot::collided(const PhysicalObject *source, PhysicalObject::Axis relativeLocation)
 {
-    switch (source->type ()) {
-        case PhysicalObject::BlockType::Bullet :
-            _alive = false;
-            break;
-        default:
-            Actor::collided(source, relativeLocation);
-            break;
-    }
-
+    Actor::collided(source, relativeLocation);
 }
 
 PhysicalObject::Position Bot::tick()

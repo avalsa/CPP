@@ -115,7 +115,7 @@ std::vector<PhysicalObject *> &Model::getObjs ()
     return objs;
 }
 
-void Model::movePlayer (Actor::Direction direction)
+void Model::movePlayer (Actor::Direction direction, float speed)
 {
     switch (direction)
     {
@@ -126,15 +126,15 @@ void Model::movePlayer (Actor::Direction direction)
             }
             break;
         case PhysicalObject::Direction::Right:
-            player.addDx (playerMovementSpeed);
+            player.addDx (speed*playerMovementSpeed/100);
             player.setMoving (true);
             player.setLookDirection (PhysicalObject::Direction::Right);
             break;
         case PhysicalObject::Direction::Down:
-            player.addDy (playerMovementSpeed);
+            player.addDy (speed*playerMovementSpeed/100);
             break;
         case PhysicalObject::Direction::Left:
-            player.addDx (-playerMovementSpeed);
+            player.addDx (speed*-playerMovementSpeed/100);
             player.setMoving (true);
             player.setLookDirection (PhysicalObject::Direction::Left);
             break;

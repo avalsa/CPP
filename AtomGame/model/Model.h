@@ -30,7 +30,7 @@ public:
 
     void startGame ();
 
-    void movePlayer (Actor::Direction direction);
+    void movePlayer (Actor::Direction direction, float speed);
 
     void actPlayer (Actor::Action action);
 
