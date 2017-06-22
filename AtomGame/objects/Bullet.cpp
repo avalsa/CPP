@@ -3,6 +3,7 @@
 //
 
 #include "Bullet.h"
+#include "Teleporter.h"
 
 
 Bullet::Bullet(int x, int y, int sizeX, int sizeY, int damage, int lifeTime):
@@ -17,8 +18,21 @@ PhysicalObject::BlockType Bullet::getClass() const
 
 void Bullet::collided(const PhysicalObject *source, PhysicalObject::Axis relativeLocation)
 {
-    _curTime = _lifeTime;
-    PhysicalObject::collided(source, relativeLocation);
+    switch (source->type ()){
+        case PhysicalObject::BlockType::Portal :
+            if (source->getClass () == Portal || source->getClass () == MapChange)
+            {
+                _x = dynamic_cast<Teleporter*>(const_cast<PhysicalObject *>(source))->getDestX ();
+                _y = dynamic_cast<Teleporter*>(const_cast<PhysicalObject *>(source))->getDestY ();
+            } else
+                logger.warn ("Block type mismatch encountered");
+            break;
+        default:
+            _curTime = _lifeTime;
+            PhysicalObject::collided(source, relativeLocation);
+            break;
+    }
+
 }
 
 int Bullet::getDamage() const {

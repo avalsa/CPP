@@ -3,6 +3,7 @@
 //
 
 #include "Actor.h"
+#include "Teleporter.h"
 
 Actor::Actor (int x, int y, int sizeX, int sizeY) : PhysicalObject (x, y, sizeX, sizeY, Player), _action (NoAction),
                                                     _lookDirection (Right),
@@ -29,50 +30,67 @@ PhysicalObject::Position Actor::tick ()
 
 void Actor::collided (const PhysicalObject *source, PhysicalObject::Axis relativeLocation)
 {
-    if (relativeLocation == axisX)
+    switch (source->type ())
     {
-        if (source->getX () < _x)
-        {
-            if (minDX.first)
-                minDX.second = std::max (minDX.second, source->getVx ());
-            else
+        case PhysicalObject::BlockType::Deadly :
+            _alive = false;
+            //respawn ();
+            break;
+        case PhysicalObject::BlockType::Portal :
+            if (source->getClass () == Portal || source->getClass () == MapChange)
             {
-                minDX.first = true;
-                minDX.second = source->getVx ();
-            }
-        } else
-        {
-            if (maxDX.first)
-                maxDX.second = std::min (maxDX.second, source->getVx ());
-            else
+                _x = dynamic_cast<Teleporter*>(const_cast<PhysicalObject *>(source))->getDestX ();
+                _y = dynamic_cast<Teleporter*>(const_cast<PhysicalObject *>(source))->getDestY ();
+            } else
+                logger.warn ("Block type mismatch encountered");
+            break;
+        default:
+            if (relativeLocation == axisX)
             {
-                maxDX.first = true;
-                maxDX.second = source->getVx ();
-            }
-        }
-        //_dy += source.getVy ();
-    } else
-    {
-        if (source->getY () < _y)
-        {
-            if (minDY.first)
-                minDY.second = std::max (minDY.second, source->getVy ());
-            else
+                if (source->getX () < _x)
+                {
+                    if (minDX.first)
+                        minDX.second = std::max (minDX.second, source->getVx ());
+                    else
+                    {
+                        minDX.first = true;
+                        minDX.second = source->getVx ();
+                    }
+                } else
+                {
+                    if (maxDX.first)
+                        maxDX.second = std::min (maxDX.second, source->getVx ());
+                    else
+                    {
+                        maxDX.first = true;
+                        maxDX.second = source->getVx ();
+                    }
+                }
+                //_dy += source.getVy ();
+            } else
             {
-                minDY.first = true;
-                minDY.second = source->getVy ();
+                if (source->getY () < _y)
+                {
+                    if (minDY.first)
+                        minDY.second = std::max (minDY.second, source->getVy ());
+                    else
+                    {
+                        minDY.first = true;
+                        minDY.second = source->getVy ();
+                    }
+                } else
+                {
+                    if (maxDY.first)
+                        maxDY.second = std::min (maxDY.second, source->getVy ());
+                    else
+                    {
+                        maxDY.first = true;
+                        maxDY.second = source->getVy ();
+                    }
+                }
+                _dx += source->getVx ();
             }
-        } else
-        {
-            if (maxDY.first)
-                maxDY.second = std::min (maxDY.second, source->getVy ());
-            else
-            {
-                maxDY.first = true;
-                maxDY.second = source->getVy ();
-            }
-        }
-        _dx += source->getVx ();
+            break;
     }
 }
 

@@ -29,8 +29,11 @@ void Bot::collided(const PhysicalObject *source, PhysicalObject::Axis relativeLo
         case PhysicalObject::BlockType::Bullet :
             _alive = false;
             break;
+        default:
+            Actor::collided(source, relativeLocation);
+            break;
     }
-    PhysicalObject::collided(source, relativeLocation);
+
 }
 
 PhysicalObject::Position Bot::tick()

@@ -21,10 +21,6 @@ void Player::collided (const PhysicalObject *source, PhysicalObject::Axis relati
 {
     switch (source->type ())
     {
-        case PhysicalObject::BlockType::Deadly :
-            _alive = false;
-            //respawn ();
-            break;
         case PhysicalObject::BlockType::Bot:
             _alive = false;
             break;
@@ -32,14 +28,6 @@ void Player::collided (const PhysicalObject *source, PhysicalObject::Axis relati
             _respX = _x;
             _respY = _y;
             Actor::collided (source, relativeLocation);
-            break;
-        case PhysicalObject::BlockType::Portal :
-            if (source->getClass () == Portal || source->getClass () == MapChange)
-            {
-                _x = dynamic_cast<Teleporter*>(const_cast<PhysicalObject *>(source))->getDestX ();
-                _y = dynamic_cast<Teleporter*>(const_cast<PhysicalObject *>(source))->getDestY ();
-            } else
-                logger.warn ("Block type mismatch encountered");
             break;
         case PhysicalObject::BlockType::MapChange :
             if (source->getClass () == MapChange)
@@ -49,7 +37,6 @@ void Player::collided (const PhysicalObject *source, PhysicalObject::Axis relati
             } else
                 logger.warn ("Block type mismatch encountered");
             break;
-
         case PhysicalObject::BlockType::Coin:
             _coins++;
             break;
