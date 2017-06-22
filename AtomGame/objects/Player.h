@@ -16,6 +16,8 @@ public:
 
     int getScore();
 
+    int getLives();
+
     virtual BlockType getClass () const;
 
     virtual Position tick ();
@@ -26,6 +28,8 @@ private:
     int _respX;
     int _respY;
     int _coins;
+    int _lastLive;
+    int _lives;
     Weapon weapon;
 protected:
     virtual void collided (const PhysicalObject *source, Axis relativeLocation);

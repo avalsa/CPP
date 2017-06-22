@@ -29,6 +29,8 @@ public:
 
     void onSpacePress();
 
+    void onRPress();
+
     void onNoMovementKeyPress ();
 
     void tick ();
@@ -49,6 +51,8 @@ private:
     static log4cpp::Category &logger;
     Model *model;
     View *view;
+    const int restartTicksReq = 100;
+    int restartTicks;
 };
 
 #endif //ATOMGAME_ATOMGAME_H

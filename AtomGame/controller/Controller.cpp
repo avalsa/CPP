@@ -36,7 +36,12 @@ void Controller::onSpacePress()
     model->shootPlayer();
 }
 
-Controller::Controller (Model *model, View *view) : model (model), view (view)
+void Controller::onRPress()
+{
+    model->getPlayer ().respawn ();
+}
+
+Controller::Controller (Model *model, View *view) : model (model), view (view), restartTicks(0)
 {
     logger.info ("Controller init");
 }
@@ -61,6 +66,17 @@ void Controller::tick ()
             onUpKeyPress ();
         if(sf::Joystick::isButtonPressed (0,1) && axisRushPosition == -100)
             onSpacePress ();
+        if(sf::Joystick::isButtonPressed (0,6))
+        {
+            ++restartTicks;
+            if(restartTicks == restartTicksReq)
+            {
+                restartTicks = 0;
+                onRPress ();
+            }
+        }
+        else
+            restartTicks = 0;
     }
     else
     {
@@ -85,6 +101,17 @@ void Controller::tick ()
             onNoMovementKeyPress ();
         if (sf::Keyboard::isKeyPressed (sf::Keyboard::Key::Space) && !rush)
             onSpacePress ();
+        if(sf::Keyboard::isKeyPressed (sf::Keyboard::Key::R))
+        {
+            ++restartTicks;
+            if (restartTicks == restartTicksReq)
+            {
+                restartTicks = 0;
+                onRPress ();
+            }
+        }
+        else
+            restartTicks = 0;
     }
 }
 

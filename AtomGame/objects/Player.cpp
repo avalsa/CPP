@@ -8,13 +8,18 @@
 Player::Player (int x, int y, int sizeX, int sizeY) :
         Actor (x, y, sizeX, sizeY),
         PhysicalObject(x, y, sizeX, sizeY, BlockType::Player),
-        _respX (x), _respY (y), _coins(0), weapon(10, 10)
+        _respX (x), _respY (y), _coins(0), weapon(10, 10), _lastLive(0), _lives(5)
 {}
 
 void Player::respawn ()
 {
-    _x = _respX;
-    _y = _respY;
+    if(_lives)
+    {
+        --_lives;
+        _alive = true;
+        _x = _respX;
+        _y = _respY;
+    }
 }
 
 void Player::collided (const PhysicalObject *source, PhysicalObject::Axis relativeLocation)
@@ -39,6 +44,11 @@ void Player::collided (const PhysicalObject *source, PhysicalObject::Axis relati
             break;
         case PhysicalObject::BlockType::Coin:
             _coins++;
+            if (_coins / ((_lastLive+1)*100))
+            {
+                ++_lives;
+                ++_lastLive;
+            }
             break;
         default:
             Actor::collided (source, relativeLocation);
@@ -73,4 +83,9 @@ PhysicalObject* Player::tryShoot()
     else
         bullet->setX(_x - bullet->getSizeX() - 6);
     return bullet;
+}
+
+int Player::getLives ()
+{
+    return _lives;
 }
