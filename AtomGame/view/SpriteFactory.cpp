@@ -21,7 +21,9 @@ std::map<SpriteFactory::ObjectType, std::pair<const char*, const char*>> SpriteF
         {ObjectType::Number7, {"number_7.xml", "number_7.png"}},
         {ObjectType::Number8, {"number_8.xml", "number_8.png"}},
         {ObjectType::Number9, {"number_9.xml", "number_9.png"}},
-        {ObjectType::Bullet, {"bullet.xml", "bullet.png"}}
+        {ObjectType::Bullet, {"bullet.xml", "bullet.png"}},
+        {ObjectType::Heart, {"heart.xml", "heart.png"}},
+        {ObjectType::GameOverRestart, {"gameoverres.xml", "gameoverres.png"}},
 };
 
 std::vector<std::shared_ptr<sf::Texture>> SpriteFactory::_textures = std::vector<std::shared_ptr<sf::Texture>>();
@@ -63,6 +65,14 @@ std::shared_ptr<sf::Sprite> SpriteFactory::getGameOverSprite()
 
 std::shared_ptr<sf::Sprite> SpriteFactory::getBulletSprite() {
     return getSprite(ObjectType::Bullet);
+}
+
+std::shared_ptr<sf::Sprite> SpriteFactory::getHeartSprite() {
+    return getSprite(ObjectType::Heart);
+}
+
+std::shared_ptr<sf::Sprite> SpriteFactory::getGameOverRestartSprite() {
+    return getSprite(ObjectType::GameOverRestart);
 }
 
 std::shared_ptr<sf::Sprite> SpriteFactory::getNumberSprite(int number)
@@ -154,16 +164,11 @@ void SpriteFactory::load(tinyxml2::XMLDocument &xmlDocument, const char *file, s
 SpriteFactory::ObjectType SpriteFactory::makeObjectType(const char *str, int &res)
 {
     res = 0;
-    if (!strcmp(str, "SolidBlock"))
-        return SolidBlock;
-    if (!strcmp(str, "DeadlyBlock"))
-        return DeadlyBlock;
-    if (!strcmp(str, "Background1"))
-        return Background1;
-    if (!strcmp(str, "Background2"))
-        return Background2;
-    if (!strcmp(str, "GameOver"))
-        return GameOver;
+    if (!strcmp(str, "SolidBlock")) return SolidBlock;
+    if (!strcmp(str, "DeadlyBlock")) return DeadlyBlock;
+    if (!strcmp(str, "Background1")) return Background1;
+    if (!strcmp(str, "Background2")) return Background2;
+    if (!strcmp(str, "GameOver")) return GameOver;
     if (!strcmp(str, "Number0")) return Number0;
     if (!strcmp(str, "Number1")) return Number1;
     if (!strcmp(str, "Number2")) return Number2;
@@ -175,7 +180,8 @@ SpriteFactory::ObjectType SpriteFactory::makeObjectType(const char *str, int &re
     if (!strcmp(str, "Number8")) return Number8;
     if (!strcmp(str, "Number9")) return Number9;
     if (!strcmp(str, "Bullet")) return Bullet;
-
+    if (!strcmp(str, "Heart")) return Heart;
+    if (!strcmp(str, "GameOverRestart")) return GameOverRestart;
     res = 1;
     return SolidBlock;
 }

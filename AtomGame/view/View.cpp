@@ -9,6 +9,7 @@
 #include "ScorePanel.h"
 #include "Sounds.h"
 #include "../objects/Bot.h"
+#include "HealthPanel.h"
 
 
 log4cpp::Category &View::logger = log4cpp::Category::getInstance (typeid (View).name ());
@@ -29,30 +30,41 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
         }
     }
 
-//background sound
-    static sf::Music * music = nullptr;
-    if (!music)
-    {
-        music = Sounds::getMainMusic();
-        music->setLoop(true);
-        music->play();
-    }
 
-//check game end
+//background sounds
+    static sf::Sound * gomus = nullptr;
+    static sf::Music * music = nullptr;
     if (model->isGameOver())
     {
-        static sf::Sound * gomus = nullptr;
         music->setVolume(music->getVolume() - music->getVolume() / 30);
+        static int e;
         if (!gomus)
         {
             gomus = Sounds::getGameOverSound();
+            e = 0;
             gomus->play();
         }
-
-        showGameOver();
+        if (e < 80) e++;
+        showGameOver(model->getPlayer().getLives(), e == 80);
+        showPlayerStat();
         window.display();
-        sf::sleep(sf::milliseconds(10));
         return 1;
+    }
+    else
+    {
+        if (gomus)
+        {
+            gomus->stop();
+            music->setVolume(100.f);
+            music->setPlayingOffset(sf::seconds(0));
+            gomus = nullptr;
+        }
+        if (!music)
+        {
+            music = Sounds::getMainMusic();
+            music->setLoop(true);
+            music->play();
+        }
     }
 
 //process all objs we know
@@ -184,29 +196,28 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
         }
     }
 
-//draw score
-    static ScorePanel scorePanel;
-    scorePanel.setScore(player.getScore());
-    scorePanel.draw(&window);
+    showPlayerStat();
 
 //finish
     window.display ();
     return 1;
 }
 
-void View::showGameOver ()
+void View::showGameOver (bool isRespawnable, bool isShow)
 {
     logger.warn("Game over");
-    static int i = 0;
-    if ((++i) > 80 ) i = 80;
     sf::RectangleShape s(sf::Vector2f(window.getSize()));
     s.setPosition(-(int)window.getSize().x / 2,  -(int)window.getSize().y / 2);
     s.setFillColor(sf::Color(0, 0, 1, 10));
     window.draw(s);
 
-    if (i == 80)
+    if (isShow)
     {
-        auto e = SpriteFactory::getGameOverSprite();
+        std::shared_ptr<sf::Sprite> e;
+        if (isRespawnable)
+            e = SpriteFactory::getGameOverRestartSprite();
+        else
+            e = SpriteFactory::getGameOverSprite();
         e->setPosition(-e->getLocalBounds().width / 2, 0);
         window.draw(*e);
     }
@@ -373,6 +384,19 @@ void View::onDieBot(Actor* o)
     Animation* a = AnimationFactory::getBotAnimation();
     a->setAnimationType(Animation::AnimationType::Die);
     _tempAnim.push_back(AnimInfo(a, o));
+}
+
+void View::showPlayerStat()
+{
+//draw score
+    static ScorePanel scorePanel;
+    scorePanel.setScore(model->getPlayer().getScore());
+    scorePanel.draw(&window);
+
+//draw hp
+    static HealthPanel healthPanel;
+    healthPanel.setHealth(model->getPlayer().getLives());
+    healthPanel.draw(&window);
 }
 
 View::AnimInfo::AnimInfo(Animation *anim, Actor* obj) :

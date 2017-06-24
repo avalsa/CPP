@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <Objects>
-    <Object Type="GameOver">
+    <Object Type="Heart">
         <Place X="0" Y="0"/>
-        <Size X="332" Y="50"/>
+        <Size X="30" Y="30"/>
     </Object>
 </Objects>

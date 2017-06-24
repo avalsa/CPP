@@ -22,7 +22,7 @@ public:
     { SolidBlock, DeadlyBlock, GameOver,
         Background1, Background2,
         Number0, Number1, Number2, Number3, Number4, Number5, Number6, Number7, Number8, Number9,
-        Bullet
+        Bullet, Heart, GameOverRestart
     };
 
     static std::shared_ptr<sf::Sprite> getSprite(ObjectType objectType);
@@ -38,6 +38,10 @@ public:
     static std::shared_ptr<sf::Sprite> getNumberSprite(int);
 
     static std::shared_ptr<sf::Sprite> getBulletSprite();
+
+    static std::shared_ptr<sf::Sprite> getHeartSprite();
+
+    static std::shared_ptr<sf::Sprite> getGameOverRestartSprite();
 
 private:
 

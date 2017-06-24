@@ -10,6 +10,7 @@ set(SOURCE_FILES
         SpriteFactory.cpp SpriteFactory.h
         ScorePanel.cpp ScorePanel.h
         Sounds.cpp Sounds.h
+        HealthPanel.cpp HealthPanel.h
         )
 
 

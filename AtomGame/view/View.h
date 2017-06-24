@@ -45,7 +45,9 @@ public:
 
 private:
 
-    void showGameOver ();
+    void showPlayerStat();
+
+    void showGameOver (bool isRespawnable, bool isShow);
 
     void showPlayerWin ();
 

@@ -8,7 +8,7 @@
 Player::Player (int x, int y, int sizeX, int sizeY) :
         Actor (x, y, sizeX, sizeY),
         PhysicalObject(x, y, sizeX, sizeY, BlockType::Player),
-        _respX (x), _respY (y), _coins(0), weapon(10, 10), _lastLive(0), _lives(5)
+        _respX (x), _respY (y), _coins(0), weapon(10, 10), _lastLive(0), _lives(3)
 {}
 
 void Player::respawn ()
@@ -44,7 +44,7 @@ void Player::collided (const PhysicalObject *source, PhysicalObject::Axis relati
             break;
         case PhysicalObject::BlockType::Coin:
             _coins++;
-            if (_coins / ((_lastLive+1)*100))
+            if (_coins / ((_lastLive+1)*10))
             {
                 ++_lives;
                 ++_lastLive;
