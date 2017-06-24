@@ -1,3 +1,10 @@
+push x2
+push 0
+cmp
+jnz t
+push x9
+pop x2
+t:
 push x8
 push x0
 sub

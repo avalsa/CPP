@@ -31,6 +31,7 @@ protected:
 private:
     Position _plPos;
     int _stepCount;
+    Position _defaultSpeed;
 };
 
 

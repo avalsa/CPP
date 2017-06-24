@@ -13,7 +13,7 @@ Bot::Bot (int x, int y, int sizeX, int sizeY, int stepCnt) :
 Bot::Bot(int x, int y, int sizeX, int sizeY, int stepCnt, tinyxml2::XMLElement *pElement) :
         CustomObject(x, y, sizeX, sizeY), _stepCount(stepCnt),
         Actor(x, y, sizeX, sizeY),
-        PhysicalObject(x, y, sizeX, sizeY, PhysicalObject::BlockType::Bot)
+        PhysicalObject(x, y, sizeX, sizeY, PhysicalObject::BlockType::Bot), _defaultSpeed()
 {
     load(pElement);
     _ay = 1;
@@ -44,6 +44,7 @@ PhysicalObject::Position Bot::tick()
         proc->setReg (_ay, 5);
         proc->setReg(_stepCount, 6);
         proc->setReg(_plPos.x, 8);
+        proc->setReg(_defaultSpeed.x, 9);
         proc->execute ();
         proc->reset ();
         _x = proc->getReg (0);
@@ -68,9 +69,15 @@ void Bot::load(tinyxml2::XMLElement *block) {
     if (tinyxml2::XMLElement *info = block->FirstChildElement ("Speed"))
     {
         if (info->Attribute ("X"))
-            _vx = info->IntAttribute ("X");
+        {
+            _vx = info->IntAttribute("X");
+            _defaultSpeed.x = _vx;
+        }
         if (info->Attribute ("Y"))
-            _vy = info->IntAttribute ("Y");
+        {
+            _vy = info->IntAttribute("Y");
+            _defaultSpeed.y = _vy;
+        }
     }
 }
 

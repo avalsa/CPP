@@ -2,22 +2,22 @@
 <Actions>
     <Action Type="Move">
         <Place X="0" Y="370"/>
-        <Size X="77" Y="95"/>
+        <Size X="77" Y="90"/>
         <Frames Count="8"/>
     </Action>
     <Action Type="Jump">
         <Place X="50" Y="0"/>
-        <Size X="77" Y="95"/>
+        <Size X="77" Y="90"/>
         <Frames Count="6"/>
     </Action>
     <Action Type="Stand">
-        <Place X="0" Y="0"/>
-        <Size X="77" Y="95"/>
+        <Place X="0" Y="220"/>
+        <Size X="77" Y="90"/>
         <Frames Count="4"/>
     </Action>
    <Action Type="Die">
         <Place X="0" Y="492"/>
-        <Size X="118" Y="95"/>
+        <Size X="118" Y="90"/>
         <Frames Count="8"/>
     </Action>
 

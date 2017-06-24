@@ -290,7 +290,9 @@ void View::drawObject(sf::Sprite *sprite, PhysicalObject *object, bool scaleX, b
     }
 }
 
-void View::changeMap(const char *string) {
+void View::changeMap(const char *string)
+{
+    block_animations.clear();
     if (string == nullptr)
         logger.warn("Try to change map from nullptr");
     else {
