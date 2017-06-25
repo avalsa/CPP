@@ -37,6 +37,8 @@ public:
         bool operator()(const std::shared_ptr<AnimationType> a, const std::shared_ptr<AnimationType > b) const;
     };
 
+    Animation(const Animation&);
+
     static AnimationType makeAnimationType(const char* string, int& retcode);
 
     AnimationType getAnimationType () const;

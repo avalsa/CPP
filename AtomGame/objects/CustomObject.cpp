@@ -35,6 +35,7 @@ PhysicalObject::Position CustomObject::tick ()
         proc->setReg (_vy, 3);
         proc->setReg (_ax, 4);
         proc->setReg (_ay, 5);
+        proc->setReg(_st, 6);
         proc->execute ();
         proc->reset ();
         _x = proc->getReg (0);
@@ -119,6 +120,11 @@ void CustomObject::load (tinyxml2::XMLElement *block)
             _sizeX = size->IntAttribute ("X");
         if (size->Attribute ("Y"))
             _sizeY = size->IntAttribute ("Y");
+    }
+    if (tinyxml2::XMLElement *info = block->FirstChildElement ("Step"))
+    {
+        if (info->Attribute ("Count"))
+            _st = info->IntAttribute ("Count");
     }
     if (tinyxml2::XMLElement *velocity = block->FirstChildElement ("Velocity"))
     {

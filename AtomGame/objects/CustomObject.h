@@ -10,7 +10,7 @@ class CustomObject : virtual public PhysicalObject
 {
 private:
     CustomObject (const CustomObject &);
-
+    int _st;
 protected:
     VCPU *proc;
 

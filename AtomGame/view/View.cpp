@@ -180,6 +180,7 @@ int View::tick ()     // 1 - window is open, 0 - closed, todo also better to mak
         {
             if ( 1.f * i->_anim->getCountFrames() / i->_anim->getFrameRate() - 10 < i->_left)
             {
+                delete i->_anim;
                 delete i->_obj;
                 _tempAnim.erase(i);
                 i = (prev == nullptr) ? _tempAnim.begin () : *prev;
@@ -282,7 +283,7 @@ void View::drawObject(sf::Sprite *sprite, PhysicalObject *object, bool scaleX, b
     if (scaleX) {
         int cnt = object->getSizeY() / sprite->getGlobalBounds().height;
         for (int j = 0; j < std::max(cnt, 1); j++) {
-            sprite->setPosition(object->getX()  - offsetX,
+            sprite->setPosition(object->getX() + sprite->getGlobalBounds().width  - offsetX,
                                 object->getY() + j * sprite->getGlobalBounds().height - offsetY);
             window.draw(*sprite);
         }
@@ -292,6 +293,8 @@ void View::drawObject(sf::Sprite *sprite, PhysicalObject *object, bool scaleX, b
 
 void View::changeMap(const char *string)
 {
+    for (auto anim : block_animations)
+        delete anim.second;
     block_animations.clear();
     if (string == nullptr)
         logger.warn("Try to change map from nullptr");
@@ -399,6 +402,17 @@ void View::showPlayerStat()
     static HealthPanel healthPanel;
     healthPanel.setHealth(model->getPlayer().getLives());
     healthPanel.draw(&window);
+}
+
+View::~View()
+{
+    for (auto anim : block_animations)
+        delete anim.second;
+    for (auto i : _tempAnim)
+    {
+        delete i._anim;
+        delete i._obj;
+    }
 }
 
 View::AnimInfo::AnimInfo(Animation *anim, Actor* obj) :

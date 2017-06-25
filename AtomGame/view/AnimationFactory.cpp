@@ -23,27 +23,27 @@ AnimationFactory::AnimationFactory ()
 
 Animation *AnimationFactory::getPlayerAnimation ()
 {
-    return &playerAnimation;
+    return new Animation(playerAnimation);
 }
 
 Animation *AnimationFactory::getTeleportAnimation() {
-    return &teleportAnimation;
+    return new Animation(teleportAnimation);
 }
 
 Animation *AnimationFactory::getMapChangeAnimation() {
-    return &mapchangeAnimation;
+    return new Animation(mapchangeAnimation);
 }
 
 Animation *AnimationFactory::getRespawnAnimation() {
-    return &respawnAnimation;
+    return new Animation(respawnAnimation);
 }
 
 Animation *AnimationFactory::getBotAnimation() {
-    return &botAnimation;
+    return new Animation(botAnimation);
 }
 
 Animation *AnimationFactory::getCoinAnimation() {
-    return &coinAnimation;
+    return new Animation(coinAnimation);
 }
 
 std::shared_ptr<std::map<std::shared_ptr<Animation::AnimationType>, std::shared_ptr<Animation::FrameSequence>, Animation::Comp>>

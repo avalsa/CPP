@@ -24,6 +24,8 @@ public:
 
     View (Model *, int height, int width);
 
+    ~View();
+
     int tick ();
 
     void changeMap(const char *string);

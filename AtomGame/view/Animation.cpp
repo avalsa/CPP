@@ -85,6 +85,14 @@ float Animation::getFrameRate() {
     return _frameRate;
 }
 
+Animation::Animation(const Animation &a):_frameRate(a._frameRate), _currentFrame(0.f), _animations(a._animations)
+{
+
+    _texture = sf::Texture(a._texture);
+    _sprite.setTexture(_texture);
+}
+
+
 Animation::FrameSequence::FrameSequence (int frameCount, int init_x, int init_y, int size_x, int size_y) :
         _FrameCount (frameCount),
         _init_x (init_x), _init_y (init_y),
