@@ -92,8 +92,8 @@ bool Model::isPlayerWin ()
 {
     return false;
 }
-//(0, -200, 38, 42)
-Model::Model () : /*bots (),*/ objs (), player (2020, -350, 38, 42)
+
+Model::Model () : /*bots (),*/ objs (), player(0, -200, 38, 42)
 {
     logger.info ("Model init");
     objs.emplace_back (&player);
