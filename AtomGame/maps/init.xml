@@ -114,7 +114,7 @@
     </Block>
     <Block Type="Deadly">
         <Place X="2040" Y="30"/>
-        <Size X="30" Y="400"/>
+        <Size X="30" Y="350"/>
     </Block>
     <Block Type="Solid">
         <Place X="1500" Y="530"/>

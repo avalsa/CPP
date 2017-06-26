@@ -226,7 +226,7 @@ void View::showGameOver (bool isRespawnable, bool isShow)
 
 View::View (Model *model, int height, int width) :
         model (model),
-        window (sf::VideoMode (width, height), "AtomGame"),
+        window (sf::VideoMode (width, height), "AtomGame",sf::Style::Fullscreen),
         offsetX (0),
         offsetY (0), backgroundType(BackgroundType::City2),
         _playerAnimation (AnimationFactory::getPlayerAnimation ()),
@@ -235,7 +235,6 @@ View::View (Model *model, int height, int width) :
 
     sf::View view = window.getDefaultView ();
     view.setCenter (0, 0);
-
     window.setView (view);
     logger.info ("View init");
 }

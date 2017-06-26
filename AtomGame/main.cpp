@@ -30,7 +30,7 @@ int main (int argc, char **argv)
     }
     Model model;
 
-    View view (&model, 600, 400);
+    View view (&model, 600, 1000);
     Controller controller (&model, &view);
     model.setController(&controller);
 

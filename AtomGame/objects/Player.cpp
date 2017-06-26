@@ -72,6 +72,8 @@ PhysicalObject::Position Player::tick() {
 
 PhysicalObject* Player::tryShoot()
 {
+    if(!isOnGround ())
+        return nullptr;
     auto bullet = weapon.tryShoot();
     if (!bullet)
         return nullptr;
