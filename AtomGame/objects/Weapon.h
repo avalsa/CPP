@@ -1,22 +1,29 @@
 //
-// Created by sl on 06.04.17.
+// Created by sl on 19.06.17.
 //
 
 #ifndef ATOMGAME_WEAPON_H
 #define ATOMGAME_WEAPON_H
 
-#include "GameObject.h"
+#include "Bullet.h"
 
-class Weapon : public GameObject
+class Weapon
 {
 public:
-//    Weapon(int damage) : damage_(damage), attackFrequency_(1), distance_to_start_attack_(1)
-//    {}
-//
-//private:
-//    int damage_;
-//    int attackFrequency_;
-//    int distance_to_start_attack_;
+
+    Weapon(int damage, int coolDownTime);
+
+    Bullet* tryShoot();
+
+    void tick();
+
+    bool isOnCoolDown() const;
+
+private:
+    int _steps;
+    int _damage;
+    int _coolDownTime;
 };
+
 
 #endif //ATOMGAME_WEAPON_H

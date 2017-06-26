@@ -5,8 +5,8 @@
 #ifndef ATOMGAME_PLAYER_H
 #define ATOMGAME_PLAYER_H
 
-
 #include "Actor.h"
+#include "Weapon.h"
 
 class Player : public Actor
 {
@@ -14,12 +14,23 @@ public:
     Player (int x, int y, int sizeX, int sizeY);
     void respawn ();
 
+    int getScore();
+
+    int getLives();
+
     virtual BlockType getClass () const;
+
+    virtual Position tick ();
+
+    PhysicalObject* tryShoot();
 
 private:
     int _respX;
     int _respY;
-
+    int _coins;
+    int _lastLive;
+    int _lives;
+    Weapon weapon;
 protected:
     virtual void collided (const PhysicalObject *source, Axis relativeLocation);
 

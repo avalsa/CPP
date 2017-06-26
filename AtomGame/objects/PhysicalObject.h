@@ -5,9 +5,8 @@
 #include <typeinfo>
 #include <unordered_map>
 #include <tinyxml2.h>
-#include "GameObject.h"
 
-class PhysicalObject : public GameObject
+class PhysicalObject
 {
 public:
 
@@ -21,7 +20,7 @@ public:
     };
     enum BlockType
     {
-        Solid, Deadly, Respawn, Portal, MapChange, Player
+        Solid, Deadly, Respawn, Portal, MapChange, Player, Coin, Bot, Bullet
     };
 
     struct Position;
@@ -35,6 +34,8 @@ public:
     void setAcceleration (int ax, int ay);
 
     virtual Position tick ();
+
+    virtual ~PhysicalObject();
 
     int getX () const;
 
@@ -82,6 +83,8 @@ protected:
     const int maxSpeed = 30;
     Direction _blockedX;
     Direction _blockedY;
+    Direction _newBlockedX;
+    Direction _newBlockedY;
     static log4cpp::Category &logger;
 
     virtual void collided (const PhysicalObject *source, Axis relativeLocation);

@@ -19,7 +19,7 @@ void PhysicalObject::move (Position position)
     if (abs (_vx + _dx) > abs (_x - position.x))
     {
         PhysicalObject::Direction newBlocked = (_x + _vx + _dx) > position.x ? Right : Left;
-        if (_blockedX == newBlocked)
+        if (_blockedX == newBlocked && _type!=Player)
         {
             int nvx = position.x - _x - _dx;
             if(_vx > 0 == nvx > 0 || nvx == 0)
@@ -27,8 +27,13 @@ void PhysicalObject::move (Position position)
             else
                 _vx = 0;
         }
+        _blockedX = newBlocked;
+        _newBlockedX = newBlocked;
     } else
-        _blockedX = NoDirection;
+    {
+        _blockedX = _newBlockedX;
+        _newBlockedX = NoDirection;
+    }
     if (abs (_vy + _dy) != abs (_y - position.y))
     {
         PhysicalObject::Direction newBlocked = (_y + _vy + _dy) > position.y ? Down : Up;
@@ -41,8 +46,12 @@ void PhysicalObject::move (Position position)
                 _vy = 0;
         }
         _blockedY = newBlocked;
+        _newBlockedY = newBlocked;
     } else
-        _blockedY = NoDirection;
+    {
+        _blockedY = _newBlockedY;
+        _newBlockedY = NoDirection;
+    };
     _x = position.x;
     _y = position.y;
     _dx = 0;
@@ -182,6 +191,9 @@ void PhysicalObject::setType (const PhysicalObject::BlockType type)
 {
     _type = type;
 }
+
+PhysicalObject::~PhysicalObject()
+{}
 
 PhysicalObject::Position::Position (int x, int y) : x (x), y (y)
 {

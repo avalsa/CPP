@@ -5,13 +5,33 @@
 #ifndef ATOMGAME_BOT_H
 #define ATOMGAME_BOT_H
 
-
+#include "CustomObject.h"
 #include "Actor.h"
 
-class Bot : public Actor
+class Bot : public CustomObject, public Actor
 {
-    Bot (int x, int y, int sizeX, int sizeY);
+public:
 
+    Bot (int x, int y, int sizeX, int sizeY, int stepCount);
+
+    Bot(int, int, int, int,int, tinyxml2::XMLElement *pElement);
+
+    PhysicalObject::BlockType getClass() const;
+
+    Position tick();
+
+    void setPlayerPosition(Position);
+
+protected:
+
+    void load (tinyxml2::XMLElement *block);
+
+    virtual void collided (const PhysicalObject *source, Axis relativeLocation);
+
+private:
+    Position _plPos;
+    int _stepCount;
+    Position _defaultSpeed;
 };
 
 

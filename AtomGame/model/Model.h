@@ -10,9 +10,10 @@
 #include <typeinfo>
 #include <queue>
 #include "../objects/Player.h"
-//#include "../objects/Bot.h"
-#include "../objects/GameField.h"
 #include "../objects/TransMapTeleporter.h"
+#include "../controller/Controller.h"
+
+class Controller;
 
 class Model
 {
@@ -29,13 +30,11 @@ public:
 
     void startGame ();
 
-    void movePlayer (Actor::Direction direction);
+    void movePlayer (Actor::Direction direction, float speed);
 
     void actPlayer (Actor::Action action);
 
     //const std::vector<Bot> &getBots () const;
-
-    const GameField &getGameField () const;
 
     std::vector<PhysicalObject *> &getObjs ();
 
@@ -49,12 +48,16 @@ public:
 
     bool isReloading () const;
 
+    void setController(Controller * controller);
+
+    void shootPlayer();
+
 private:
+    Controller* controller;
     static log4cpp::Category &logger;
     Player player;
     //std::vector<Bot> bots;
     std::vector<PhysicalObject *> objs; //for movement algorithm standardization
-    GameField gameField;
     TransMapTeleporter *teleporter;
 
     void tryMove (PhysicalObject &obj, PhysicalObject::Position position);

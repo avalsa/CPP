@@ -3,9 +3,16 @@ project(AtomGame)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES View.cpp View.h Animation.cpp Animation.h AnimationFactory.cpp AnimationFactory.h)
+set(SOURCE_FILES
+        View.cpp View.h
+        Animation.cpp Animation.h
+        AnimationFactory.cpp AnimationFactory.h
+        SpriteFactory.cpp SpriteFactory.h
+        ScorePanel.cpp ScorePanel.h
+        Sounds.cpp Sounds.h
+        HealthPanel.cpp HealthPanel.h
+        )
 
-add_subdirectory(res)
 
 add_library(Graphics STATIC ${SOURCE_FILES})
 

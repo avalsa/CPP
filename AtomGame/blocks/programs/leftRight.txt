@@ -1,0 +1,16 @@
+push x7
+push x6
+cmp
+jnz fin
+push 0
+pop x7
+push -1
+push x2
+mul
+pop x2
+fin:
+push 1
+push x7
+add
+pop x7
+end

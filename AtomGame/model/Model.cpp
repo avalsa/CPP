@@ -5,14 +5,63 @@
 #include <memory>
 
 #include "Model.h"
+#include "../objects/Coin.h"
+#include "../objects/Bot.h"
 
 log4cpp::Category &Model::logger = log4cpp::Category::getInstance (typeid (Model).name ());
 
 void Model::tick ()
 {
+    std::vector<PhysicalObject *>::iterator i = objs.begin ();
+    std::vector<PhysicalObject *>::iterator prev = objs.begin();
+    while (++i != objs.end())
+    {
+        switch ((*i)->type())
+        {
+            case PhysicalObject::BlockType::Coin:
+            {
+                Coin *c = (Coin *) (*i);
+                if (c->isPicked())
+                {
+                    controller->onCoinPicked();
+                    delete *i;
+                    objs.erase(i);
+                    i = prev;
+                }
+            }
+                break;
+            case PhysicalObject::BlockType::Bot:
+            {
+                Bot *b = dynamic_cast<Bot *>(*i);
+                b->setPlayerPosition(PhysicalObject::Position(player.getX(), player.getY()));
+                if (!b->isAlive())
+                {
+                    auto a = new Actor(*b);
+                    a->setSize(50, 50);
+                    controller->onDieBot(a);
+                    delete *i;
+                    objs.erase(i);
+                    i = prev;
+                }
+            }
+                break;
+            case PhysicalObject::Bullet:
+            {
+                Bullet *bullet = (Bullet *) (*i);
+                if (bullet->isDestroyed()) {
+                    delete *i;
+                    objs.erase(i);
+                    i = prev;
+                }
+            }
+                break;
+        }
+        prev = i;
+    }
     if (teleporter)
     {
         load (teleporter->getDestFile (), teleporter->getDest ());
+        logger.warn(teleporter->getDest ());
         teleporter = nullptr;
     } else
     {
@@ -20,7 +69,8 @@ void Model::tick ()
         for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); i++)
         {
             PhysicalObject::Position pos = (*i)->tick ();
-            tryMove (**i, pos);
+            if(pos.x != (*i)->getX () || pos.y != (*i)->getY ())
+                tryMove (**i, pos);
         }
         for (std::vector<PhysicalObject *>::iterator i = objs.begin (); i != objs.end (); i++)
         {
@@ -43,7 +93,7 @@ bool Model::isPlayerWin ()
     return false;
 }
 
-Model::Model () : /*bots (),*/ objs (), gameField (100, 100), player (0, -200, 38, 42)
+Model::Model () : /*bots (),*/ objs (), player(0, -200, 38, 42)
 {
     logger.info ("Model init");
     objs.emplace_back (&player);
@@ -59,17 +109,13 @@ Player &Model::getPlayer ()
     return bots;
 }*/
 
-const GameField &Model::getGameField () const
-{
-    return gameField;
-}
 
 std::vector<PhysicalObject *> &Model::getObjs ()
 {
     return objs;
 }
 
-void Model::movePlayer (Actor::Direction direction)
+void Model::movePlayer (Actor::Direction direction, float speed)
 {
     switch (direction)
     {
@@ -80,15 +126,15 @@ void Model::movePlayer (Actor::Direction direction)
             }
             break;
         case PhysicalObject::Direction::Right:
-            player.addDx (playerMovementSpeed);
+            player.addDx (speed*playerMovementSpeed/100);
             player.setMoving (true);
             player.setLookDirection (PhysicalObject::Direction::Right);
             break;
         case PhysicalObject::Direction::Down:
-            player.addDy (playerMovementSpeed);
+            player.addDy (speed*playerMovementSpeed/100);
             break;
         case PhysicalObject::Direction::Left:
-            player.addDx (-playerMovementSpeed);
+            player.addDx (speed*-playerMovementSpeed/100);
             player.setMoving (true);
             player.setLookDirection (PhysicalObject::Direction::Left);
             break;
@@ -123,18 +169,19 @@ void Model::tryMove (PhysicalObject &obj, PhysicalObject::Position position)
     }
     for (std::vector<PhysicalObject *>::iterator i = collides.begin (); i != collides.end (); i++)
     {
-        if (obj.type () == PhysicalObject::BlockType::Player && obj.getClass () == PhysicalObject::BlockType::Player &&
+        if (obj.type () == PhysicalObject::BlockType::Player &&
+            obj.getClass () == PhysicalObject::BlockType::Player &&
             (*i)->type () == PhysicalObject::BlockType::MapChange &&
             (*i)->getClass () == PhysicalObject::BlockType::MapChange)
         {
-            teleporter = (TransMapTeleporter *) *i;
+            teleporter = dynamic_cast<TransMapTeleporter *>(*i);
         }
         if ((*i)->type () == PhysicalObject::BlockType::Player &&
             (*i)->getClass () == PhysicalObject::BlockType::Player &&
             obj.type () == PhysicalObject::BlockType::MapChange &&
             obj.getClass () == PhysicalObject::BlockType::MapChange)
         {
-            teleporter = (TransMapTeleporter *) &obj;
+            teleporter = dynamic_cast<TransMapTeleporter *>(&obj);
         }
         (*i)->addCollision (&obj, PhysicalObject::Axis::axisX);
         obj.addCollision (*i, PhysicalObject::Axis::axisX);
@@ -159,6 +206,20 @@ void Model::tryMove (PhysicalObject &obj, PhysicalObject::Position position)
     }
     for (std::vector<PhysicalObject *>::iterator i = collides.begin (); i != collides.end (); i++)
     {
+        if (obj.type () == PhysicalObject::BlockType::Player &&
+            obj.getClass () == PhysicalObject::BlockType::Player &&
+            (*i)->type () == PhysicalObject::BlockType::MapChange &&
+            (*i)->getClass () == PhysicalObject::BlockType::MapChange)
+        {
+            teleporter = dynamic_cast<TransMapTeleporter *>(*i);
+        }
+        if ((*i)->type () == PhysicalObject::BlockType::Player &&
+            (*i)->getClass () == PhysicalObject::BlockType::Player &&
+            obj.type () == PhysicalObject::BlockType::MapChange &&
+            obj.getClass () == PhysicalObject::BlockType::MapChange)
+        {
+            teleporter = dynamic_cast<TransMapTeleporter *>(&obj);
+        }
         (*i)->addCollision (&obj, PhysicalObject::Axis::axisY);
         obj.addCollision (*i, PhysicalObject::Axis::axisY);
     }
@@ -256,6 +317,7 @@ void Model::load (const char *xmlfile, const char *name)
     } else
     {
         logger.info ("\"%s\" parsed", xmlfile);
+        controller->onMapChange(name);
         load (map, name);
     }
 }
@@ -286,7 +348,10 @@ void Model::load (tinyxml2::XMLElement *map)
 {
     for (std::vector<PhysicalObject *>::const_iterator i = objs.cbegin (); i != objs.cend (); i++)
         if (*i != &player)
+        {
             delete *i;
+        }
+
     objs.clear ();
     for(tinyxml2::XMLElement* block = map->FirstChildElement ("Block"); block != nullptr; block = block->NextSiblingElement ("Block") )
     {
@@ -296,6 +361,10 @@ void Model::load (tinyxml2::XMLElement *map)
                 objs.push_back (new Teleporter (0, 0, 10, 10, block));
             else if(strcmp (type, "MapChange") == 0)
                 objs.push_back (new TransMapTeleporter (0, 0, 10, 10, block));
+            else if (strcmp (type, "Coin") == 0)
+                objs.push_back(new Coin(0, 0, 10, 10, block));
+            else if (strcmp (type, "Bot") == 0)
+                objs.push_back(new Bot(0, 0, 10, 10, 10,  block));
             else
                 objs.push_back (new CustomObject (0, 0, 10, 10, block));
         }
@@ -310,7 +379,22 @@ bool Model::isReloading () const
     return teleporter != nullptr;
 }
 
+void Model::setController(Controller *controller)
+{
+    this->controller = controller;
+}
 
+bool Model::isGameOver()
+{
+    return !player.isAlive();
+}
 
+void Model::shootPlayer()
+{
+    auto e = (Bullet *) player.tryShoot();
+    if (!e)
+        return;
+    objs.push_back((Bullet*)e);
+    controller->onShot();
 
-
+}

@@ -35,6 +35,7 @@ PhysicalObject::Position CustomObject::tick ()
         proc->setReg (_vy, 3);
         proc->setReg (_ax, 4);
         proc->setReg (_ay, 5);
+        proc->setReg(_st, 6);
         proc->execute ();
         proc->reset ();
         _x = proc->getReg (0);
@@ -49,7 +50,8 @@ PhysicalObject::Position CustomObject::tick ()
 
 CustomObject::~CustomObject ()
 {
-    delete proc;
+    if (proc != NULL)
+        delete proc;
 }
 
 CustomObject CustomObject::clone () const
@@ -119,6 +121,11 @@ void CustomObject::load (tinyxml2::XMLElement *block)
         if (size->Attribute ("Y"))
             _sizeY = size->IntAttribute ("Y");
     }
+    if (tinyxml2::XMLElement *info = block->FirstChildElement ("Step"))
+    {
+        if (info->Attribute ("Count"))
+            _st = info->IntAttribute ("Count");
+    }
     if (tinyxml2::XMLElement *velocity = block->FirstChildElement ("Velocity"))
     {
         if (velocity->Attribute ("X"))
@@ -143,6 +150,10 @@ void CustomObject::load (tinyxml2::XMLElement *block)
             setType (Portal);
         else if (strcmp (type, "MapChange") == 0)
             setType (MapChange);
+        else if (strcmp (type, "Coin") == 0)
+            setType (Coin);
+        else if (strcmp (type, "Bot") == 0)
+            setType (Bot);
     }
 }
 

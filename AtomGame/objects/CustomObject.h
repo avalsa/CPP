@@ -6,14 +6,13 @@
 #include "VCPU/Interpreter/VCPU.h"
 #include "tinyxml2.h"
 
-class CustomObject : public PhysicalObject
+class CustomObject : virtual public PhysicalObject
 {
 private:
-    VCPU *proc;
-
     CustomObject (const CustomObject &);
-
+    int _st;
 protected:
+    VCPU *proc;
 
     void load (tinyxml2::XMLElement *block);
 public:

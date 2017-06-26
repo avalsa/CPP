@@ -5,10 +5,9 @@
 #ifndef ATOMGAME_ACTOR_H
 #define ATOMGAME_ACTOR_H
 
-#include "Weapon.h"
 #include "PhysicalObject.h"
 
-class Actor : public PhysicalObject
+class Actor : virtual public PhysicalObject
 {
 public:
 
@@ -23,15 +22,21 @@ public:
 
     Actor (int x, int y, int sizeX, int sizeY);
 
+    void setSize(int x, int y);
+
     bool isOnGround () const;
 
     virtual PhysicalObject::Position tick ();
 
-    bool isMoving ();
+    bool isMoving () const;
 
     PhysicalObject::Direction getLookDirection () const;
 
     void setLookDirection (Direction direction);
+
+    bool isAlive() const;
+
+    void setMoving (bool moving);
 
     //virtual void attack() = 0;
 
@@ -39,16 +44,13 @@ protected:
 
     virtual void collided (const PhysicalObject *source, Axis relativeLocation);
 
-private:
+    bool _alive;
 
     Action _action;
 
-    Direction lookDirection;
+    Direction _lookDirection;
 
-    bool moving;
-
-public:
-    void setMoving (bool moving);
+    bool _moving;
 
 };
 

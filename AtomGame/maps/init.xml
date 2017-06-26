@@ -1,22 +1,163 @@
 <?xml version="1.0" ?>
 <Map Name="Init">
+    <!--init-->
     <Block Type="Solid">
-        <Place X="-1000" Y="10"/>
-        <Size X="2000" Y="10"/>
+        <Place X="-70" Y="10"/>
+        <Size X="344" Y="10"/>
     </Block>
-    <Block Type="Portal">
-        <Place X="-30" Y="-10"/>
-        <Size X="10" Y="10"/>
-        <Acceleration X="0" Y="1"/>
-        <Script file="blocks/programs/bounce.bit"/>
-        <Acceleration Y="1"/>
-        <Portal X="0" Y="-2000"/>
+    <Block Type="Deadly">
+        <Place X="-70" Y="-230"/>
+        <Size X="30" Y="231"/>
+    </Block>
+    <Block Type="Coin">
+        <Place X="70" Y="-30"/>
+        <Size X="16" Y="16"/>
+    </Block>
+    <Block Type="Coin">
+        <Place X="150" Y="-30"/>
+        <Size X="16" Y="16"/>
+    </Block>
+    <Block Type="Deadly">
+        <Place X="274" Y="10"/>
+        <Size X="600" Y="30"/>
+    </Block>
+    <Block Type="Solid">
+        <Place X="350" Y="-50"/>
+        <Size X="86" Y="10"/>
+    </Block>
+    <Block Type="Coin">
+        <Place X="390" Y="-80"/>
+        <Size X="16" Y="16"/>
+    </Block>
+    <Block Type="Solid">
+        <Place X="530" Y="-100"/>
+        <Size X="86" Y="10"/>
+    </Block>
+    <Block Type="Coin">
+        <Place X="570" Y="-130"/>
+        <Size X="16" Y="16"/>
+    </Block>
+    <Block Type="Solid">
+        <Place X="750" Y="-50"/>
+        <Size X="86" Y="10"/>
+    </Block>
+    <Block Type="Coin">
+        <Place X="790" Y="-80"/>
+        <Size X="16" Y="16"/>
+    </Block>
+    <Block Type="Solid">
+        <Place X="874" Y="10"/>
+        <Size X="86" Y="10"/>
+    </Block>
+
+    <!--!init-->
+    <Block Type="Solid">
+        <Place X="960" Y="10"/>
+        <Size X="86" Y="10"/>
+        <Step Count="300"/>
+        <Velocity X="2" Y="0"/>
+        <Script file="blocks/programs/leftRight.bit"/>
+    </Block>
+    <Block Type="Coin">
+        <Place X="1050" Y="-30"/>
+        <Size X="16" Y="16"/>
+    </Block>
+    <Block Type="Coin">
+        <Place X="1150" Y="-30"/>
+        <Size X="16" Y="16"/>
+    </Block>
+    <Block Type="Coin">
+        <Place X="1250" Y="-30"/>
+        <Size X="16" Y="16"/>
+    </Block>
+    <Block Type="Coin">
+        <Place X="1350" Y="-30"/>
+        <Size X="16" Y="16"/>
+    </Block>
+    <Block Type="Coin">
+        <Place X="1450" Y="-30"/>
+        <Size X="16" Y="16"/>
+    </Block>
+    <Block Type="Coin">
+        <Place X="1550" Y="-30"/>
+        <Size X="16" Y="16"/>
+    </Block>
+    <Block Type="Deadly">
+        <Place X="950" Y="100"/>
+        <Size X="750" Y="30"/>
+    </Block>
+    <Block Type="Solid">
+        <Place X="1650" Y="10"/>
+        <Size X="430" Y="10"/>
+    </Block>
+    <Block Type="Bot">
+        <Step Count="40"/>
+        <Script file="blocks/programs/patrol.bit"/>
+        <Place X="1950" Y="-50"/>
+        <Size X="30" Y="50"/>
+        <Speed X="2" Y="0"/>
+    </Block>
+    <Block Type="Solid">
+        <Place X="1900" Y="-240"/>
+        <Size X="172" Y="10"/>
+    </Block>
+    <Block Type="Solid">
+        <Place X="2080" Y="10"/>
+        <Size X="86" Y="10"/>
+        <Step Count="500"/>
+        <Velocity X="0" Y="1"/>
+        <Script file="blocks/programs/upDown.bit"/>
+    </Block>
+    <Block Type="Deadly">
+        <Place X="2170" Y="-500"/>
+        <Size X="30" Y="1100"/>
+    </Block>
+    <Block Type="Deadly">
+        <Place X="2040" Y="30"/>
+        <Size X="30" Y="350"/>
+    </Block>
+    <Block Type="Solid">
+        <Place X="1500" Y="530"/>
+        <Size X="602" Y="10"/>
     </Block>
     <Block Type="MapChange">
-        <Place X="-100" Y="-50"/>
-        <Size X="10" Y="50"/>
+        <Place X="1950" Y="-300"/>
+        <Size X="50" Y="50"/>
         <Portal X="0" Y="-100"/>
         <Map File="maps/init.xml" Name="New"/>
+    </Block>
+    <Block Type="Portal">
+        <Place X="1500" Y="480"/>
+        <Size X="50" Y="50"/>
+        <Portal X="2020" Y="-350"/>
+    </Block>
+    <Block Type="Bot">
+        <Step Count="40"/>
+        <Script file="blocks/programs/patrol.bit"/>
+        <Place X="1560" Y="480"/>
+        <Size X="30" Y="50"/>
+        <Speed X="2" Y="0"/>
+    </Block>
+    <Block Type="Bot">
+        <Step Count="40"/>
+        <Script file="blocks/programs/patrol.bit"/>
+        <Place X="1600" Y="480"/>
+        <Size X="30" Y="50"/>
+        <Speed X="2" Y="0"/>
+    </Block>
+    <Block Type="Bot">
+        <Step Count="40"/>
+        <Script file="blocks/programs/patrol.bit"/>
+        <Place X="1800" Y="480"/>
+        <Size X="30" Y="50"/>
+        <Speed X="2" Y="0"/>
+    </Block>
+    <Block Type="Bot">
+        <Step Count="40"/>
+        <Script file="blocks/programs/patrol.bit"/>
+        <Place X="1850" Y="480"/>
+        <Size X="30" Y="50"/>
+        <Speed X="2" Y="0"/>
     </Block>
 </Map>
 
@@ -25,10 +166,40 @@
     <Place X="-1000" Y="10"/>
     <Size X="2000" Y="10"/>
 </Block>
-<Block Type="MapChange">
-    <Place X="100" Y="-50"/>
-    <Size X="10" Y="50"/>
-    <Portal X="0" Y="-100"/>
-    <Map File="maps/init.xml" Name="Init"/>
+<Block Type="Bot">
+    <Step Count="50"/>
+    <Script file="blocks/programs/patrol.bit"/>
+    <Place X="-500" Y="-100"/>
+    <Size X="30" Y="50"/>
+    <Speed X="3" Y="0"/>
+</Block>
+<Block Type="Bot">
+    <Step Count="50"/>
+    <Script file="blocks/programs/patrol.bit"/>
+    <Place X="300" Y="-100"/>
+    <Size X="30" Y="50"/>
+    <Speed X="3" Y="0"/>
+</Block>
+<Block Type="Bot">
+    <Step Count="50"/>
+    <Script file="blocks/programs/patrol.bit"/>
+    <Place X="200" Y="-100"/>
+    <Size X="30" Y="50"/>
+    <Speed X="3" Y="0"/>
+</Block>
+<Block Type="Bot">
+    <Step Count="50"/>
+    <Script file="blocks/programs/patrol.bit"/>
+    <Place X="-200" Y="-100"/>
+    <Size X="30" Y="50"/>
+    <Speed X="3" Y="0"/>
+</Block>
+<Block Type="Coin">
+    <Place X="-950" Y="-30"/>
+    <Size X="16" Y="16"/>
+</Block>
+<Block Type="Coin">
+    <Place X="950" Y="-30"/>
+    <Size X="16" Y="16"/>
 </Block>
 </Map>

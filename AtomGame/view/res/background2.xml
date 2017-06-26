@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<Objects>
+    <Object Type="Background2">
+        <Place X="0" Y="0"/>
+        <Size X="8190" Y="1000"/>
+    </Object>
+</Objects>
