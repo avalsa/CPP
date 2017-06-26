@@ -4,6 +4,8 @@ project(AtomGame)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS " -pthread")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_BUILD_TYPE "Release")
+
 
 add_subdirectory(objects)
 add_subdirectory(model)
@@ -41,3 +43,5 @@ target_link_libraries(Rain Objects)
 target_link_libraries(Rain Mechanics)
 target_link_libraries(Rain Graphics)
 target_link_libraries(Rain Plugin)
+
+build_command(TARGET Run)
